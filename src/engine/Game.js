@@ -1,4 +1,5 @@
 import { Input } from './Input.js';
+import { EventBus } from './EventBus.js';
 
 // How often the game logic runs: 60 times per second, no matter how fast the
 // monitor refreshes. One "step" is therefore 1/60 s.
@@ -8,7 +9,8 @@ const STEP = 1 / 60;
 // of catch-up steps when it comes back, so cap how much time one frame can add.
 const MAX_FRAME_TIME = 0.25;
 
-// The Game owns the canvas, the input and the loop, and holds the active screen.
+// The Game owns the canvas, the input, the event bus and the loop, and holds
+// the active screen.
 export class Game {
   constructor(canvas) {
     this.canvas = canvas;
@@ -17,6 +19,7 @@ export class Game {
     this.height = canvas.height;
 
     this.input = new Input();
+    this.events = new EventBus();
     this.screen = null;
 
     this.lastTime = 0;
@@ -25,7 +28,10 @@ export class Game {
 
   // Swap the active screen. The old one gets exit(), the new one enter().
   setScreen(screen) {
-    if (this.screen) this.screen.exit();
+    if (this.screen) {
+      this.screen.exit();
+      this.screen.stopListening();
+    }
     this.screen = screen;
     this.screen.enter();
   }

@@ -5,9 +5,23 @@
 export class Screen {
   constructor(game) {
     this.game = game;
+    this.unsubscribers = [];
   }
 
-  // Called once when the screen becomes active. Good place to reset things.
+  // Listen to a game event for as long as this screen is active. The Game
+  // removes these listeners automatically when we switch away, so a screen
+  // that's gone can't keep reacting to events.
+  listen(name, fn) {
+    this.unsubscribers.push(this.game.events.on(name, fn));
+  }
+
+  stopListening() {
+    for (const unsubscribe of this.unsubscribers) unsubscribe();
+    this.unsubscribers = [];
+  }
+
+  // Called once when the screen becomes active. Good place to reset things
+  // and to listen() to events.
   enter() {}
 
   // Called once when we switch away from this screen.

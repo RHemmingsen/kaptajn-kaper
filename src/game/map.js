@@ -1,3 +1,5 @@
+import { TileMap } from '../engine/TileMap.js';
+
 // The Kattegat, as a tile map. North is up.
 //
 //   .  water
@@ -28,6 +30,8 @@ export const MAP_ROWS = [
   '######..####..###########...#######',
   '######.######.###########...#######',
 ];
+
+export const KATTEGAT = new TileMap(MAP_ROWS);
 
 // Ports sit on land tiles next to the water. The ship is allowed to sail
 // into a port tile even though it's land.

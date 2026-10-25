@@ -1,0 +1,8 @@
+{
+  "name": "kaptajn-kaper",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "node --test"
+  }
+}

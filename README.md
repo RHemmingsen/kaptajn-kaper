@@ -14,6 +14,14 @@ python3 -m http.server 8000
 
 Then open http://localhost:8000.
 
+## Running the tests
+
+```sh
+npm test
+```
+
+No install needed; it uses Node's built-in test runner.
+
 ## How the engine works
 
 ```
@@ -22,15 +30,24 @@ src/
   engine/              reusable engine code, knows nothing about pirates
     Game.js            canvas, game loop, active screen
     Input.js           keyboard state
+    EventBus.js        on(event, fn) / emit(event, data)
     Screen.js          base class for a game mode
     TileMap.js         grid of tiles built from strings
   game/                everything specific to Kaptajn Kaper
     palette.js         colours and font
     GameState.js       the ship's stats for the current playthrough
     map.js             the Kattegat tile map and its ports
-    screens/
+    rules/             the game's rules: change GameState, emit events.
+      sailing.js         No drawing, no keyboard.
+    ui/                drawing code, shared between screens
+      draw.js            small helpers: clearScreen, polygon, label
+      mapView.js         the sea map, ports and ship
+      statusPanel.js     the Træk/Rgsdl/Korn... table
+      titleArt.js        the title screen picture
+    screens/           thin glue: read input -> call rules -> draw
       TitleScreen.js
-      MapScreen.js     sail around, one tile per arrow key
+      MapScreen.js
+tests/                 Node tests for engine and rules: npm test
 ```
 
 **The game loop** (`Game.frame`). The browser calls it before every repaint. It
@@ -54,3 +71,15 @@ character means and how to draw it.
 
 **Game state.** Stats that every mode shares (men, guns, money...) live in one
 `GameState` object that is handed from screen to screen.
+
+**Three kinds of game code.** *Rules* (`game/rules/`) decide what happens and
+change the `GameState`. *UI* (`game/ui/`) draws things. *Screens* connect the
+two: they turn key presses into rule calls and hand the state to the drawing
+code. Because the rules never touch the canvas or keyboard, they can be tested
+in Node.
+
+**Events.** Rules announce what happened with `events.emit('arrivedAtPort', {
+city })`, and anything interested listens with `events.on(...)`. A screen uses
+`this.listen(...)` instead, and its listeners are removed automatically when
+the game switches to another screen. Events are for things several unrelated
+parts of the game care about; everything else is a direct function call.
