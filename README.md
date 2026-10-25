@@ -23,11 +23,14 @@ src/
     Game.js            canvas, game loop, active screen
     Input.js           keyboard state
     Screen.js          base class for a game mode
+    TileMap.js         grid of tiles built from strings
   game/                everything specific to Kaptajn Kaper
     palette.js         colours and font
+    GameState.js       the ship's stats for the current playthrough
+    map.js             the Kattegat tile map and its ports
     screens/
       TitleScreen.js
-      MapScreen.js     (placeholder)
+      MapScreen.js     sail around, one tile per arrow key
 ```
 
 **The game loop** (`Game.frame`). The browser calls it before every repaint. It
@@ -44,3 +47,10 @@ calling `exit()` on the old one and `enter()` on the new one.
 
 **Input.** Keyboard events are turned into state the game can query:
 `isDown(code)` for held keys, `wasPressed(code)` for one-shot presses.
+
+**Tile maps.** The map is an array of strings, one character per tile (`.` water,
+`#` land). `TileMap` answers "what's at (col, row)?"; the game decides what each
+character means and how to draw it.
+
+**Game state.** Stats that every mode shares (men, guns, money...) live in one
+`GameState` object that is handed from screen to screen.

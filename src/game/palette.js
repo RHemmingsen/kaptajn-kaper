@@ -8,6 +8,7 @@ export const COLORS = {
   red: '#e02828',
   brown: '#c87828',
   green: '#40f080',
+  salmon: '#f08070',
 };
 
 export const FONT = '"Courier New", Courier, monospace';

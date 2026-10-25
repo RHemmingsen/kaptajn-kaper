@@ -1,6 +1,7 @@
 import { Screen } from '../../engine/Screen.js';
 import { COLORS, FONT } from '../palette.js';
 import { MapScreen } from './MapScreen.js';
+import { GameState } from '../GameState.js';
 
 // The title screen: a picture and "press any key to continue".
 //
@@ -15,7 +16,7 @@ export class TitleScreen extends Screen {
     this.time += dt;
 
     if (this.game.input.anyKeyPressed()) {
-      this.game.setScreen(new MapScreen(this.game));
+      this.game.setScreen(new MapScreen(this.game, new GameState()));
     }
   }
 
