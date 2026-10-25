@@ -1,0 +1,18 @@
+html, body {
+  margin: 0;
+  height: 100%;
+  background: #000;
+}
+
+body {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Scale the 640x480 canvas to the largest size that fits, keeping 4:3. */
+#game {
+  width: min(100vw, calc(100vh * 4 / 3));
+  height: min(100vh, calc(100vw * 3 / 4));
+  image-rendering: pixelated; /* keep pixels crisp when scaled up */
+}
