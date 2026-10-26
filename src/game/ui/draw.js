@@ -26,3 +26,10 @@ export function label(ctx, text, x, y, color = COLORS.salmon) {
   ctx.fillStyle = color;
   ctx.fillText(text, x, y);
 }
+
+// Same as label(), centred horizontally on the screen.
+export function centeredLabel(ctx, text, y, color = COLORS.salmon) {
+  ctx.font = `bold 20px ${FONT}`;
+  const w = ctx.measureText(text).width;
+  label(ctx, text, (ctx.canvas.width - w) / 2, y, color);
+}

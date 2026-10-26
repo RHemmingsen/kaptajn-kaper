@@ -31,6 +31,7 @@ src/
     Game.js            canvas, game loop, active screen
     Input.js           keyboard state
     EventBus.js        on(event, fn) / emit(event, data)
+    collision.js       rectsOverlap(a, b) for box collisions
     Screen.js          base class for a game mode
     TileMap.js         grid of tiles built from strings
   game/                everything specific to Kaptajn Kaper
@@ -39,14 +40,17 @@ src/
     map.js             the Kattegat tile map and its ports
     rules/             the game's rules: change GameState, emit events.
       sailing.js         No drawing, no keyboard.
+      harbor.js          the harbor minigame: steering, wind, crashes
     ui/                drawing code, shared between screens
       draw.js            small helpers: clearScreen, polygon, label
       mapView.js         the sea map, ports and ship
+      harborView.js      the harbor minigame
       statusPanel.js     the Træk/Rgsdl/Korn... table
       titleArt.js        the title screen picture
     screens/           thin glue: read input -> call rules -> draw
       TitleScreen.js
       MapScreen.js
+      HarborScreen.js
 tests/                 Node tests for engine and rules: npm test
 ```
 
@@ -83,3 +87,12 @@ city })`, and anything interested listens with `events.on(...)`. A screen uses
 `this.listen(...)` instead, and its listeners are removed automatically when
 the game switches to another screen. Events are for things several unrelated
 parts of the game care about; everything else is a direct function call.
+
+**Real time vs turns.** The map is turn-based: one key press, one tile. The
+harbor runs in real time: the ship's position is in pixels and moves by
+`speed * dt` every step, so speeds are in pixels per second whatever the frame
+rate. Held keys (`isDown`) steer; the wind adds a constant sideways speed.
+
+**Collision boxes.** Everything in the harbor is a rectangle `{ x, y, w, h }`,
+and `rectsOverlap` checks whether two of them overlap. The drawings are made to
+fill those boxes, so what you see is what collides.

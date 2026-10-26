@@ -1,10 +1,11 @@
 import { Screen } from '../../engine/Screen.js';
 import { COLORS } from '../palette.js';
-import { KATTEGAT } from '../map.js';
+import { KATTEGAT, cityAt } from '../map.js';
 import { sail } from '../rules/sailing.js';
 import { clearScreen, label } from '../ui/draw.js';
 import { drawMap, drawCities, drawCityName, drawShip } from '../ui/mapView.js';
 import { drawStatusPanel } from '../ui/statusPanel.js';
+import { HarborScreen } from './HarborScreen.js';
 import { TitleScreen } from './TitleScreen.js';
 
 // Which arrow key means which sailing direction.
@@ -22,12 +23,16 @@ export class MapScreen extends Screen {
   constructor(game, state) {
     super(game);
     this.state = state;
-    this.portCity = null; // the city we're docked in, if any
+    // The city we're in, if any. We can be in one already when coming back
+    // from the harbor.
+    this.portCity = cityAt(state.ship.col, state.ship.row);
   }
 
   enter() {
     this.listen('shipMoved', () => { this.portCity = null; });
-    this.listen('arrivedAtPort', ({ city }) => { this.portCity = city; });
+    this.listen('arrivedAtPort', ({ city }) => {
+      this.game.setScreen(new HarborScreen(this.game, this.state, city));
+    });
   }
 
   update(dt) {
@@ -38,8 +43,13 @@ export class MapScreen extends Screen {
       return;
     }
 
+    // One step per update at most. Sailing can switch to the harbor screen,
+    // and this screen must not keep moving the ship after that.
     for (const [key, direction] of Object.entries(KEY_TO_DIRECTION)) {
-      if (input.wasPressed(key)) sail(this.state, direction, this.game.events);
+      if (input.wasPressed(key)) {
+        sail(this.state, direction, this.game.events);
+        break;
+      }
     }
   }
 
