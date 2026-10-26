@@ -1,6 +1,6 @@
 // The rules for sailing on the map. Nothing here knows about the keyboard or
 // the canvas: it takes the game state, changes it, and announces what happened.
-import { KATTEGAT, cityAt } from '../map.js';
+import { tileAt, cityAt } from '../map.js';
 
 // How each direction changes the ship's position, as [columns, rows].
 export const DIRECTIONS = {
@@ -12,7 +12,7 @@ export const DIRECTIONS = {
 
 // Water is always sailable. Ports are on land, but you can sail into them.
 export function canSailTo(col, row) {
-  return KATTEGAT.get(col, row) === '.' || cityAt(col, row) !== null;
+  return tileAt(col, row) === '.' || cityAt(col, row) !== null;
 }
 
 // Move the ship one tile. Costs one move (Træk). Returns false, and changes

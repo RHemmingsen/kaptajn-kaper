@@ -8,7 +8,7 @@ import { createHarbor, updateHarbor, LAYOUT } from '../src/game/rules/harbor.js'
 
 const DT = 1 / 60;
 const NO_KEYS = {};
-const SKAGEN = { name: 'Skagen' };
+const SKAGEN = { name: 'Skagen' }; // any city will do here
 
 // A predictable stand-in for Math.random, so every run builds the same harbor.
 function seededRandom(seed) {

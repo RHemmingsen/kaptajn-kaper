@@ -37,7 +37,7 @@ src/
   game/                everything specific to Kaptajn Kaper
     palette.js         colours and font
     GameState.js       the ship's stats for the current playthrough
-    map.js             the Kattegat tile map and its ports
+    map.js             the Kattegat tile map; grid and ports as in the original
     rules/             the game's rules: change GameState, emit events.
       sailing.js         No drawing, no keyboard.
       ship.js            damage and sinking, shared by every mode
@@ -53,6 +53,9 @@ src/
       MapScreen.js
       HarborScreen.js
 tests/                 Node tests for engine and rules: npm test
+docs/
+  original-regler.md   the original game's rules, in Danish
+KaptajnKaper_original/ the original 1985 source code, for reference only
 ```
 
 **The game loop** (`Game.frame`). The browser calls it before every repaint. It
