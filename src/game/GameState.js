@@ -16,6 +16,6 @@ export class GameState {
     this.guns = 20; // Skyts
     this.repair = 200; // Rep: the ship's condition
 
-    this.ship = { col: 12, row: 9 };
+    this.ship = { col: 10, row: 10 }; // as in the original
   }
 }

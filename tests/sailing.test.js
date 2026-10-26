@@ -17,33 +17,42 @@ function recordEvents() {
 }
 
 test('sailing onto water moves the ship and costs one move', () => {
-  const state = new GameState(); // ship starts at col 12, row 9
+  const state = new GameState(); // ship starts at col 10, row 10
   const { events, log } = recordEvents();
 
   assert.equal(sail(state, 'left', events), true);
-  assert.deepEqual(state.ship, { col: 11, row: 9 });
+  assert.deepEqual(state.ship, { col: 9, row: 10 });
   assert.equal(state.moves, 1);
-  assert.deepEqual(log, [{ name: 'shipMoved', data: { col: 11, row: 9 } }]);
+  assert.deepEqual(log, [{ name: 'shipMoved', data: { col: 9, row: 10 } }]);
 });
 
 test('land blocks the ship and costs nothing', () => {
   const state = new GameState();
-  state.ship = { col: 8, row: 9 }; // Jutland's coast is just to the left
+  state.ship = { col: 7, row: 10 }; // Helgenæs is just to the left
   const { events, log } = recordEvents();
 
   assert.equal(sail(state, 'left', events), false);
-  assert.deepEqual(state.ship, { col: 8, row: 9 });
+  assert.deepEqual(state.ship, { col: 7, row: 10 });
   assert.equal(state.moves, 0);
   assert.deepEqual(log, []);
 });
 
 test('sailing into a port announces the arrival', () => {
   const state = new GameState();
-  state.ship = { col: 10, row: 5 }; // right next to Skagen
+  state.ship = { col: 8, row: 4 }; // right next to Ebeltoft
   const { events, log } = recordEvents();
 
   sail(state, 'left', events);
 
   assert.deepEqual(log.map((e) => e.name), ['shipMoved', 'arrivedAtPort']);
-  assert.equal(log[1].data.city.name, 'Skagen');
+  assert.equal(log[1].data.city.name, 'Ebeltoft');
+});
+
+test('the edge of the map stops the ship', () => {
+  const state = new GameState();
+  state.ship = { col: 1, row: 12 }; // open water at the left edge
+  const { events } = recordEvents();
+
+  assert.equal(sail(state, 'left', events), false);
+  assert.deepEqual(state.ship, { col: 1, row: 12 });
 });

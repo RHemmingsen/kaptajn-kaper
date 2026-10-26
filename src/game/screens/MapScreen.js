@@ -1,6 +1,6 @@
 import { Screen } from '../../engine/Screen.js';
 import { COLORS } from '../palette.js';
-import { KATTEGAT, cityAt } from '../map.js';
+import { cityAt } from '../map.js';
 import { sail } from '../rules/sailing.js';
 import { clearScreen, label } from '../ui/draw.js';
 import { drawMap, drawCities, drawCityName, drawShip } from '../ui/mapView.js';
@@ -56,7 +56,7 @@ export class MapScreen extends Screen {
   render(ctx) {
     clearScreen(ctx);
     this.drawFrame(ctx);
-    drawMap(ctx, KATTEGAT);
+    drawMap(ctx);
     drawCities(ctx);
     if (this.portCity) drawCityName(ctx, this.portCity);
     drawShip(ctx, this.state.ship);
