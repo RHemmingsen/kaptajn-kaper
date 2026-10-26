@@ -32,14 +32,12 @@ src/
     Input.js           keyboard state
     EventBus.js        on(event, fn) / emit(event, data)
     collision.js       rectsOverlap(a, b) for box collisions
-    Bitmap.js          pixel grid with line() and fill(), works without a browser
-    drawCommands.js    interpreter for GW-BASIC's DRAW language
     Screen.js          base class for a game mode
     TileMap.js         grid of tiles built from strings
   game/                everything specific to Kaptajn Kaper
     palette.js         colours and font
     GameState.js       the ship's stats for the current playthrough
-    map.js             the Kattegat, rebuilt from the original's BUILD.BAS
+    map.js             the Kattegat tile map and its ports
     rules/             the game's rules: change GameState, emit events.
       sailing.js         No drawing, no keyboard.
       ship.js            damage and sinking, shared by every mode
@@ -55,9 +53,6 @@ src/
       MapScreen.js
       HarborScreen.js
 tests/                 Node tests for engine and rules: npm test
-docs/
-  original-regler.md   the original game's rules, in Danish
-KaptajnKaper_original/ the original 1985 source code (GPL v3)
 ```
 
 **The game loop** (`Game.frame`). The browser calls it before every repaint. It
@@ -75,14 +70,9 @@ calling `exit()` on the old one and `enter()` on the new one.
 **Input.** Keyboard events are turned into state the game can query:
 `isDown(code)` for held keys, `wasPressed(code)` for one-shot presses.
 
-**Tile maps.** The map is a grid of cells, `.` water and `#` land. `TileMap`
-answers "what's at (col, row)?"; the game decides what each character means.
-
-**The map comes from the original.** The 1985 game drew its map with BASIC's
-`DRAW` (turtle-graphics coastlines) and `PAINT` (flood-filling the land). We
-run the same commands through our own `drawCommands` interpreter into a
-`Bitmap`, twice: once at the original size to decide which cells are land, and
-once at screen size to draw it. The drawing is made once and cached.
+**Tile maps.** The map is an array of strings, one character per tile (`.` water,
+`#` land). `TileMap` answers "what's at (col, row)?"; the game decides what each
+character means and how to draw it.
 
 **Game state.** Stats that every mode shares (men, guns, money...) live in one
 `GameState` object that is handed from screen to screen.
