@@ -32,10 +32,12 @@ src/
     Input.js           keyboard state
     EventBus.js        on(event, fn) / emit(event, data)
     collision.js       rectsOverlap(a, b) for box collisions
+    loadImage.js       load an image file and wait until it's ready
     Screen.js          base class for a game mode
     TileMap.js         grid of tiles built from strings
   game/                everything specific to Kaptajn Kaper
     palette.js         colours and font
+    assets.js          loads the game's images before it starts
     GameState.js       the ship's stats for the current playthrough
     map.js             the Kattegat tile map; grid and ports as in the original
     rules/             the game's rules: change GameState, emit events.
@@ -52,6 +54,8 @@ src/
       TitleScreen.js
       MapScreen.js
       HarborScreen.js
+assets/
+  kattegat.svg         the map's land, drawn as SVG (10 units per cell)
 tests/                 Node tests for engine and rules: npm test
 docs/
   original-regler.md   the original game's rules, in Danish
@@ -76,6 +80,15 @@ calling `exit()` on the old one and `enter()` on the new one.
 **Tile maps.** The map is an array of strings, one character per tile (`.` water,
 `#` land). `TileMap` answers "what's at (col, row)?"; the game decides what each
 character means and how to draw it.
+
+**Graphics layer and collision layer.** The map has two layers that are kept
+apart: `assets/kattegat.svg` is what you *see* (smooth coastlines), and the
+text grid in `map.js` is what the ship *hits*. The picture can be redrawn
+without touching the rules, but the two must agree.
+
+**Loading assets.** Images load in the background, so `main.js` waits for
+`loadAssets()` before starting the game. After that, drawing code can use
+`IMAGES.kattegat` straight away.
 
 **Game state.** Stats that every mode shares (men, guns, money...) live in one
 `GameState` object that is handed from screen to screen.

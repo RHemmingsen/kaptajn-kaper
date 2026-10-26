@@ -1,6 +1,10 @@
-// Entry point: create the game, pick the first screen, start the loop.
+// Entry point: load the images, create the game, pick the first screen, start
+// the loop.
 import { Game } from './engine/Game.js';
+import { loadAssets } from './game/assets.js';
 import { TitleScreen } from './game/screens/TitleScreen.js';
+
+await loadAssets();
 
 const canvas = document.getElementById('game');
 const game = new Game(canvas);

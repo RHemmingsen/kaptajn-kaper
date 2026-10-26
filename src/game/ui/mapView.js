@@ -1,6 +1,7 @@
 // Drawing the sea map: tiles, ports and the ship.
 import { COLORS } from '../palette.js';
 import { CITIES } from '../map.js';
+import { IMAGES } from '../assets.js';
 import { label } from './draw.js';
 
 // Size of one tile in pixels. Not square: the original ran on screens whose
@@ -36,17 +37,9 @@ export function drawMap(ctx, map) {
   }
   ctx.stroke();
 
-  // 3. Paint land tiles on top, which hides the grid on land. The TileMap
-  // counts from 0, the map cells from 1, hence the + 1.
-  ctx.fillStyle = COLORS.brown;
-  for (let row = 0; row < map.height; row++) {
-    for (let col = 0; col < map.width; col++) {
-      if (map.get(col, row) === '#') {
-        const [x, y] = cellCorner(col + 1, row + 1);
-        ctx.fillRect(x, y, TILE_W, TILE_H);
-      }
-    }
-  }
+  // 3. The land picture on top, which hides the grid on land. It's only for
+  // looks: where the ship can sail is decided by the text grid in map.js.
+  ctx.drawImage(IMAGES.kattegat, MAP_X, MAP_Y, w, h);
 }
 
 export function drawCities(ctx) {
