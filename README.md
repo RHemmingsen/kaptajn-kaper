@@ -40,6 +40,7 @@ src/
     map.js             the Kattegat tile map and its ports
     rules/             the game's rules: change GameState, emit events.
       sailing.js         No drawing, no keyboard.
+      ship.js            damage and sinking, shared by every mode
       harbor.js          the harbor minigame: steering, wind, crashes
     ui/                drawing code, shared between screens
       draw.js            small helpers: clearScreen, polygon, label
@@ -91,8 +92,13 @@ parts of the game care about; everything else is a direct function call.
 **Real time vs turns.** The map is turn-based: one key press, one tile. The
 harbor runs in real time: the ship's position is in pixels and moves by
 `speed * dt` every step, so speeds are in pixels per second whatever the frame
-rate. Held keys (`isDown`) steer; the wind adds a constant sideways speed.
+rate. The ship sails down on its own, held keys (`isDown`) steer left and
+right, and the wind adds a constant sideways speed.
 
 **Collision boxes.** Everything in the harbor is a rectangle `{ x, y, w, h }`,
 and `rectsOverlap` checks whether two of them overlap. The drawings are made to
 fill those boxes, so what you see is what collides.
+
+**Game-wide events.** Some reactions apply whatever screen is showing. Those
+are set up once in `main.js` with `game.events.on(...)`; for example, when the
+ship sinks (`shipSunk`), the game goes back to the title screen.

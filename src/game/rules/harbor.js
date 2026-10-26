@@ -1,11 +1,14 @@
-// The rules for the harbor minigame: steer between the anchored ships and
-// through the gap in the docks while the wind pushes you sideways.
+// The rules for the harbor minigame. The ship sails down towards the harbor
+// on its own; you steer left and right between the anchored ships while the
+// wind pushes you sideways, and must hit the gap between the docks. Miss it
+// and the ship sinks.
 //
 // Unlike the map, this runs in real time. The ship has a position in pixels,
 // and every step it moves by speed * dt, where dt is the length of one step in
 // seconds. That way the speeds below mean "pixels per second", whatever the
 // frame rate is.
 import { rectsOverlap } from '../../engine/collision.js';
+import { damageShip, isSunk, sinkShip } from './ship.js';
 
 // Where things are, in pixels on the 640x480 screen.
 export const LAYOUT = {
@@ -27,9 +30,10 @@ const START = { x: 311, y: 40 };
 const SHIP_SIZE = { w: 18, h: 14 };
 const OBSTACLE_SIZE = { w: 16, h: 18 };
 
-const SHIP_SPEED = 90; // pixels per second, when holding an arrow key
-const WIND_MIN = 20; // wind speed range, pixels per second
-const WIND_MAX = 55;
+const SAIL_SPEED = 45; // pixels per second downwards, always
+const STEER_SPEED = 90; // pixels per second sideways, when holding an arrow key
+export const WIND_MAX = 55; // wind speed range, pixels per second
+const WIND_MIN = 20;
 const OBSTACLE_COUNT = 13;
 const CRASH_DAMAGE = 10; // Rep lost per crash
 const CRASH_MESSAGE_TIME = 1; // seconds the crash message stays up
@@ -43,7 +47,7 @@ export function createHarbor(city, random = Math.random) {
     ship: { ...START, ...SHIP_SIZE },
     wind: direction * (WIND_MIN + random() * (WIND_MAX - WIND_MIN)), // < 0 blows left
     obstacles: placeObstacles(random),
-    status: 'sailing', // 'sailing' | 'docked'
+    status: 'sailing', // 'sailing' | 'docked' | 'sunk'
     crashTimer: 0, // > 0 while the crash message is showing
   };
 }
@@ -73,41 +77,47 @@ function placeObstacles(random) {
 
 // Advance the harbor by dt seconds.
 //
-// `controls` says which directions are held: { left, right, up, down }. It's
-// plain booleans rather than key codes, so the rules don't know about the
-// keyboard.
+// `controls` says which directions are held: { left, right }. It's plain
+// booleans rather than key codes, so the rules don't know about the keyboard.
 //
-// Events emitted:
-//   harborCrash    { damage }
+// Events emitted (plus the ones from ship.js):
 //   enteredHarbor  { city }
 export function updateHarbor(harbor, controls, dt, state, events) {
   if (harbor.status !== 'sailing') return;
 
   harbor.crashTimer = Math.max(0, harbor.crashTimer - dt);
 
-  // 1. Move: steering plus wind.
+  // 1. Move: always down, plus steering and wind sideways.
   const ship = harbor.ship;
-  const steerX = (controls.right ? 1 : 0) - (controls.left ? 1 : 0);
-  const steerY = (controls.down ? 1 : 0) - (controls.up ? 1 : 0);
-  ship.x += (steerX * SHIP_SPEED + harbor.wind) * dt;
-  ship.y += steerY * SHIP_SPEED * dt;
+  const steer = (controls.right ? 1 : 0) - (controls.left ? 1 : 0);
+  ship.x += (steer * STEER_SPEED + harbor.wind) * dt;
+  ship.y += SAIL_SPEED * dt;
 
-  // 2. The harbor walls and the top edge just stop you.
+  // 2. The harbor walls just stop you.
   ship.x = Math.min(Math.max(ship.x, LAYOUT.wallLeft), LAYOUT.wallRight - ship.w);
-  ship.y = Math.max(ship.y, 0);
 
-  // 3. Hitting an anchored ship or a dock costs Rep and sends you back.
-  const hit = [...harbor.obstacles, ...DOCKS].some((r) => rectsOverlap(ship, r));
-  if (hit) {
-    state.repair = Math.max(0, state.repair - CRASH_DAMAGE);
-    ship.x = START.x;
-    ship.y = START.y;
-    harbor.crashTimer = CRASH_MESSAGE_TIME;
-    events.emit('harborCrash', { damage: CRASH_DAMAGE });
+  // 3. Missing the gap and hitting a dock sinks the ship.
+  if (DOCKS.some((dock) => rectsOverlap(ship, dock))) {
+    harbor.status = 'sunk';
+    sinkShip(state, events);
     return;
   }
 
-  // 4. All the way past the docks means you made it in.
+  // 4. Hitting an anchored ship costs Rep and sends you back to the start,
+  //    unless that was the last of the Rep.
+  if (harbor.obstacles.some((obstacle) => rectsOverlap(ship, obstacle))) {
+    damageShip(state, CRASH_DAMAGE, events);
+    if (isSunk(state)) {
+      harbor.status = 'sunk';
+      return;
+    }
+    ship.x = START.x;
+    ship.y = START.y;
+    harbor.crashTimer = CRASH_MESSAGE_TIME;
+    return;
+  }
+
+  // 5. All the way past the docks means you made it in.
   if (ship.y > LAYOUT.dockTop + LAYOUT.dockHeight) {
     harbor.status = 'docked';
     events.emit('enteredHarbor', { city: harbor.city });

@@ -8,7 +8,6 @@ import { createHarbor, updateHarbor, LAYOUT } from '../src/game/rules/harbor.js'
 
 const DT = 1 / 60;
 const NO_KEYS = {};
-const HOLD_DOWN = { down: true };
 const SKAGEN = { name: 'Skagen' };
 
 // A predictable stand-in for Math.random, so every run builds the same harbor.
@@ -35,7 +34,7 @@ function play(harbor, controls, seconds, state, events) {
 function recordEvents() {
   const events = new EventBus();
   const log = [];
-  for (const name of ['harborCrash', 'enteredHarbor']) {
+  for (const name of ['shipDamaged', 'shipSunk', 'enteredHarbor']) {
     events.on(name, (data) => log.push({ name, data }));
   }
   return { events, log };
@@ -51,6 +50,30 @@ test('a new harbor has its anchored ships spread out', () => {
       assert.ok(apart, 'two anchored ships are too close');
     }
   }
+});
+
+test('the ship sails downwards on its own', () => {
+  const harbor = emptyHarbor();
+  const start = { x: harbor.ship.x, y: harbor.ship.y };
+  const { events } = recordEvents();
+
+  play(harbor, NO_KEYS, 1, new GameState(), events);
+
+  assert.ok(harbor.ship.y > start.y + 40);
+  assert.equal(harbor.ship.x, start.x);
+});
+
+test('the arrow keys steer left and right', () => {
+  const left = emptyHarbor();
+  const right = emptyHarbor();
+  const startX = left.ship.x;
+  const { events } = recordEvents();
+
+  play(left, { left: true }, 0.5, new GameState(), events);
+  play(right, { right: true }, 0.5, new GameState(), events);
+
+  assert.ok(left.ship.x < startX);
+  assert.ok(right.ship.x > startX);
 });
 
 test('the wind pushes the ship sideways, in pixels per second', () => {
@@ -81,11 +104,25 @@ test('hitting an anchored ship costs Rep and sends you back to the start', () =>
   const state = new GameState();
   const { events, log } = recordEvents();
 
-  play(harbor, HOLD_DOWN, 0.3, state, events); // long enough to hit it once
+  play(harbor, NO_KEYS, 0.5, state, events); // long enough to hit it once
 
   assert.equal(state.repair, 190);
-  assert.deepEqual(log, [{ name: 'harborCrash', data: { damage: 10 } }]);
+  assert.deepEqual(log, [{ name: 'shipDamaged', data: { amount: 10 } }]);
   assert.ok(harbor.ship.y < start.y + 30, 'ship should be back near the start');
+});
+
+test('a crash that takes the last Rep sinks the ship', () => {
+  const harbor = emptyHarbor();
+  harbor.obstacles = [{ x: harbor.ship.x, y: harbor.ship.y + 30, w: 16, h: 18 }];
+  const state = new GameState();
+  state.repair = 10;
+  const { events, log } = recordEvents();
+
+  play(harbor, NO_KEYS, 2, state, events);
+
+  assert.equal(harbor.status, 'sunk');
+  assert.equal(state.repair, 0);
+  assert.deepEqual(log.map((e) => e.name), ['shipDamaged', 'shipSunk']);
 });
 
 test('sailing through the gap docks the ship', () => {
@@ -94,22 +131,22 @@ test('sailing through the gap docks the ship', () => {
   const state = new GameState();
   const { events, log } = recordEvents();
 
-  play(harbor, HOLD_DOWN, 10, state, events);
+  play(harbor, NO_KEYS, 12, state, events);
 
   assert.equal(harbor.status, 'docked');
   assert.equal(state.repair, 200);
   assert.deepEqual(log, [{ name: 'enteredHarbor', data: { city: SKAGEN } }]);
 });
 
-test('sailing into a dock is a crash', () => {
+test('missing the gap and hitting a dock sinks the ship', () => {
   const harbor = emptyHarbor();
   harbor.ship.x = 100; // over the left dock
   const state = new GameState();
   const { events, log } = recordEvents();
 
-  play(harbor, HOLD_DOWN, 5, state, events);
+  play(harbor, NO_KEYS, 12, state, events);
 
-  assert.equal(harbor.status, 'sailing');
-  assert.ok(state.repair < 200);
-  assert.equal(log[0].name, 'harborCrash');
+  assert.equal(harbor.status, 'sunk');
+  assert.equal(state.repair, 0);
+  assert.deepEqual(log.map((e) => e.name), ['shipSunk']);
 });

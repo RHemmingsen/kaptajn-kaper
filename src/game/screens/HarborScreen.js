@@ -6,7 +6,8 @@ import { drawHarbor } from '../ui/harborView.js';
 import { MapScreen } from './MapScreen.js';
 
 // The harbor minigame, played when the ship sails into a port on the map.
-// Arrow keys steer (hold them down), Esc gives up and goes back to sea.
+// Left/right arrows steer (hold them down), Esc gives up and goes back to sea.
+// If the ship sinks, the shipSunk listener in main.js ends the game.
 export class HarborScreen extends Screen {
   constructor(game, state, city) {
     super(game);
@@ -30,8 +31,6 @@ export class HarborScreen extends Screen {
     const controls = {
       left: input.isDown('ArrowLeft'),
       right: input.isDown('ArrowRight'),
-      up: input.isDown('ArrowUp'),
-      down: input.isDown('ArrowDown'),
     };
     updateHarbor(this.harbor, controls, dt, this.state, this.game.events);
   }
