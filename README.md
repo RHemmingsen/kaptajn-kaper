@@ -84,7 +84,8 @@ character means and how to draw it.
 **Graphics layer and collision layer.** The map has two layers that are kept
 apart: `assets/kattegat.svg` is what you *see* (smooth coastlines), and the
 text grid in `map.js` is what the ship *hits*. The picture can be redrawn
-without touching the rules, but the two must agree.
+without touching the rules, but the two must agree. Press **G** on the map to
+see the collision grid on top of the picture (`game.debug.showCollision`).
 
 **Loading assets.** Images load in the background, so `main.js` waits for
 `loadAssets()` before starting the game. After that, drawing code can use

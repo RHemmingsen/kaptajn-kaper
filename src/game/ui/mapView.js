@@ -1,6 +1,7 @@
 // Drawing the sea map: tiles, ports and the ship.
 import { COLORS } from '../palette.js';
-import { CITIES } from '../map.js';
+import { CITIES, KATTEGAT } from '../map.js';
+import { canSailTo } from '../rules/sailing.js';
 import { IMAGES } from '../assets.js';
 import { label } from './draw.js';
 
@@ -40,6 +41,26 @@ export function drawMap(ctx, map) {
   // 3. The land picture on top, which hides the grid on land. It's only for
   // looks: where the ship can sail is decided by the text grid in map.js.
   ctx.drawImage(IMAGES.kattegat, MAP_X, MAP_Y, w, h);
+}
+
+// Debug view: a see-through red box on every cell the ship can't sail into,
+// so you can check that the picture and the collision grid agree. It asks
+// the sailing rules, so it shows exactly what the ship will hit.
+export function drawCollisionOverlay(ctx) {
+  ctx.fillStyle = 'rgba(255, 0, 0, 0.35)';
+  ctx.strokeStyle = 'rgba(255, 0, 0, 0.8)';
+  ctx.lineWidth = 1;
+  for (let row = 1; row <= KATTEGAT.height; row++) {
+    for (let col = 1; col <= KATTEGAT.width; col++) {
+      if (canSailTo(col, row)) continue;
+      const [x, y] = cellCorner(col, row);
+      ctx.fillRect(x, y, TILE_W, TILE_H);
+      ctx.strokeRect(x + 0.5, y + 0.5, TILE_W - 1, TILE_H - 1);
+    }
+  }
+
+  const bottom = MAP_Y + KATTEGAT.height * TILE_H;
+  label(ctx, 'DEBUG: kollision (G)', MAP_X + 8, bottom - 14, COLORS.white);
 }
 
 export function drawCities(ctx) {

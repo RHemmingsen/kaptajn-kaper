@@ -3,7 +3,9 @@ import { COLORS } from '../palette.js';
 import { KATTEGAT, cityAt } from '../map.js';
 import { sail } from '../rules/sailing.js';
 import { clearScreen, label } from '../ui/draw.js';
-import { drawMap, drawCities, drawCityName, drawShip } from '../ui/mapView.js';
+import {
+  drawMap, drawCollisionOverlay, drawCities, drawCityName, drawShip,
+} from '../ui/mapView.js';
 import { drawStatusPanel } from '../ui/statusPanel.js';
 import { HarborScreen } from './HarborScreen.js';
 import { TitleScreen } from './TitleScreen.js';
@@ -43,6 +45,11 @@ export class MapScreen extends Screen {
       return;
     }
 
+    // G toggles the debug view of the collision grid.
+    if (input.wasPressed('KeyG')) {
+      this.game.debug.showCollision = !this.game.debug.showCollision;
+    }
+
     // One step per update at most. Sailing can switch to the harbor screen,
     // and this screen must not keep moving the ship after that.
     for (const [key, direction] of Object.entries(KEY_TO_DIRECTION)) {
@@ -57,6 +64,7 @@ export class MapScreen extends Screen {
     clearScreen(ctx);
     this.drawFrame(ctx);
     drawMap(ctx, KATTEGAT);
+    if (this.game.debug.showCollision) drawCollisionOverlay(ctx);
     drawCities(ctx);
     if (this.portCity) drawCityName(ctx, this.portCity);
     drawShip(ctx, this.state.ship);

@@ -22,6 +22,10 @@ export class Game {
     this.events = new EventBus();
     this.screen = null;
 
+    // Developer switches, like showing collision boxes. They live on the
+    // Game rather than a screen, so they stay on when the screen changes.
+    this.debug = {};
+
     this.lastTime = 0;
     this.accumulator = 0;
   }
