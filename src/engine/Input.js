@@ -19,6 +19,11 @@
 // That keeps every key in one place in the game, and lets several keys do the
 // same thing. Key names are the browser's KeyboardEvent.code values, which
 // name the physical key whatever the keyboard layout.
+//
+// Typing is different: when the player writes a number or a letter, what
+// matters is the character, not which key made it. typedText() gives the
+// characters typed since the last update, using the keyboard layout (so
+// Shift+7 on a Danish keyboard is '/').
 export class Input {
   // `bindings` is { actionName: [keyCode, ...], ... }. There's no Input
   // without them, so a game can't forget to set its keys.
@@ -27,6 +32,7 @@ export class Input {
   constructor(bindings, target = window) {
     this.down = new Set();
     this.pressed = new Set();
+    this.typed = '';
     this.setBindings(bindings);
 
     target.addEventListener('keydown', (e) => {
@@ -34,7 +40,12 @@ export class Input {
       // keys, opening its help page on F1, ...).
       if (this.isBound(e.code)) e.preventDefault();
       // Holding a key makes the OS repeat keydown events; only count the first one.
-      if (!e.repeat) this.pressed.add(e.code);
+      if (!e.repeat) {
+        this.pressed.add(e.code);
+        // e.key is the character for printable keys ('7', 'k'), and a name
+        // like 'Enter' or 'Shift' for the rest.
+        if (e.key.length === 1) this.typed += e.key;
+      }
       this.down.add(e.code);
     });
 
@@ -80,9 +91,16 @@ export class Input {
     return this.pressed.size > 0;
   }
 
-  // Called by the game loop after every update, so "pressed" only lasts one step.
+  // The characters typed since the last update, e.g. '12' or 'k'.
+  typedText() {
+    return this.typed;
+  }
+
+  // Called by the game loop after every update, so "pressed" and the typed
+  // text only last one step.
   endStep() {
     this.pressed.clear();
+    this.typed = '';
   }
 
   // An action nobody bound is almost always a typo, so fail loudly.

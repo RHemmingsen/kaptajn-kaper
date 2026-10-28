@@ -20,8 +20,13 @@ export const CONTROLS = {
   steerLeft: ['ArrowLeft', 'Digit4', 'Numpad4'],
   steerRight: ['ArrowRight', 'Digit6', 'Numpad6'],
 
-  // On the map it ends the game; in the harbor it turns back to sea.
+  // On the map it ends the game; in the harbor it turns back to sea; in a
+  // port it goes back a step.
   leave: ['Escape'],
+
+  // Typing a number, e.g. how many to buy.
+  confirm: ['Enter', 'NumpadEnter'],
+  erase: ['Backspace'],
 
   // Shown on the map ("F1:Hjælp", "F2:lyd") but not made yet. Bound already
   // so the browser doesn't open its own help page on F1.

@@ -11,7 +11,9 @@ function setup() {
 
   // Send a key event, and return it so tests can check what Input did to it.
   const send = (type, code, extra = {}) => {
-    const event = Object.assign(new Event(type, { cancelable: true }), { code, repeat: false }, extra);
+    const event = Object.assign(
+      new Event(type, { cancelable: true }), { code, key: code, repeat: false }, extra,
+    );
     target.dispatchEvent(event);
     return event;
   };
@@ -102,4 +104,27 @@ test('new bindings replace the old ones completely', () => {
   assert.throws(() => input.isActionDown('steerLeft'), /No keys are bound/);
   send('keydown', 'Space');
   assert.equal(input.wasActionPressed('fire'), true);
+});
+
+test('typed text is the characters typed this step', () => {
+  const { input, send } = setup();
+
+  send('keydown', 'Digit1', { key: '1' });
+  send('keydown', 'Numpad2', { key: '2' });
+  send('keydown', 'KeyK', { key: 'k' });
+  send('keydown', 'Enter', { key: 'Enter' }); // not a character
+  send('keydown', 'ShiftLeft', { key: 'Shift' }); // not a character
+
+  assert.equal(input.typedText(), '12k');
+  input.endStep();
+  assert.equal(input.typedText(), '');
+});
+
+test('holding a key down does not type it again', () => {
+  const { input, send } = setup();
+
+  send('keydown', 'Digit5', { key: '5' });
+  send('keydown', 'Digit5', { key: '5', repeat: true });
+
+  assert.equal(input.typedText(), '5');
 });
