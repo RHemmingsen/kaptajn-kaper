@@ -128,3 +128,16 @@ test('holding a key down does not type it again', () => {
 
   assert.equal(input.typedText(), '5');
 });
+
+test('"repeated" is a press, and every repeat while the key is held', () => {
+  const { input, send } = setup();
+
+  send('keydown', 'KeyF');
+  assert.equal(input.wasActionRepeated('fire'), true);
+  input.endStep();
+  assert.equal(input.wasActionRepeated('fire'), false, 'held, but not repeated this step');
+
+  send('keydown', 'KeyF', { repeat: true });
+  assert.equal(input.wasActionRepeated('fire'), true);
+  assert.equal(input.wasActionPressed('fire'), false, 'a repeat is not a new press');
+});

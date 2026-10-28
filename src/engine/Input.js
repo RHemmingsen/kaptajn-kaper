@@ -13,8 +13,10 @@
 //
 // and then asks about actions:
 //
-//   input.isActionDown('steerLeft')     held right now (steering)
-//   input.wasActionPressed('steerLeft') pressed since the last update (one step)
+//   input.isActionDown('steerLeft')       held right now (steering)
+//   input.wasActionPressed('steerLeft')   pressed since the last update (one step)
+//   input.wasActionRepeated('aimUp')      pressed, or repeated by the OS because
+//                                         it's held down (moving a cursor)
 //
 // That keeps every key in one place in the game, and lets several keys do the
 // same thing. Key names are the browser's KeyboardEvent.code values, which
@@ -32,6 +34,7 @@ export class Input {
   constructor(bindings, target = window) {
     this.down = new Set();
     this.pressed = new Set();
+    this.repeated = new Set(); // pressed, or repeated while held
     this.typed = '';
     this.setBindings(bindings);
 
@@ -46,6 +49,7 @@ export class Input {
         // like 'Enter' or 'Shift' for the rest.
         if (e.key.length === 1) this.typed += e.key;
       }
+      this.repeated.add(e.code);
       this.down.add(e.code);
     });
 
@@ -86,6 +90,13 @@ export class Input {
     return this.keysFor(action).some((code) => this.pressed.has(code));
   }
 
+  // Like wasActionPressed, but also true each time the operating system
+  // repeats a held-down key, at the player's own key-repeat speed. For moving
+  // something one step per press, faster when held.
+  wasActionRepeated(action) {
+    return this.keysFor(action).some((code) => this.repeated.has(code));
+  }
+
   // For "press any key to continue", which isn't an action.
   anyKeyPressed() {
     return this.pressed.size > 0;
@@ -100,6 +111,7 @@ export class Input {
   // text only last one step.
   endStep() {
     this.pressed.clear();
+    this.repeated.clear();
     this.typed = '';
   }
 
