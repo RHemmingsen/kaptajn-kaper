@@ -10,24 +10,17 @@ import { drawStatusPanel } from '../ui/statusPanel.js';
 import { HarborScreen } from './HarborScreen.js';
 import { TitleScreen } from './TitleScreen.js';
 
-// Which key means which sailing direction. As in the original: the arrow
-// keys, or the number keys laid out like a compass (7 8 9 / 4 6 / 1 2 3),
-// where the corners sail diagonally. Both the number row and the numeric
-// keypad work.
-const KEY_TO_DIRECTION = {
-  ArrowUp: 'up',
-  ArrowDown: 'down',
-  ArrowLeft: 'left',
-  ArrowRight: 'right',
+// Which action sails which way. The keys for each action are in controls.js.
+const SAIL_ACTIONS = {
+  sailUp: 'up',
+  sailDown: 'down',
+  sailLeft: 'left',
+  sailRight: 'right',
+  sailUpLeft: 'upLeft',
+  sailUpRight: 'upRight',
+  sailDownLeft: 'downLeft',
+  sailDownRight: 'downRight',
 };
-const NUMBER_KEYS = {
-  8: 'up', 2: 'down', 4: 'left', 6: 'right',
-  7: 'upLeft', 9: 'upRight', 1: 'downLeft', 3: 'downRight',
-};
-for (const [digit, direction] of Object.entries(NUMBER_KEYS)) {
-  KEY_TO_DIRECTION[`Digit${digit}`] = direction;
-  KEY_TO_DIRECTION[`Numpad${digit}`] = direction;
-}
 
 // The main screen: sail the ship around the Kattegat, one tile per key press.
 // The screen only connects things: keys go to the sailing rules, and the
@@ -51,20 +44,19 @@ export class MapScreen extends Screen {
   update(dt) {
     const input = this.game.input;
 
-    if (input.wasPressed('Escape')) {
+    if (input.wasActionPressed('leave')) {
       this.game.setScreen(new TitleScreen(this.game));
       return;
     }
 
-    // G toggles the debug view of the collision grid.
-    if (input.wasPressed('KeyG')) {
+    if (input.wasActionPressed('debugCollision')) {
       this.game.debug.showCollision = !this.game.debug.showCollision;
     }
 
     // One step per update at most. Sailing can switch to the harbor screen,
     // and this screen must not keep moving the ship after that.
-    for (const [key, direction] of Object.entries(KEY_TO_DIRECTION)) {
-      if (input.wasPressed(key)) {
+    for (const [action, direction] of Object.entries(SAIL_ACTIONS)) {
+      if (input.wasActionPressed(action)) {
         sail(this.state, direction, this.game.events);
         break;
       }

@@ -29,7 +29,7 @@ src/
   main.js              creates the Game, sets the first screen, starts the loop
   engine/              reusable engine code, knows nothing about pirates
     Game.js            canvas, game loop, active screen
-    Input.js           keyboard state
+    Input.js           keyboard input as named actions
     EventBus.js        on(event, fn) / emit(event, data)
     collision.js       rectsOverlap(a, b) for box collisions
     loadImage.js       load an image file and wait until it's ready
@@ -37,6 +37,7 @@ src/
     TileMap.js         grid of tiles built from strings
   game/                everything specific to Kaptajn Kaper
     palette.js         colours and font
+    controls.js        every key the game uses, as named actions
     assets.js          loads the game's images before it starts
     GameState.js       the ship's stats for the current playthrough
     map.js             the Kattegat tile map; grid and ports as in the original
@@ -74,8 +75,11 @@ times in a frame while drawing always happens once.
 The Game holds exactly one, and `game.setScreen(...)` switches between them,
 calling `exit()` on the old one and `enter()` on the new one.
 
-**Input.** Keyboard events are turned into state the game can query:
-`isDown(code)` for held keys, `wasPressed(code)` for one-shot presses.
+**Input.** Keyboard events are turned into state the game can query, as
+named actions: `isActionDown('steerLeft')` for held keys,
+`wasActionPressed('sailUp')` for one-shot presses. The engine provides the
+mechanism; which keys trigger which action is the game's business and lives in
+one place, `game/controls.js`. Screens never ask about keys directly.
 
 **Tile maps.** The map is an array of strings, one character per tile (`.` water,
 `#` land). `TileMap` answers "what's at (col, row)?"; the game decides what each
