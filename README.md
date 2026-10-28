@@ -47,11 +47,14 @@ src/
       ship.js            damage and sinking, shared by every mode
       harbor.js          the harbor minigame: steering, wind, crashes
       trade.js           prices, buying and selling in a port
+      sea.js             what the lookout spots: ships and fog banks
+      career.js          your rank (skibsfører ... admiral)
     ui/                drawing code, shared between screens
       draw.js            small helpers: clearScreen, polygon, label
       mapView.js         the sea map, ports and ship
       harborView.js      the harbor minigame
       portView.js        the trading menu in a port
+      seaView.js         what the lookout reports, and what was in the fog
       statusPanel.js     the Træk/Rgsdl/Korn... table
       titleArt.js        the title screen picture
     screens/           thin glue: read input -> call rules -> draw
@@ -59,6 +62,7 @@ src/
       MapScreen.js
       HarborScreen.js
       PortScreen.js
+      SeaEventScreen.js
 assets/
   kattegat.svg         the map's land, drawn as SVG (10 units per cell)
 tests/                 Node tests for engine and rules: npm test
@@ -125,6 +129,10 @@ harbor runs in real time: the ship's position is in pixels and moves by
 `speed * dt` every step, so speeds are in pixels per second whatever the frame
 rate. The ship sails down on its own, held keys (`isDown`) steer left and
 right, and the wind adds a constant sideways speed.
+
+**Controlling chance.** Rules that roll dice take a `random` function
+(returning 0..1, `Math.random` by default). The game uses the real thing; tests
+pass their own, so they decide exactly what happens.
 
 **Collision boxes.** Everything in the harbor is a rectangle `{ x, y, w, h }`,
 and `rectsOverlap` checks whether two of them overlap. The drawings are made to

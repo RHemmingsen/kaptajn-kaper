@@ -8,6 +8,7 @@ import {
 } from '../ui/mapView.js';
 import { drawStatusPanel } from '../ui/statusPanel.js';
 import { HarborScreen } from './HarborScreen.js';
+import { SeaEventScreen } from './SeaEventScreen.js';
 import { TitleScreen } from './TitleScreen.js';
 
 // Which action sails which way. The keys for each action are in controls.js.
@@ -38,6 +39,9 @@ export class MapScreen extends Screen {
     this.listen('shipMoved', () => { this.portCity = null; });
     this.listen('arrivedAtPort', ({ city }) => {
       this.game.setScreen(new HarborScreen(this.game, this.state, city));
+    });
+    this.listen('seaEvent', (seaEvent) => {
+      this.game.setScreen(new SeaEventScreen(this.game, this.state, seaEvent));
     });
   }
 
