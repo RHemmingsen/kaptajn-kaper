@@ -111,17 +111,17 @@ test('hitting an anchored ship costs Rep and sends you back to the start', () =>
   assert.ok(harbor.ship.y < start.y + 30, 'ship should be back near the start');
 });
 
-test('a crash that takes the last Rep sinks the ship', () => {
+test('a crash that takes Rep down to 20 or less sinks the ship', () => {
   const harbor = emptyHarbor();
   harbor.obstacles = [{ x: harbor.ship.x, y: harbor.ship.y + 30, w: 16, h: 18 }];
   const state = new GameState();
-  state.repair = 10;
+  state.repair = 30; // one crash takes 10
   const { events, log } = recordEvents();
 
   play(harbor, NO_KEYS, 2, state, events);
 
   assert.equal(harbor.status, 'sunk');
-  assert.equal(state.repair, 0);
+  assert.equal(state.sunk, true);
   assert.deepEqual(log.map((e) => e.name), ['shipDamaged', 'shipSunk']);
 });
 
@@ -147,6 +147,7 @@ test('missing the gap and hitting a dock sinks the ship', () => {
   play(harbor, NO_KEYS, 12, state, events);
 
   assert.equal(harbor.status, 'sunk');
-  assert.equal(state.repair, 0);
+  assert.equal(state.sunk, true);
+  assert.equal(state.repair, 200, 'a wreck on the pier sinks the ship whatever its Rep');
   assert.deepEqual(log.map((e) => e.name), ['shipSunk']);
 });

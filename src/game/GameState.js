@@ -21,6 +21,10 @@ export class GameState {
     this.guns = 20; // Skyts
     this.repair = 200; // Rep: the ship's condition
 
+    // True once the ship is lost, by damage, a starved crew or a wreck. The
+    // game is over then. See rules/ship.js.
+    this.sunk = false;
+
     this.ship = { col: 10, row: 10 }; // as in the original
   }
 }

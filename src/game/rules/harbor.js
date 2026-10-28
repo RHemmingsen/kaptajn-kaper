@@ -104,7 +104,7 @@ export function updateHarbor(harbor, controls, dt, state, events) {
   }
 
   // 4. Hitting an anchored ship costs Rep and sends you back to the start,
-  //    unless that was the last of the Rep.
+  //    unless the damage sinks the ship.
   if (harbor.obstacles.some((obstacle) => rectsOverlap(ship, obstacle))) {
     damageShip(state, CRASH_DAMAGE, events);
     if (isSunk(state)) {

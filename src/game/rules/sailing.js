@@ -2,7 +2,7 @@
 // knows about the keyboard or the canvas: it takes the game state, changes
 // it, and announces what happened.
 import { tileAt, cityAt } from '../map.js';
-import { crewEats, damageShip } from './ship.js';
+import { crewEats, damageShip, isSunk } from './ship.js';
 
 // How each direction changes the ship's position, as [columns, rows].
 export const DIRECTIONS = {
@@ -26,7 +26,8 @@ export function canSailTo(col, row) {
 // Try to sail one cell in a direction. Returns true if the ship moved.
 //
 //   - Off the edge of the map: nothing happens.
-//   - Every other attempt is a move (Træk), and the crew eats.
+//   - Every other attempt is a move (Træk), and the crew eats. If that
+//     starves the crew to death, the ship is lost and goes nowhere.
 //   - Into land: the ship runs aground. It stays where it is and loses Rep.
 //
 // Events emitted (plus the ones from ship.js):
@@ -42,6 +43,7 @@ export function sail(state, direction, events) {
 
   state.moves += 1;
   crewEats(state, events);
+  if (isSunk(state)) return false;
 
   if (!canSailTo(col, row)) {
     events.emit('shipRanAground', { col, row });

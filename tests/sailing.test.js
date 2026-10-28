@@ -82,3 +82,16 @@ test('the edge of the map stops the ship and costs nothing', () => {
   assert.equal(state.grain, 30);
   assert.deepEqual(log, []);
 });
+
+test('if the crew starves to death, the ship is lost and goes nowhere', () => {
+  const state = new GameState();
+  state.men = 11; // a tenth will starve, leaving 9: too few to sail
+  state.grain = 0;
+  state.ship = { col: 8, row: 10 }; // Samsø is just to the left
+  const { events, log } = recordEvents();
+
+  assert.equal(sail(state, 'left', events), false);
+  assert.equal(state.sunk, true);
+  assert.equal(state.repair, 200, 'the lost ship does not also run aground');
+  assert.deepEqual(log.map((e) => e.name), ['shipSunk']);
+});
