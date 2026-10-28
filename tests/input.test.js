@@ -6,8 +6,8 @@ import { Input } from '../src/engine/Input.js';
 
 function setup() {
   const target = new EventTarget();
-  const input = new Input(target);
-  input.setBindings({ steerLeft: ['ArrowLeft', 'Numpad4'], fire: ['KeyF'] });
+  const bindings = { steerLeft: ['ArrowLeft', 'Numpad4'], fire: ['KeyF'] };
+  const input = new Input(bindings, target);
 
   // Send a key event, and return it so tests can check what Input did to it.
   const send = (type, code, extra = {}) => {
@@ -15,7 +15,7 @@ function setup() {
     target.dispatchEvent(event);
     return event;
   };
-  return { target, input, send };
+  return { target, bindings, input, send };
 }
 
 test('any of an action\'s keys triggers it', () => {
@@ -78,4 +78,28 @@ test('asking about an action with no keys is an error', () => {
   const { input } = setup();
 
   assert.throws(() => input.wasActionPressed('steerLeftt'), /No keys are bound to the action 'steerLeftt'/);
+});
+
+test('there is no Input without key bindings', () => {
+  assert.throws(() => new Input(undefined, new EventTarget()), /Input needs key bindings/);
+});
+
+test('changing the bindings object afterwards does not change the Input', () => {
+  const { bindings, input, send } = setup();
+
+  bindings.fire.push('Space');
+  send('keydown', 'Space');
+
+  assert.equal(input.wasActionPressed('fire'), false);
+});
+
+test('new bindings replace the old ones completely', () => {
+  const { input, send } = setup();
+
+  input.setBindings({ fire: ['Space'] });
+
+  assert.equal(send('keydown', 'ArrowLeft').defaultPrevented, false);
+  assert.throws(() => input.isActionDown('steerLeft'), /No keys are bound/);
+  send('keydown', 'Space');
+  assert.equal(input.wasActionPressed('fire'), true);
 });

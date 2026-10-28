@@ -79,7 +79,9 @@ calling `exit()` on the old one and `enter()` on the new one.
 named actions: `isActionDown('steerLeft')` for held keys,
 `wasActionPressed('sailUp')` for one-shot presses. The engine provides the
 mechanism; which keys trigger which action is the game's business and lives in
-one place, `game/controls.js`. Screens never ask about keys directly.
+one place, `game/controls.js`. `main.js` hands them over when the game is made,
+`new Game(canvas, { controls: CONTROLS })`, so there is no Input without keys.
+Screens never ask about keys directly.
 
 **Tile maps.** The map is an array of strings, one character per tile (`.` water,
 `#` land). `TileMap` answers "what's at (col, row)?"; the game decides what each

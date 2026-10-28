@@ -11,14 +11,17 @@ const MAX_FRAME_TIME = 0.25;
 
 // The Game owns the canvas, the input, the event bus and the loop, and holds
 // the active screen.
+//
+// `controls` is the game's key bindings, { actionName: [keyCode, ...], ... },
+// handed on to the Input. See Input.js.
 export class Game {
-  constructor(canvas) {
+  constructor(canvas, { controls } = {}) {
     this.canvas = canvas;
     this.ctx = canvas.getContext('2d');
     this.width = canvas.width;
     this.height = canvas.height;
 
-    this.input = new Input();
+    this.input = new Input(controls);
     this.events = new EventBus();
     this.screen = null;
 

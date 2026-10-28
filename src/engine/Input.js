@@ -7,9 +7,9 @@
 // last update.
 //
 // The game never asks about keys directly, though. It names its actions and
-// says which keys trigger each one:
+// says which keys trigger each one, when the Input is made:
 //
-//   input.setBindings({ steerLeft: ['ArrowLeft', 'Numpad4'], ... });
+//   new Input({ steerLeft: ['ArrowLeft', 'Numpad4'], ... });
 //
 // and then asks about actions:
 //
@@ -20,18 +20,19 @@
 // same thing. Key names are the browser's KeyboardEvent.code values, which
 // name the physical key whatever the keyboard layout.
 export class Input {
+  // `bindings` is { actionName: [keyCode, ...], ... }. There's no Input
+  // without them, so a game can't forget to set its keys.
   // `target` is what to listen on: the browser window normally, something
   // else in tests.
-  constructor(target = window) {
+  constructor(bindings, target = window) {
     this.down = new Set();
     this.pressed = new Set();
-    this.bindings = new Map(); // action -> key codes
-    this.boundKeys = new Set();
+    this.setBindings(bindings);
 
     target.addEventListener('keydown', (e) => {
       // Stop the browser acting on keys the game uses (scrolling on arrow
       // keys, opening its help page on F1, ...).
-      if (this.boundKeys.has(e.code)) e.preventDefault();
+      if (this.isBound(e.code)) e.preventDefault();
       // Holding a key makes the OS repeat keydown events; only count the first one.
       if (!e.repeat) this.pressed.add(e.code);
       this.down.add(e.code);
@@ -45,10 +46,25 @@ export class Input {
     target.addEventListener('blur', () => this.down.clear());
   }
 
-  // Replace all bindings: { actionName: [keyCode, ...], ... }.
+  // Replace all bindings, e.g. if the player changes their keys.
   setBindings(bindings) {
-    this.bindings = new Map(Object.entries(bindings));
-    this.boundKeys = new Set(Object.values(bindings).flat());
+    if (!bindings) {
+      throw new Error('Input needs key bindings: { actionName: [keyCode, ...], ... }');
+    }
+    // A Map holds only what we put in it (a plain object would also "have"
+    // toString, constructor, ...). The key lists are copied, so later changes
+    // to the caller's object can't reach in here.
+    this.bindings = new Map(
+      Object.entries(bindings).map(([action, codes]) => [action, [...codes]]),
+    );
+  }
+
+  // Does the game use this key for any action?
+  isBound(code) {
+    for (const codes of this.bindings.values()) {
+      if (codes.includes(code)) return true;
+    }
+    return false;
   }
 
   isActionDown(action) {
