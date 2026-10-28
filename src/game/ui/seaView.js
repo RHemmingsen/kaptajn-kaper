@@ -31,6 +31,13 @@ function linesFor({ step, ship, outcome, rank }) {
         '',
         'Vil du angribe (a) eller flygte (f)?',
       ];
+    case 'attackHow':
+      return [
+        `${shipName(ship)} i sigte!`,
+        '',
+        'Vil du borde hende (b) eller',
+        'vil du skyde (s) på hende?',
+      ];
     case 'fog':
       return [
         'Udkiggen melder:',
@@ -45,9 +52,9 @@ function linesFor({ step, ship, outcome, rank }) {
       ];
     case 'outcome':
       return [...outcomeLines(outcome), '', pressAnyKey];
-    case 'noBattle':
+    case 'noBoarding':
       return [
-        'Kampen er ikke bygget endnu.',
+        'Bordning er ikke bygget endnu.',
         `${shipName(ship)} sejler sin vej.`,
         '',
         pressAnyKey,

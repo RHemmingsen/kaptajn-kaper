@@ -20,6 +20,20 @@ export const CONTROLS = {
   steerLeft: ['ArrowLeft', 'Digit4', 'Numpad4'],
   steerRight: ['ArrowRight', 'Digit6', 'Numpad6'],
 
+  // In a gun battle. As in the original: the arrow keys or the number keys
+  // like a compass move the sights (hold to keep moving), F fires, 0 breaks
+  // off the battle.
+  aimUp: ['ArrowUp', 'Digit8', 'Numpad8'],
+  aimDown: ['ArrowDown', 'Digit2', 'Numpad2'],
+  aimLeft: ['ArrowLeft', 'Digit4', 'Numpad4'],
+  aimRight: ['ArrowRight', 'Digit6', 'Numpad6'],
+  aimUpLeft: ['Digit7', 'Numpad7'],
+  aimUpRight: ['Digit9', 'Numpad9'],
+  aimDownLeft: ['Digit1', 'Numpad1'],
+  aimDownRight: ['Digit3', 'Numpad3'],
+  fire: ['KeyF'],
+  breakOff: ['Digit0', 'Numpad0'],
+
   // On the map it ends the game; in the harbor it turns back to sea; in a
   // port it goes back a step.
   leave: ['Escape'],

@@ -4,16 +4,18 @@ import { flee, investigateFog } from '../rules/sea.js';
 import { clearScreen } from '../ui/draw.js';
 import { drawSeaEvent } from '../ui/seaView.js';
 import { drawStatusPanel } from '../ui/statusPanel.js';
+import { BattleScreen } from './BattleScreen.js';
 import { MapScreen } from './MapScreen.js';
 
 // The lookout has spotted something. As in the original, you answer by
 // typing a letter.
 //
 // The screen goes through these steps:
-//   ship      a ship in sight: attack (a) or flee (f)?
-//   fog       a fog bank: investigate it (j/n)?
-//   outcome   what was in the fog; a ship from the fog goes on to 'ship'
-//   noBattle  stand-in until battles are made: the ship sails off
+//   ship        a ship in sight: attack (a) or flee (f)?
+//   attackHow   board her (b) or shoot (s)? Shooting starts a gun battle.
+//   fog         a fog bank: investigate it (j/n)?
+//   outcome     what was in the fog; a ship from the fog goes on to 'ship'
+//   noBoarding  stand-in until boarding is made: the ship sails off
 export class SeaEventScreen extends Screen {
   constructor(game, state, seaEvent) {
     super(game);
@@ -28,10 +30,17 @@ export class SeaEventScreen extends Screen {
     const typed = input.typedText().toLowerCase();
 
     if (this.step === 'ship') {
-      if (typed.includes('a')) this.step = 'noBattle';
+      if (typed.includes('a')) this.step = 'attackHow';
       else if (typed.includes('f')) {
         flee(this.state);
         this.backToSea();
+      }
+    } else if (this.step === 'attackHow') {
+      // As in the original, with no guns left boarding is the only way.
+      if (typed.includes('s') && this.state.guns > 0) {
+        this.game.setScreen(new BattleScreen(this.game, this.state, this.ship));
+      } else if (typed.includes('b') || typed.includes('s')) {
+        this.step = 'noBoarding';
       }
     } else if (this.step === 'fog') {
       if (typed.includes('j')) this.searchFog();

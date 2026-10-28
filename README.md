@@ -48,6 +48,7 @@ src/
       harbor.js          the harbor minigame: steering, wind, crashes
       trade.js           prices, buying and selling in a port
       sea.js             what the lookout spots: ships and fog banks
+      battle.js          the gun battle: wind, aim, fire, damage both ways
       career.js          your rank (skibsfører ... admiral)
     ui/                drawing code, shared between screens
       draw.js            small helpers: clearScreen, polygon, label
@@ -55,6 +56,7 @@ src/
       harborView.js      the harbor minigame
       portView.js        the trading menu in a port
       seaView.js         what the lookout reports, and what was in the fog
+      battleView.js      the "Sigte" screen: panels, sights, table
       statusPanel.js     the Træk/Rgsdl/Korn... table
       titleArt.js        the title screen picture
     screens/           thin glue: read input -> call rules -> draw
@@ -63,6 +65,7 @@ src/
       HarborScreen.js
       PortScreen.js
       SeaEventScreen.js
+      BattleScreen.js
 assets/
   kattegat.svg         the map's land, drawn as SVG (10 units per cell)
 tests/                 Node tests for engine and rules: npm test
