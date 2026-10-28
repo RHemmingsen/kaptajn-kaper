@@ -33,6 +33,7 @@ src/
     EventBus.js        on(event, fn) / emit(event, data)
     collision.js       rectsOverlap(a, b) for box collisions
     loadImage.js       load an image file and wait until it's ready
+    NumberField.js     a whole number being typed in ("Hvor mange?")
     Screen.js          base class for a game mode
     TileMap.js         grid of tiles built from strings
   game/                everything specific to Kaptajn Kaper
@@ -45,16 +46,19 @@ src/
       sailing.js         No drawing, no keyboard.
       ship.js            damage and sinking, shared by every mode
       harbor.js          the harbor minigame: steering, wind, crashes
+      trade.js           prices, buying and selling in a port
     ui/                drawing code, shared between screens
       draw.js            small helpers: clearScreen, polygon, label
       mapView.js         the sea map, ports and ship
       harborView.js      the harbor minigame
+      portView.js        the trading menu in a port
       statusPanel.js     the Træk/Rgsdl/Korn... table
       titleArt.js        the title screen picture
     screens/           thin glue: read input -> call rules -> draw
       TitleScreen.js
       MapScreen.js
       HarborScreen.js
+      PortScreen.js
 assets/
   kattegat.svg         the map's land, drawn as SVG (10 units per cell)
 tests/                 Node tests for engine and rules: npm test
@@ -82,6 +86,8 @@ mechanism; which keys trigger which action is the game's business and lives in
 one place, `game/controls.js`. `main.js` hands them over when the game is made,
 `new Game(canvas, { controls: CONTROLS })`, so there is no Input without keys.
 Screens never ask about keys directly.
+Typing is different: `typedText()` gives the characters typed since the last
+update, for answering questions like "Hvor mange?" with a `NumberField`.
 
 **Tile maps.** The map is an array of strings, one character per tile (`.` water,
 `#` land). `TileMap` answers "what's at (col, row)?"; the game decides what each

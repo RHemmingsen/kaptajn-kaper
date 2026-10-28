@@ -4,6 +4,7 @@ import { createHarbor, updateHarbor } from '../rules/harbor.js';
 import { clearScreen, centeredLabel } from '../ui/draw.js';
 import { drawHarbor } from '../ui/harborView.js';
 import { MapScreen } from './MapScreen.js';
+import { PortScreen } from './PortScreen.js';
 
 // The harbor minigame, played when the ship sails into a port on the map.
 // Steer left and right (hold the keys down), or leave to give up and go back
@@ -20,7 +21,9 @@ export class HarborScreen extends Screen {
     const input = this.game.input;
 
     if (this.harbor.status === 'docked') {
-      if (input.anyKeyPressed()) this.backToMap();
+      if (input.anyKeyPressed()) {
+        this.game.setScreen(new PortScreen(this.game, this.state, this.harbor.city));
+      }
       return;
     }
 

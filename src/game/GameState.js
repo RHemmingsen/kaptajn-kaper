@@ -20,6 +20,7 @@ export class GameState {
     this.men = 200; // Mænd
     this.guns = 20; // Skyts
     this.repair = 200; // Rep: the ship's condition
+    this.jewels = 0; // Juveler: found on islands, sold in ports
 
     // True once the ship is lost, by damage, a starved crew or a wreck. The
     // game is over then. See rules/ship.js.
