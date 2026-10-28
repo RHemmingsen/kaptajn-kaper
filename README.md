@@ -106,7 +106,9 @@ city })`, and anything interested listens with `events.on(...)`. A screen uses
 the game switches to another screen. Events are for things several unrelated
 parts of the game care about; everything else is a direct function call.
 
-**Real time vs turns.** The map is turn-based: one key press, one tile. The
+**Real time vs turns.** The map is turn-based: one key press, one tile
+(arrow keys, or the number keys 1-9 like a compass for diagonals). As in the
+original, every move costs grain, and sailing into land costs 3 Rep. The
 harbor runs in real time: the ship's position is in pixels and moves by
 `speed * dt` every step, so speeds are in pixels per second whatever the frame
 rate. The ship sails down on its own, held keys (`isDown`) steer left and

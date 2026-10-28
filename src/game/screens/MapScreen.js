@@ -10,13 +10,24 @@ import { drawStatusPanel } from '../ui/statusPanel.js';
 import { HarborScreen } from './HarborScreen.js';
 import { TitleScreen } from './TitleScreen.js';
 
-// Which arrow key means which sailing direction.
+// Which key means which sailing direction. As in the original: the arrow
+// keys, or the number keys laid out like a compass (7 8 9 / 4 6 / 1 2 3),
+// where the corners sail diagonally. Both the number row and the numeric
+// keypad work.
 const KEY_TO_DIRECTION = {
   ArrowUp: 'up',
   ArrowDown: 'down',
   ArrowLeft: 'left',
   ArrowRight: 'right',
 };
+const NUMBER_KEYS = {
+  8: 'up', 2: 'down', 4: 'left', 6: 'right',
+  7: 'upLeft', 9: 'upRight', 1: 'downLeft', 3: 'downRight',
+};
+for (const [digit, direction] of Object.entries(NUMBER_KEYS)) {
+  KEY_TO_DIRECTION[`Digit${digit}`] = direction;
+  KEY_TO_DIRECTION[`Numpad${digit}`] = direction;
+}
 
 // The main screen: sail the ship around the Kattegat, one tile per key press.
 // The screen only connects things: keys go to the sailing rules, and the

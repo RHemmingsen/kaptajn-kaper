@@ -22,8 +22,10 @@ export function drawStatusPanel(ctx, state) {
   }
   ctx.stroke();
 
+  // Grain can be a fraction (the crew eats half sacks); show whole sacks, as
+  // the original did.
   const cells = [
-    [`Træk: ${state.moves}`, `Rgsdl: ${state.money}`, `Korn: ${state.grain}`],
+    [`Træk: ${state.moves}`, `Rgsdl: ${state.money}`, `Korn: ${Math.floor(state.grain)}`],
     [`Mænd: ${state.men}`, `Skyts: ${state.guns}`, `Rep: ${state.repair}`],
   ];
   ctx.fillStyle = COLORS.salmon;

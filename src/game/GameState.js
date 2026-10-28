@@ -9,9 +9,14 @@ export class GameState {
     this.goal = 1000; // points needed to win...
     this.maxMoves = 300; // ...within this many moves
 
+    // How hard the game is (IDIF in the original). Starts at 2 and goes up
+    // with each goal reached. Many rules use it, e.g. how much grain the crew
+    // eats.
+    this.difficulty = 2;
+
     this.moves = 0; // Træk
     this.money = 600; // Rigsdaler
-    this.grain = 30; // Korn
+    this.grain = 30; // Korn, in sacks. Can be a fraction: the crew eats half sacks.
     this.men = 200; // Mænd
     this.guns = 20; // Skyts
     this.repair = 200; // Rep: the ship's condition
