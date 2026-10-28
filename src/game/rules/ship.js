@@ -3,8 +3,9 @@
 // fire damage the ship.
 //
 // The ship is lost when it gets too damaged or its crew too small (the
-// original's line 5000). Everything here that lowers Rep or men checks that
-// straight away, so no other rule has to remember to.
+// original's line 5000). Rep and men only go down through damageShip and
+// loseMen, and both check that straight away, so no other rule has to
+// remember to.
 //
 // Events emitted:
 //   shipDamaged   { amount }
@@ -30,10 +31,14 @@ export function crewEats(state, events) {
   if (state.grain >= 0) return;
 
   state.grain = 0;
-  const survivors = Math.floor(state.men * STARVING_SURVIVORS);
-  const lost = state.men - survivors;
-  state.men = survivors;
+  const lost = state.men - Math.floor(state.men * STARVING_SURVIVORS);
   events.emit('crewStarving', { lost });
+  loseMen(state, lost, events);
+}
+
+// Lose `count` men, to hunger, plague or (later) battle. Never below 0.
+export function loseMen(state, count, events) {
+  state.men = Math.max(0, state.men - count);
   checkShipLost(state, events);
 }
 

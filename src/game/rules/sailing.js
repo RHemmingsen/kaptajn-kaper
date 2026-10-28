@@ -2,6 +2,7 @@
 // knows about the keyboard or the canvas: it takes the game state, changes
 // it, and announces what happened.
 import { tileAt, cityAt } from '../map.js';
+import { rollSeaEvent } from './sea.js';
 import { crewEats, damageShip, isSunk } from './ship.js';
 
 // How each direction changes the ship's position, as [columns, rows].
@@ -29,12 +30,16 @@ export function canSailTo(col, row) {
 //   - Every other attempt is a move (Træk), and the crew eats. If that
 //     starves the crew to death, the ship is lost and goes nowhere.
 //   - Into land: the ship runs aground. It stays where it is and loses Rep.
+//   - Onto open water: the lookout may spot something (see sea.js).
 //
-// Events emitted (plus the ones from ship.js):
+// `random` returns 0..1 and decides what's spotted; tests pass their own.
+//
+// Events emitted (plus the ones from ship.js and sea.js):
 //   shipMoved       { col, row }
 //   arrivedAtPort   { city }
 //   shipRanAground  { col, row }   the land cell it hit
-export function sail(state, direction, events) {
+//   seaEvent        { kind: 'ship', ship } or { kind: 'fog' }
+export function sail(state, direction, events, random = Math.random) {
   const [dCol, dRow] = DIRECTIONS[direction];
   const col = state.ship.col + dCol;
   const row = state.ship.row + dRow;
@@ -56,7 +61,12 @@ export function sail(state, direction, events) {
   events.emit('shipMoved', { col, row });
 
   const city = cityAt(col, row);
-  if (city) events.emit('arrivedAtPort', { city });
+  if (city) {
+    events.emit('arrivedAtPort', { city });
+    return true;
+  }
 
+  const seaEvent = rollSeaEvent(state, random);
+  if (seaEvent) events.emit('seaEvent', seaEvent);
   return true;
 }

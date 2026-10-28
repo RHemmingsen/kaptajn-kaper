@@ -14,6 +14,13 @@ export class GameState {
     // eats.
     this.difficulty = 2;
 
+    // Counted as in the original (IKAMP and ILOSE, with the same odd start
+    // values). Ships and fog banks met, and times you fled. Later, battles
+    // get harder the more often you've fled: (encounters + flights) /
+    // encounters.
+    this.encounters = 2;
+    this.flights = 1;
+
     this.moves = 0; // Træk
     this.money = 600; // Rigsdaler
     this.grain = 30; // Korn, in sacks. Can be a fraction: the crew eats half sacks.
