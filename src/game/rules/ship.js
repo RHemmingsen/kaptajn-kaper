@@ -42,6 +42,14 @@ export function loseMen(state, count, events) {
   checkShipLost(state, events);
 }
 
+// A gun is knocked out by enemy fire. As in the original, the ship always
+// keeps at least one. Returns true if a gun was lost.
+export function loseGun(state) {
+  if (state.guns <= 1) return false;
+  state.guns -= 1;
+  return true;
+}
+
 // The ship is lost, whatever its Rep and crew, e.g. wrecked on a pier.
 export function sinkShip(state, events) {
   if (state.sunk) return;
