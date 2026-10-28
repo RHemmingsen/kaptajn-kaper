@@ -11,7 +11,7 @@ function recordEvents() {
   const events = new EventBus();
   const log = [];
   for (const name of [
-    'shipMoved', 'arrivedAtPort', 'shipRanAground', 'crewStarving', 'shipDamaged', 'shipSunk',
+    'shipMoved', 'arrivedAtPort', 'shipRanAground', 'shipDamaged', 'shipSunk',
   ]) {
     events.on(name, (data) => log.push({ name, data }));
   }
@@ -36,27 +36,15 @@ test('the ship can sail diagonally', () => {
   assert.deepEqual(state.ship, { col: 9, row: 9 });
 });
 
-test('every move the crew eats men x difficulty / 800 sacks of grain', () => {
+// How much the crew eats, and starving, is tested in ship.test.js; here we
+// only check that a move makes them eat.
+test('every move the crew eats', () => {
   const state = new GameState(); // 200 men, difficulty 2, 30 sacks
   const { events } = recordEvents();
 
   sail(state, 'left', events);
 
   assert.equal(state.grain, 29.5);
-});
-
-test('running out of grain kills a tenth of the crew each move', () => {
-  const state = new GameState();
-  state.grain = 0.2; // less than the half sack they need
-  const { events, log } = recordEvents();
-
-  sail(state, 'left', events);
-  assert.equal(state.grain, 0);
-  assert.equal(state.men, 180);
-  assert.deepEqual(log[0], { name: 'crewStarving', data: { lost: 20 } });
-
-  sail(state, 'right', events);
-  assert.equal(state.men, 162);
 });
 
 test('sailing into land: the ship stays, but it costs a move, grain and 3 Rep', () => {
