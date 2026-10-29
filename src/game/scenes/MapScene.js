@@ -1,6 +1,7 @@
 import { Scene } from '../../engine/Scene.js';
 import { COLORS } from '../palette.js';
 import { KATTEGAT, cityAt } from '../map.js';
+import { goalReached } from '../rules/career.js';
 import { sail } from '../rules/sailing.js';
 import { clearScreen, label } from '../ui/draw.js';
 import {
@@ -8,6 +9,7 @@ import {
 } from '../ui/mapView.js';
 import { drawStatusPanel } from '../ui/statusPanel.js';
 import { HarborScene } from './HarborScene.js';
+import { PromotionScene } from './PromotionScene.js';
 import { SeaEventScene } from './SeaEventScene.js';
 import { TitleScene } from './TitleScene.js';
 
@@ -47,6 +49,13 @@ export class MapScene extends Scene {
 
   update(dt) {
     const input = this.game.input;
+
+    // Back at sea with enough points, e.g. after a victory or a payout in
+    // København: the news of your promotion comes first.
+    if (goalReached(this.state)) {
+      this.game.setScene(new PromotionScene(this.game, this.state));
+      return;
+    }
 
     if (input.wasActionPressed('leave')) {
       this.game.setScene(new TitleScene(this.game));

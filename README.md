@@ -33,6 +33,7 @@ src/
     EventBus.js        on(event, fn) / emit(event, data)
     collision.js       rectsOverlap(a, b) for box collisions
     loadImage.js       load an image file and wait until it's ready
+    storage.js         localStorage that can't crash the game
     NumberField.js     a whole number being typed in ("Hvor mange?")
     Scene.js           base class for a part of the game
     TileMap.js         grid of tiles built from strings
@@ -40,6 +41,7 @@ src/
     palette.js         colours and font
     controls.js        every key the game uses, as named actions
     assets.js          loads the game's images before it starts
+    records.js         the record: most points in a finished game
     GameState.js       the ship's stats for the current playthrough
     map.js             the Kattegat tile map; grid and ports as in the original
     rules/             the game's rules: change GameState, emit events.
@@ -51,7 +53,8 @@ src/
       battle.js          the gun battle: wind, aim, fire, damage both ways
       boarding.js        boarding: fight on her deck, one round at a time
       victory.js         plunder, sink or take as a prize, prize money
-      career.js          your rank (skibsfører ... admiral)
+      career.js          goals, promotions, rank and title, running out of moves
+      ending.js          the game ends once: sunk, jilted or won
     ui/                drawing code, shared between scenes
       draw.js            small helpers: clearScreen, polygon, label
       mapView.js         the sea map, ports and ship
@@ -61,6 +64,8 @@ src/
       battleView.js      the "Sigte" screen: panels, sights, table
       boardingView.js    the fight on the enemy's deck
       victoryView.js     what you took, and what you do with her
+      promotionView.js   the news of a promotion
+      endingView.js      how the game ended, and the record
       shipArt.js         a three-master from the side, at any place and size
       statusPanel.js     the Træk/Rgsdl/Korn... table
       titleArt.js        the title scene's picture
@@ -73,6 +78,8 @@ src/
       BattleScene.js
       BoardingScene.js
       VictoryScene.js
+      PromotionScene.js
+      EndScene.js
 assets/
   kattegat.svg         the map's land, drawn as SVG (10 units per cell)
 tests/                 Node tests for engine and rules: npm test
@@ -152,5 +159,7 @@ and `rectsOverlap` checks whether two of them overlap. The drawings are made to
 fill those boxes, so what you see is what collides.
 
 **Game-wide events.** Some reactions apply whatever scene is running. Those
-are set up once in `main.js` with `game.events.on(...)`; for example, when the
-ship sinks (`shipSunk`), the game goes back to the title scene.
+are set up once in `main.js` with `game.events.on(...)`. The game can end in
+many places (the ship lost in the harbor or in battle, out of moves, every
+goal reached), but always through `endGame` in `rules/ending.js`, which emits
+one `gameOver` event; `main.js` answers it with the end scene.
