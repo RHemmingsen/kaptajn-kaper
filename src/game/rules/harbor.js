@@ -83,7 +83,9 @@ function placeGap(difficulty, random) {
 // and from beside where you start down to a little above the docks. Nothing
 // keeps them apart: they can lie close together, and block the way.
 // (Two can't lie on the same place; in the original, the second one erased
-// the first.)
+// the first.) The places where a ship would lie on top of yours at the start
+// are kept free, or you'd crash before you could steer; the original only
+// looked for crashes after the first step.
 const GRID_COLUMNS = 29;
 const GRID_ROWS = 14;
 const GRID_TOP = 15; // the original's top row, beside its ship
@@ -92,21 +94,24 @@ const GRID_BOTTOM = 334; // its bottom row, with a fifth of the trip left to the
 function placeObstacles(count, random) {
   const columnWidth = (WIDTH - OBSTACLE_SIZE.w) / (GRID_COLUMNS - 1);
   const rowHeight = (GRID_BOTTOM - GRID_TOP) / (GRID_ROWS - 1);
-  // Every place, from which each ship takes one at random.
+  // Every free place, from which each ship takes one at random.
+  const startingShip = { ...START, ...SHIP_SIZE };
   const free = [];
   for (let row = 0; row < GRID_ROWS; row++) {
-    for (let column = 0; column < GRID_COLUMNS; column++) free.push({ column, row });
+    for (let column = 0; column < GRID_COLUMNS; column++) {
+      const place = {
+        x: LAYOUT.wallLeft + column * columnWidth,
+        y: GRID_TOP + row * rowHeight,
+        ...OBSTACLE_SIZE,
+      };
+      if (!rectsOverlap(place, startingShip)) free.push(place);
+    }
   }
 
   const obstacles = [];
   for (let i = 0; i < count; i++) {
-    const [{ column, row }] = free.splice(Math.floor(random() * free.length), 1);
-    obstacles.push({
-      x: LAYOUT.wallLeft + column * columnWidth,
-      y: GRID_TOP + row * rowHeight,
-      ...OBSTACLE_SIZE,
-      hit: false,
-    });
+    const [place] = free.splice(Math.floor(random() * free.length), 1);
+    obstacles.push({ ...place, hit: false });
   }
   return obstacles;
 }

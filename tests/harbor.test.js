@@ -4,6 +4,7 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { EventBus } from '../src/engine/EventBus.js';
 import { GameState } from '../src/game/GameState.js';
+import { rectsOverlap } from '../src/engine/collision.js';
 import { createHarbor, updateHarbor, LAYOUT } from '../src/game/rules/harbor.js';
 
 const DT = 1 / 60;
@@ -47,6 +48,13 @@ test('there are difficulty x 5 + 1 ships at anchor, all of them, however crowded
   for (const difficulty of [2, 4, 6, 8]) {
     const harbor = createHarbor(CITY, difficulty, seededRandom(42));
     assert.equal(harbor.obstacles.length, 5 * difficulty + 1);
+  }
+});
+
+test('no ship at anchor lies on top of yours at the start', () => {
+  for (let seed = 1; seed <= 200; seed++) {
+    const harbor = createHarbor(CITY, 8, seededRandom(seed));
+    assert.ok(!harbor.obstacles.some((o) => rectsOverlap(o, harbor.ship)));
   }
 });
 

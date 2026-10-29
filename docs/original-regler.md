@@ -244,6 +244,8 @@ Har du over 500 mænd, smides resten "ud til hajerne".
 - Moderne udførelse: f.eks. glidende bevægelse i havnen, men med originalens
   vindstød, skade, placering af skibene og 18-skridts-længde omsat til tid og
   afstand. Mens et vindstød blæser, virker roret ikke, som i originalen.
+  Den plads på gitteret, der ligger oven i skibet ved start, holdes fri;
+  originalen tjekkede først for sammenstød efter første skridt.
   Havnen sejles på ca. 5,3 sekunder (0,3 s pr. skridt): originalens fart
   kendes ikke, og det er valgt efter, hvordan det føles. Sammenstød tjekkes
   med hele skibets kasse, ikke én pixel.
