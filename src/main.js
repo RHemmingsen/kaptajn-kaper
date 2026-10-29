@@ -6,6 +6,7 @@ import { CONTROLS } from './game/controls.js';
 import { EndScene } from './game/scenes/EndScene.js';
 import { HelpScene } from './game/scenes/HelpScene.js';
 import { SoundScene } from './game/scenes/SoundScene.js';
+import { connectSounds } from './game/sounds.js';
 import { rememberSound, soundOn } from './game/records.js';
 
 await loadAssets();
@@ -13,6 +14,7 @@ await loadAssets();
 const canvas = document.getElementById('game');
 const game = new Game(canvas, { controls: CONTROLS });
 game.sound.setEnabled(soundOn());
+connectSounds(game.events, game.sound);
 
 // Game-wide reactions, which apply whatever scene is running. The game can
 // end in many places (the ship lost in the harbor or in battle, out of

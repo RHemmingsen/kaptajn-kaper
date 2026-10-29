@@ -88,8 +88,9 @@ export function investigateFog(state, events, random = Math.random) {
 }
 
 // Sail away from a ship. It always works, but it's remembered.
-export function flee(state) {
+export function flee(state, events) {
   state.flights += 1;
+  events.emit('fled', {});
 }
 
 // A ship of the given type comes into view, ready for battle: its own Rep,

@@ -31,6 +31,14 @@ function setup(enemyChanges = {}) {
   return { battle, enemy, state: new GameState(), events: new EventBus() };
 }
 
+test('firing tells what happened as a shotFired event', () => {
+  const { battle, state, events } = setup();
+  const told = [];
+  events.on('shotFired', (result) => told.push(result));
+  const result = fire(battle, state, events, dice(...ENEMY_MISSES, ...DEAD_ON, 0, 0));
+  assert.deepEqual(told, [result]);
+});
+
 test('a battle starts with new wind and the sights straight ahead', () => {
   const battle = startBattle({}, dice(0, 0.7, 0.5));
   assert.deepEqual(battle.wind, { side: -1, length: 1, strength: 6 });

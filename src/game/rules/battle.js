@@ -60,6 +60,7 @@ export function breakOff(battle, random = Math.random) {
 //              (you went down)
 //     points:  points earned, when she sank
 //   }
+// and tells the same as a 'shotFired' event.
 export function fire(battle, state, events, random = Math.random) {
   const result = {
     enemyFire: enemyFires(battle.enemy, state, events, random),
@@ -69,17 +70,17 @@ export function fire(battle, state, events, random = Math.random) {
   };
   if (isSunk(state)) {
     result.outcome = 'lost';
-    return result;
+  } else {
+    result.shot = landShot(battle, state, random);
+    if (result.shot.lands === 'hit') {
+      result.outcome = hitEnemy(battle.enemy, state, result.shot, random);
+    }
+    if (result.outcome === 'sunk') {
+      result.points = Math.floor(battle.enemy.money / 10);
+      state.points += result.points;
+    }
   }
-
-  result.shot = landShot(battle, state, random);
-  if (result.shot.lands === 'hit') {
-    result.outcome = hitEnemy(battle.enemy, state, result.shot, random);
-  }
-  if (result.outcome === 'sunk') {
-    result.points = Math.floor(battle.enemy.money / 10);
-    state.points += result.points;
-  }
+  events.emit('shotFired', result);
   return result;
 }
 

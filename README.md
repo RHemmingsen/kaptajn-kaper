@@ -44,6 +44,7 @@ src/
     palette.js         colours and font
     controls.js        every key the game uses, as named actions
     helpText.js        the help (F1): the original's topics, and about this version
+    sounds.js          which events make which sounds
     assets.js          loads the game's images before it starts
     records.js         kept between visits: the record and who set it,
                        the last name played with, and sound on or off
@@ -139,6 +140,10 @@ written in the music language of BASIC's `PLAY` statement, like the
 original's `"O3CEGO4CO3GEC2"`. `mml.js` reads such a string into notes with a
 frequency and a length; `Sound` plays them. Browsers only allow sound after
 the player has pressed something, so nothing is heard before the first key.
+
+Nothing in the rules or scenes plays a sound. They announce what happened
+(`shipRanAground`, `shotFired`, `fled`...) and `game/sounds.js` listens and
+decides what that sounds like, so all of the game's sound is in one file.
 
 **Tile maps.** The map is an array of strings, one character per tile (`.` water,
 `#` land). `TileMap` answers "what's at (col, row)?"; the game decides what each

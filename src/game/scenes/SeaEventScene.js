@@ -32,7 +32,7 @@ export class SeaEventScene extends Scene {
     if (this.step === 'ship') {
       if (typed.includes('a')) this.step = 'attackHow';
       else if (typed.includes('f')) {
-        flee(this.state);
+        flee(this.state, this.game.events);
         this.backToSea();
       }
     } else if (this.step === 'attackHow') {

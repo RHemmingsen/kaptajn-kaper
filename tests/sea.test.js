@@ -98,8 +98,12 @@ test('plague can leave too few men to sail, and the ship is lost', () => {
   assert.equal(state.sunk, true);
 });
 
-test('fleeing is counted', () => {
+test('fleeing is counted, and told', () => {
   const state = new GameState();
-  flee(state);
+  const events = new EventBus();
+  let told = 0;
+  events.on('fled', () => { told += 1; });
+  flee(state, events);
   assert.equal(state.flights, 2);
+  assert.equal(told, 1);
 });
