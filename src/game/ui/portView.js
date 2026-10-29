@@ -25,11 +25,16 @@ const REFUSALS = {
 };
 
 // `view` is what the scene wants shown:
-//   { city, prices, step, trade, amountText, cursorOn, message, jewels }
+//   { city, prices, step, trade, amountText, cursorOn, message, jewels, prizes }
 export function drawPort(ctx, view) {
   const { prices } = view;
   ctx.textAlign = 'left';
   ctx.textBaseline = 'middle';
+
+  if (view.step === 'prizes') {
+    drawPrizes(ctx, view.city, view.prizes);
+    return;
+  }
 
   text(ctx, `Velkommen til ${view.city.name}`, 50, COLORS.white, 26);
   text(ctx, 'Hvad vil du?', 100);
@@ -56,6 +61,16 @@ export function drawPort(ctx, view) {
   } else if (view.message) {
     text(ctx, messageText(view.message), y, COLORS.white);
   }
+}
+
+// The prize crews and prize money waiting in the prize port.
+function drawPrizes(ctx, city, { men, money }) {
+  text(ctx, 'Hurra!', 50, COLORS.white, 26);
+  text(ctx, `Her i ${city.name} venter dine ${men}`, 100);
+  text(ctx, 'tapre mænd på dig.', 100 + LINE);
+  text(ctx, `De har ${money} rigsdaler`, 100 + 2 * LINE);
+  text(ctx, 'i prisepenge til dig!', 100 + 3 * LINE);
+  text(ctx, 'Tryk på en tast.', 100 + 5 * LINE, COLORS.white);
 }
 
 function messageText({ action, result }) {

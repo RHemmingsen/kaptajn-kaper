@@ -1,6 +1,7 @@
 import { Scene } from '../../engine/Scene.js';
 import { NumberField } from '../../engine/NumberField.js';
 import { rollPrices, buy, sell } from '../rules/trade.js';
+import { collectPrizes } from '../rules/victory.js';
 import { clearScreen } from '../ui/draw.js';
 import { drawPort } from '../ui/portView.js';
 import { drawStatusPanel } from '../ui/statusPanel.js';
@@ -13,9 +14,11 @@ const LEAVE_CHOICE = '6';
 // What to sell: Korn, Skyts or Juveler.
 const SELL_CHOICES = { k: 'grain', s: 'guns', j: 'jewels' };
 
-// A port, reached by docking in the harbor. Trade, then set sail again.
+// A port, reached by docking in the harbor. Trade, then set sail again. In
+// the prize port (København), prizes you sent there are paid out first.
 //
-// The scene goes through three steps:
+// The scene goes through these steps:
+//   prizes    the prize crews and prize money waiting here; any key: menu
 //   menu      choose 1-6
 //   sellWhat  choose what to sell (k, s or j)
 //   amount    type how many, Enter to trade, leave to change your mind
@@ -26,17 +29,25 @@ export class PortScene extends Scene {
     this.city = city;
     this.prices = rollPrices(); // new prices every visit
     this.step = 'menu';
+    this.prizes = null; // what was paid out on arrival, if anything
     this.trade = null; // { action: 'buy' | 'sell', good } while asking how many
     this.amount = new NumberField(4);
     this.message = null; // the outcome of the last trade
     this.time = 0; // for the blinking cursor
   }
 
+  enter() {
+    if (this.city.prizePort) this.prizes = collectPrizes(this.state);
+    if (this.prizes) this.step = 'prizes';
+  }
+
   update(dt) {
     this.time += dt;
     const input = this.game.input;
 
-    if (this.step === 'menu') this.updateMenu(input);
+    if (this.step === 'prizes') {
+      if (input.anyKeyPressed()) this.step = 'menu';
+    } else if (this.step === 'menu') this.updateMenu(input);
     else if (this.step === 'sellWhat') this.updateSellWhat(input);
     else this.updateAmount(input);
   }
@@ -118,6 +129,7 @@ export class PortScene extends Scene {
       cursorOn: Math.floor(this.time * 2) % 2 === 0,
       message: this.message,
       jewels: this.state.jewels,
+      prizes: this.prizes,
     });
     drawStatusPanel(ctx, this.state);
   }

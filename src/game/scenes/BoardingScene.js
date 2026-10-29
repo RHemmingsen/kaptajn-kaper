@@ -3,13 +3,13 @@ import { fightRound } from '../rules/boarding.js';
 import { clearScreen } from '../ui/draw.js';
 import { drawBoarding } from '../ui/boardingView.js';
 import { drawStatusPanel } from '../ui/statusPanel.js';
-import { MapScene } from './MapScene.js';
 import { SeaEventScene } from './SeaEventScene.js';
+import { VictoryScene } from './VictoryScene.js';
 
 // Boarding an enemy ship. The first round is fought as soon as you board.
 // After each round, as in the original, you answer by typing a letter: fight
 // on (k), or go back to your own ship (t) and choose again whether to attack
-// or flee. When she strikes her flag, any key takes you back to sea.
+// or flee. When she strikes her flag, any key goes on to the victory.
 // If your ship is lost, the shipSunk listener in main.js ends the game.
 export class BoardingScene extends Scene {
   constructor(game, state, enemy) {
@@ -31,7 +31,7 @@ export class BoardingScene extends Scene {
     const input = this.game.input;
 
     if (this.round.outcome === 'surrender') {
-      if (input.anyKeyPressed()) this.game.setScene(new MapScene(this.game, this.state));
+      if (input.anyKeyPressed()) this.game.setScene(new VictoryScene(this.game, this.state, this.enemy));
       return;
     }
 

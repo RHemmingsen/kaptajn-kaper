@@ -62,7 +62,7 @@ function resultLines({ shot, enemyFire, outcome, points }) {
   if (shot) lines.push(shotText(shot));
   lines.push(enemyFireText(enemyFire));
   if (outcome === 'sunk') lines.push(`Den sank!! Du får ${points} point.`);
-  if (outcome === 'surrender') lines.push('De overgiver sig!! (prisen kommer senere)');
+  if (outcome === 'surrender') lines.push('Hun stryger flaget!');
   return lines;
 }
 
@@ -72,7 +72,11 @@ function shotText(shot) {
     case 'right': return 'Nedslag: til højre for hende.';
     case 'short': return 'Nedslag: for kort.';
     case 'long': return 'Nedslag: over hende.';
-    default: return `Træffer! Hun mister ${shot.damage} Rep og ${shot.menKilled ?? 0} mand.`;
+    default:
+      // If she struck her flag or sank from the damage, her men weren't counted.
+      return shot.menKilled === undefined
+        ? `Træffer! Hun mister ${shot.damage} Rep.`
+        : `Træffer! Hun mister ${shot.damage} Rep og ${shot.menKilled} mand.`;
   }
 }
 

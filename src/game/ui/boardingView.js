@@ -32,7 +32,7 @@ function linesFor(enemy, { enemyLosses, ownLosses, outcome }) {
       `og han har kun ${enemy.men} mand igen.`,
       `Du har mistet ${ownLosses} af dine tapre mænd.`,
       '',
-      'De overgiver sig!! (prisen kommer senere)',
+      'Hun stryger flaget!',
       'Tryk på en tast.',
     ];
   }

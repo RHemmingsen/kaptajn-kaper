@@ -50,6 +50,7 @@ src/
       sea.js             what the lookout spots: ships and fog banks
       battle.js          the gun battle: wind, aim, fire, damage both ways
       boarding.js        boarding: fight on her deck, one round at a time
+      victory.js         plunder, sink or take as a prize, prize money
       career.js          your rank (skibsfører ... admiral)
     ui/                drawing code, shared between scenes
       draw.js            small helpers: clearScreen, polygon, label
@@ -59,6 +60,7 @@ src/
       seaView.js         what the lookout reports, and what was in the fog
       battleView.js      the "Sigte" screen: panels, sights, table
       boardingView.js    the fight on the enemy's deck
+      victoryView.js     what you took, and what you do with her
       shipArt.js         a three-master from the side, at any place and size
       statusPanel.js     the Træk/Rgsdl/Korn... table
       titleArt.js        the title scene's picture
@@ -70,6 +72,7 @@ src/
       SeaEventScene.js
       BattleScene.js
       BoardingScene.js
+      VictoryScene.js
 assets/
   kattegat.svg         the map's land, drawn as SVG (10 units per cell)
 tests/                 Node tests for engine and rules: npm test

@@ -4,6 +4,7 @@ import { clearScreen } from '../ui/draw.js';
 import { drawBattle } from '../ui/battleView.js';
 import { MapScene } from './MapScene.js';
 import { SeaEventScene } from './SeaEventScene.js';
+import { VictoryScene } from './VictoryScene.js';
 
 // How each aiming action moves the sights, as [elevation, side]. Up means
 // aiming higher, which is a lower elevation number and a longer shot.
@@ -54,7 +55,9 @@ export class BattleScene extends Scene {
   }
 
   afterShot() {
-    if (this.result.outcome) this.game.setScene(new MapScene(this.game, this.state));
+    const { outcome } = this.result;
+    if (outcome === 'surrender') this.game.setScene(new VictoryScene(this.game, this.state, this.battle.enemy));
+    else if (outcome === 'sunk') this.game.setScene(new MapScene(this.game, this.state));
     else this.step = 'aim';
   }
 
