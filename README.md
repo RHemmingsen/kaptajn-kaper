@@ -36,11 +36,12 @@ src/
     storage.js         localStorage that can't crash the game
     TextField.js       text being typed in, like a name
     NumberField.js     a TextField for whole numbers ("Hvor mange?")
-    Scene.js           base class for a part of the game
+    Scene.js           base class for a part of the game; can be paused
     TileMap.js         grid of tiles built from strings
   game/                everything specific to Kaptajn Kaper
     palette.js         colours and font
     controls.js        every key the game uses, as named actions
+    helpText.js        the help (F1): the original's topics, and about this version
     assets.js          loads the game's images before it starts
     records.js         kept between visits: the record and who set it,
                        and the last name played with
@@ -70,12 +71,14 @@ src/
       endingView.js      how the game ended, and the record
       nameView.js        "Hvad er dit navn?", and the greeting
       recordText.js      how the record is written
+      helpView.js        the help's menu and pages
       shipArt.js         a three-master from the side, at any place and size
       statusPanel.js     the Træk/Rgsdl/Korn... table
       titleArt.js        the title scene's picture
     scenes/            each part of the game: input -> rules -> drawing
       TitleScene.js
       NameScene.js
+      HelpScene.js
       MapScene.js
       HarborScene.js
       PortScene.js
@@ -107,6 +110,12 @@ apply, turns input into calls to them, hands the state to the drawing code in
 `ui/`, and says which scene comes next. The Game holds exactly one, and
 `game.setScene(...)` switches between them, calling `exit()` on the old one and
 `enter()` on the new one. (The name is the one Phaser, Godot and Unity use.)
+Scenes can also be stacked: `game.pushScene(...)` puts one on top, like the
+help over a battle, and the one below is paused (`pause()`), not ended, until
+`game.popScene()` takes it back up (`resume()`).
+
+**Global actions.** `game.onAction('help', ...)` works whatever scene is
+showing; `main.js` uses it to open the help from anywhere with F1.
 
 **Input.** Keyboard events are turned into state the game can query, as
 named actions: `isActionDown('steerLeft')` for held keys,

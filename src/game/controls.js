@@ -42,9 +42,12 @@ export const CONTROLS = {
   confirm: ['Enter', 'NumpadEnter'],
   erase: ['Backspace'],
 
-  // Shown on the map ("F1:Hjælp", "F2:lyd") but not made yet. Bound already
-  // so the browser doesn't open its own help page on F1.
+  // Anywhere: the help, as in the original. (Bound also stops the browser
+  // opening its own help page on F1.)
   help: ['F1'],
+
+  // Shown on the map ("F2:lyd") but not made yet. Bound already so the
+  // browser leaves the key alone.
   toggleSound: ['F2'],
 
   // Developer tools.
