@@ -37,9 +37,10 @@ export function tileAt(col, row) {
 }
 
 // The original's seven ports. They sit on land next to the water, and the
-// ship is allowed to sail into a port even though it's land.
+// ship is allowed to sail into a port even though it's land. Prizes you take
+// sail to the prize port, where their crews and prize money wait for you.
 export const CITIES = [
-  { name: 'København', col: 25, row: 12 },
+  { name: 'København', col: 25, row: 12, prizePort: true },
   { name: 'Helsingør', col: 25, row: 7 },
   { name: 'Hundested', col: 18, row: 8 },
   { name: 'Grenå', col: 9, row: 1 },

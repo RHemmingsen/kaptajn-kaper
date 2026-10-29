@@ -29,6 +29,11 @@ export class GameState {
     this.repair = 200; // Rep: the ship's condition
     this.jewels = 0; // Juveler: found on islands, sold in ports
 
+    // Prizes that reached København: their crews, and the prize money for
+    // the ships. Paid out on the next visit there. See rules/victory.js.
+    this.prizeMen = 0;
+    this.prizeMoney = 0;
+
     // True once the ship is lost, by damage, a starved crew or a wreck. The
     // game is over then. See rules/ship.js.
     this.sunk = false;
