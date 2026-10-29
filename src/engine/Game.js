@@ -1,5 +1,6 @@
 import { Input } from './Input.js';
 import { EventBus } from './EventBus.js';
+import { Sound } from './Sound.js';
 
 // How often the game logic runs: 60 times per second, no matter how fast the
 // monitor refreshes. One "step" is therefore 1/60 s.
@@ -14,7 +15,8 @@ const MAX_FRAME_TIME = 0.25;
 //
 // `controls` is the game's key bindings, { actionName: [keyCode, ...], ... },
 // handed on to the Input. See Input.js. `inputTarget` is what the Input
-// listens on: the browser window normally, something else in tests.
+// listens on: the browser window normally, something else in tests. Sound
+// listens there too, for the first key press that lets it play.
 //
 // Scenes are kept in a stack. Normally there's one, and setScene() swaps it.
 // pushScene() puts another on top, like help over a battle: the one below is
@@ -29,6 +31,7 @@ export class Game {
 
     this.input = new Input(controls, inputTarget);
     this.events = new EventBus();
+    this.sound = new Sound(inputTarget);
     this.scenes = [];
 
     // Actions that work whatever scene is showing, like opening help:

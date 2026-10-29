@@ -31,6 +31,8 @@ src/
     Game.js            canvas, game loop, active scene
     Input.js           keyboard input as named actions
     EventBus.js        on(event, fn) / emit(event, data)
+    Sound.js           beeps, sweeps, noise and tunes, made with Web Audio
+    mml.js             reads BASIC's PLAY music language into notes
     collision.js       rectsOverlap(a, b) for box collisions
     loadImage.js       load an image file and wait until it's ready
     storage.js         localStorage that can't crash the game
@@ -127,6 +129,13 @@ Scenes never ask about keys directly.
 Typing is different: `typedText()` gives the characters typed since the last
 update, for answering questions like "Hvad er dit navn?" with a `TextField`,
 or "Hvor mange?" with a `NumberField`.
+
+**Sound.** `game.sound` makes every sound on the spot, PC-speaker style:
+`tone`, `sweep` (a sliding beep), `noise`, and `music`, which plays a tune
+written in the music language of BASIC's `PLAY` statement, like the
+original's `"O3CEGO4CO3GEC2"`. `mml.js` reads such a string into notes with a
+frequency and a length; `Sound` plays them. Browsers only allow sound after
+the player has pressed something, so nothing is heard before the first key.
 
 **Tile maps.** The map is an array of strings, one character per tile (`.` water,
 `#` land). `TileMap` answers "what's at (col, row)?"; the game decides what each
