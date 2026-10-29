@@ -19,7 +19,7 @@ const MIN_REPAIR = 20; // at this Rep or less, the ship goes down...
 const MIN_MEN = 10; // ...and with this few men or fewer, too
 // The most the ship can carry (the original's lines 960-963). Any more, and
 // the weight sinks her.
-const MAX_CARGO = { money: 30000, men: 500, guns: 150, grain: 700 };
+export const MAX_CARGO = { money: 30000, men: 500, guns: 150, grain: 700 };
 const STARVING_SURVIVORS = 0.9; // share of the crew left after a meal without grain
 
 // Lose `amount` Rep, never going below 0.

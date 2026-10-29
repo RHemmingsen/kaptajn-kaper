@@ -4,10 +4,9 @@
 //
 // Random numbers come from a `random` function returning 0..1, so tests can
 // decide what happens.
-import { isSunk, loseMen } from './ship.js';
+import { isSunk, loseMen, MAX_CARGO } from './ship.js';
 
 const MIN_GRAIN = 2; // there's always a little grain aboard
-const MAX_MEN = 500; // more than this, and the rest go to the sharks
 const PRIZE_CREW_BASE = 5; // a prize crew is 5 men, plus half her survivors
 
 // Take her rigsdaler (and points for them) and her grain, and count her
@@ -34,13 +33,13 @@ export function plunder(enemy, state) {
 }
 
 // Sink her. Her survivors join your crew, but the ship can hold no more than
-// 500 men. Returns { joined, toTheSharks }.
+// 500 men; the rest go to the sharks. Returns { joined, toTheSharks }.
 //
 // (In the original, sinking a ship that had surrendered gave her points a
 // second time. Here you only get them once, in plunder().)
 export function sinkPrize(state, spoils) {
   state.men += spoils.survivors;
-  const toTheSharks = Math.max(0, state.men - MAX_MEN);
+  const toTheSharks = Math.max(0, state.men - MAX_CARGO.men);
   state.men -= toTheSharks;
   return { joined: spoils.survivors, toTheSharks };
 }
@@ -65,18 +64,21 @@ export function sendPrize(state, spoils, events, random = Math.random) {
 }
 
 // Arriving in the prize port: collect the crews and prize money waiting
-// there, with points for the money. Returns { men, money, points }, or null
-// if nothing was waiting.
+// there, with points for all the money. The ship can't carry more than
+// 30000 rigsdaler, so any more is left behind. (That's what the original
+// meant to do; a typo, irdsd=3000, meant the weight sank the ship instead.)
+// Returns { men, money, points, leftBehind }, or null if nothing was waiting.
 export function collectPrizes(state) {
   if (state.prizeMen === 0 && state.prizeMoney === 0) return null;
 
   const men = state.prizeMen;
   const money = state.prizeMoney;
   const points = Math.floor(money / 10);
+  const kept = Math.min(money, Math.max(0, MAX_CARGO.money - state.money));
   state.men += men;
-  state.money += money;
+  state.money += kept;
   state.points += points;
   state.prizeMen = 0;
   state.prizeMoney = 0;
-  return { men, money, points };
+  return { men, money, points, leftBehind: money - kept };
 }

@@ -64,13 +64,19 @@ export function drawPort(ctx, view) {
 }
 
 // The prize crews and prize money waiting in the prize port.
-function drawPrizes(ctx, city, { men, money }) {
+function drawPrizes(ctx, city, { men, money, leftBehind }) {
   text(ctx, 'Hurra!', 50, COLORS.white, 26);
   text(ctx, `Her i ${city.name} venter dine ${men}`, 100);
   text(ctx, 'tapre mænd på dig.', 100 + LINE);
   text(ctx, `De har ${money} rigsdaler`, 100 + 2 * LINE);
   text(ctx, 'i prisepenge til dig!', 100 + 3 * LINE);
-  text(ctx, 'Tryk på en tast.', 100 + 5 * LINE, COLORS.white);
+  let y = 100 + 5 * LINE;
+  if (leftBehind > 0) {
+    text(ctx, 'Dit skib kan ikke bære mere end 30000', y);
+    text(ctx, `rigsdaler, så ${leftBehind} må blive tilbage.`, y + LINE);
+    y += 3 * LINE;
+  }
+  text(ctx, 'Tryk på en tast.', y, COLORS.white);
 }
 
 function messageText({ action, result }) {

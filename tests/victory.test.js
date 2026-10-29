@@ -83,9 +83,19 @@ test('in København, the prize crews and prize money are paid out, with points',
   state.prizeMen = 59;
   state.prizeMoney = 450;
 
-  assert.deepEqual(collectPrizes(state), { men: 59, money: 450, points: 45 });
+  assert.deepEqual(collectPrizes(state), { men: 59, money: 450, points: 45, leftBehind: 0 });
   assert.equal(state.men, 259);
   assert.equal(state.money, 1050);
   assert.equal(state.points, 45);
   assert.equal(collectPrizes(state), null, 'paid out only once');
+});
+
+test('prize money fills the ship up to 30000 rigsdaler; the rest is left behind', () => {
+  const state = new GameState();
+  state.money = 29900;
+  state.prizeMoney = 450;
+
+  assert.deepEqual(collectPrizes(state), { men: 0, money: 450, points: 45, leftBehind: 350 });
+  assert.equal(state.money, 30000);
+  assert.equal(state.points, 45, 'points for all of it');
 });
