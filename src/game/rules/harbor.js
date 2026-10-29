@@ -9,7 +9,9 @@
 // the speeds below are "pixels per second", whatever the frame rate is.
 //
 // The original moved in 18 steps. Here that's the time the trip takes
-// (TRIP_STEP seconds each), and a gust can come once per step.
+// (TRIP_STEP seconds each), and a gust can come once per step. While a gust
+// pushes, the rudder doesn't answer: in the original a gust took the place
+// of your move.
 //
 // Random numbers come from a `random` function returning 0..1, so tests can
 // decide what happens.
@@ -29,13 +31,13 @@ const START = { x: 311, y: 40 };
 const SHIP_SIZE = { w: 18, h: 14 };
 const OBSTACLE_SIZE = { w: 16, h: 18 };
 
-const SAIL_SPEED = 45; // pixels per second downwards, always: about 8 seconds to the docks
-const TRIP_STEP = 0.45; // seconds: the trip is about 18 of the original's steps
+const SAIL_SPEED = 67.5; // pixels per second downwards, always: about 5.3 seconds to the docks
+const TRIP_STEP = 0.3; // seconds: the trip is about 18 of the original's steps
 
 // In one step, you can steer as far as a gust pushes you, as in the original
 // (10 of its pixels each).
 const GUST_PUSH = 23; // pixels a gust pushes the ship
-const GUST_TIME = 0.3; // seconds the push takes
+const GUST_TIME = 0.2; // seconds the push takes
 const STEER_SPEED = GUST_PUSH / TRIP_STEP; // pixels per second, holding a key
 
 const CRASH_MESSAGE_TIME = 1; // seconds the crash message stays up
@@ -76,27 +78,35 @@ function placeGap(difficulty, random) {
   return { left, right: left + columns * COLUMN };
 }
 
-// Scatter ships at anchor at random, but not too close to each other, so
-// there is always a way through. If the harbor is too crowded for all of
-// them, the ones that don't fit stay out.
+// Ships at anchor, placed as in the original: each on a random place in a
+// grid of 29 x 14, which covers the whole harbor from the walls to the walls
+// and from beside where you start down to a little above the docks. Nothing
+// keeps them apart: they can lie close together, and block the way.
+// (Two can't lie on the same place; in the original, the second one erased
+// the first.)
+const GRID_COLUMNS = 29;
+const GRID_ROWS = 14;
+const GRID_TOP = 15; // the original's top row, beside its ship
+const GRID_BOTTOM = 334; // its bottom row, with a fifth of the trip left to the docks
+
 function placeObstacles(count, random) {
-  const top = 90;
-  const bottom = LAYOUT.dockTop - 40;
-  const left = LAYOUT.wallLeft + 10;
-  const right = LAYOUT.wallRight - 10 - OBSTACLE_SIZE.w;
+  const columnWidth = (WIDTH - OBSTACLE_SIZE.w) / (GRID_COLUMNS - 1);
+  const rowHeight = (GRID_BOTTOM - GRID_TOP) / (GRID_ROWS - 1);
+  // Every place, from which each ship takes one at random.
+  const free = [];
+  for (let row = 0; row < GRID_ROWS; row++) {
+    for (let column = 0; column < GRID_COLUMNS; column++) free.push({ column, row });
+  }
 
   const obstacles = [];
-  for (let attempt = 0; attempt < 1000 && obstacles.length < count; attempt++) {
-    const candidate = {
-      x: left + random() * (right - left),
-      y: top + random() * (bottom - top),
+  for (let i = 0; i < count; i++) {
+    const [{ column, row }] = free.splice(Math.floor(random() * free.length), 1);
+    obstacles.push({
+      x: LAYOUT.wallLeft + column * columnWidth,
+      y: GRID_TOP + row * rowHeight,
       ...OBSTACLE_SIZE,
       hit: false,
-    };
-    const tooClose = obstacles.some(
-      (o) => Math.abs(o.x - candidate.x) < 50 && Math.abs(o.y - candidate.y) < 50,
-    );
-    if (!tooClose) obstacles.push(candidate);
+    });
   }
   return obstacles;
 }
@@ -125,12 +135,14 @@ export function updateHarbor(harbor, controls, dt, state, events, random = Math.
     }
   }
 
-  // 2. Move: always down; sideways by steering and by any gust. A gust
-  //    pushes GUST_PUSH pixels spread over GUST_TIME seconds.
+  // 2. Move: always down; sideways by steering or, while a gust blows, only
+  //    by the gust. A gust pushes GUST_PUSH pixels spread over GUST_TIME
+  //    seconds.
   const ship = harbor.ship;
-  const steer = (controls.right ? 1 : 0) - (controls.left ? 1 : 0);
-  ship.x += steer * STEER_SPEED * dt;
-  if (harbor.gustTimer > 0) {
+  if (harbor.gustTimer === 0) {
+    const steer = (controls.right ? 1 : 0) - (controls.left ? 1 : 0);
+    ship.x += steer * STEER_SPEED * dt;
+  } else {
     const gustDt = Math.min(dt, harbor.gustTimer);
     harbor.gustTimer -= gustDt;
     ship.x += gustDirection(harbor) * (GUST_PUSH / GUST_TIME) * gustDt;

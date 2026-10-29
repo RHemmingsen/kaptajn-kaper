@@ -43,17 +43,25 @@ function recordEvents() {
   return { events, log };
 }
 
-test('there are difficulty x 5 + 1 ships at anchor, spread out', () => {
-  assert.equal(createHarbor(CITY, 2, seededRandom(42)).obstacles.length, 11);
-  const harbor = createHarbor(CITY, 4, seededRandom(42));
-  assert.equal(harbor.obstacles.length, 21);
-  for (const a of harbor.obstacles) {
-    for (const b of harbor.obstacles) {
-      if (a === b) continue;
-      const apart = Math.abs(a.x - b.x) >= 50 || Math.abs(a.y - b.y) >= 50;
-      assert.ok(apart, 'two ships at anchor are too close');
-    }
+test('there are difficulty x 5 + 1 ships at anchor, all of them, however crowded', () => {
+  for (const difficulty of [2, 4, 6, 8]) {
+    const harbor = createHarbor(CITY, difficulty, seededRandom(42));
+    assert.equal(harbor.obstacles.length, 5 * difficulty + 1);
   }
+});
+
+test('ships at anchor lie on a 29 x 14 grid inside the walls, never two on one place', () => {
+  const harbor = createHarbor(CITY, 8, seededRandom(7));
+  const places = new Set(harbor.obstacles.map((o) => `${o.x},${o.y}`));
+  assert.equal(places.size, harbor.obstacles.length);
+  for (const o of harbor.obstacles) {
+    assert.ok(o.x >= LAYOUT.wallLeft && o.x + o.w <= LAYOUT.wallRight);
+    assert.ok(o.y + o.h < LAYOUT.dockTop);
+  }
+  // The corners of the grid: random() just under 1 picks the last column and row.
+  const corners = createHarbor(CITY, 0, () => 0.999).obstacles[0];
+  assert.equal(corners.x + corners.w, LAYOUT.wallRight);
+  assert.equal(createHarbor(CITY, 0, () => 0).obstacles[0].x, LAYOUT.wallLeft);
 });
 
 test('the gap is 8 columns wide at the start and 4 at the end, between the docks', () => {
@@ -90,8 +98,8 @@ test('in one step of the trip you can steer as far as a gust pushes', () => {
   const startX = left.ship.x;
   const { events } = recordEvents();
 
-  play(left, { left: true }, 0.45, new GameState(), events);
-  play(right, { right: true }, 0.45, new GameState(), events);
+  play(left, { left: true }, 0.3, new GameState(), events);
+  play(right, { right: true }, 0.3, new GameState(), events);
 
   assert.ok(Math.abs(startX - left.ship.x - 23) < 1);
   assert.ok(Math.abs(right.ship.x - startX - 23) < 1);
@@ -103,10 +111,24 @@ test('a gust from the right pushes the ship 23 pixels left', () => {
   const startX = harbor.ship.x;
   const { events, log } = recordEvents();
 
-  // The first gust can come after one step (0.45 s) and takes 0.3 s.
-  play(harbor, NO_KEYS, 0.8, new GameState(), events, gustEveryStep);
+  // The first gust can come after one step (0.3 s) and takes 0.2 s.
+  play(harbor, NO_KEYS, 0.55, new GameState(), events, gustEveryStep);
 
   assert.equal(log.filter((e) => e.name === 'harborGust').length, 1);
+  assert.ok(Math.abs(startX - harbor.ship.x - 23) < 0.5);
+});
+
+test('while a gust blows, the rudder does not answer', () => {
+  const harbor = emptyHarbor();
+  harbor.gustsFrom = 'right';
+  const startX = harbor.ship.x;
+  const { events } = recordEvents();
+
+  // A gust from the right has just begun; you steer right against it.
+  harbor.gustTimer = 0.2;
+  play(harbor, { right: true }, 0.2, new GameState(), events);
+
+  // It pushes you its full 23 pixels left, as if you weren't steering.
   assert.ok(Math.abs(startX - harbor.ship.x - 23) < 0.5);
 });
 

@@ -101,16 +101,24 @@ Havne overskriver land, hvis et felt er begge dele.
 
 - Før start: "Pas på!!! Der kan komme vindstød fra højre/venstre!" Retningen
   er tilfældig og vises på forhånd.
-- Skibe på reden: IDIF × 5 + 1 (11 på niveau 1), tilfældigt placeret.
+- Skibe på reden: IDIF × 5 + 1 (11 på niveau 1), tilfældigt placeret på et
+  gitter af 29 × 14 pladser over hele reden, også ved siden af start og i
+  klumper (linje 1360). To på samme plads visker hinanden ud (XOR).
 - En mole tværs over bunden med et hul. Hullet har tilfældig placering og
   bredden 9 − IDIF÷2 tegn (8 tegn = 64 px på 320 px skærm, niveau 1).
 - Turen er 18 skridt. Hvert skridt: venstre/højre flytter 10 px. Skibet står
-  stille på skærmen, og reden ruller op forbi det.
+  stille på skærmen, og reden ruller op forbi det (en tom linje skrives
+  nederst, så skærmen ruller 8 px).
+- Tasten læses i slutningen af et skridt og bruges i det næste: ét skridts
+  forsinkelse, og kun én tast pr. skridt tæller.
 - Vindstød: chance IDIF ÷ 18 pr. skridt (11 % på niveau 1), skubber 10 px i
-  vindens retning.
+  vindens retning og træder i stedet for dit træk det skridt.
+- Sammenstød tjekkes med én pixel under skibets midte (`POINT(ISX+5,26)`).
+  Kun skrogene på skibene på reden kan rammes, og kun i 6 af de 14 rækker.
 - Rammer du et skib: −15 × IDIF Rep (30 på niveau 1). Du fortsætter.
 - Rammer du molen i sidste skridt: "Dit skib gik ned med mand og mus".
-- Tempoet stiger med IDIF.
+- Tempoet stiger lidt med IDIF (ventetiden falder med 40 af 5000 omgange pr.
+  niveau). Den rigtige fart afhang af maskinen.
 
 ## Handel i havnen (linje 1500–1720)
 
@@ -234,7 +242,11 @@ Har du over 500 mænd, smides resten "ud til hajerne".
 
 - Vi følger originalens regler og tal.
 - Moderne udførelse: f.eks. glidende bevægelse i havnen, men med originalens
-  vindstød, skade og 18-skridts-længde omsat til tid og afstand.
+  vindstød, skade, placering af skibene og 18-skridts-længde omsat til tid og
+  afstand. Mens et vindstød blæser, virker roret ikke, som i originalen.
+  Havnen sejles på ca. 5,3 sekunder (0,3 s pr. skridt): originalens fart
+  kendes ikke, og det er valgt efter, hvordan det føles. Sammenstød tjekkes
+  med hele skibets kasse, ikke én pixel.
 - Skærmen forbliver 640×480. Originalens koordinater (320×200) omregnes.
 - Fejlene ovenfor kopieres ikke.
 - Felter med kaprede eller sænkede skibe bliver "rolige", som i originalen
