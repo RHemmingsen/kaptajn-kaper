@@ -11,6 +11,9 @@
 //   shipDamaged   { amount }
 //   crewStarving  { lost }   men who died for lack of grain
 //   shipSunk      {}         once per game, however the ship was lost
+// and, when the ship is lost, the game ends (see ending.js).
+
+import { endGame } from './ending.js';
 
 const MIN_REPAIR = 20; // at this Rep or less, the ship goes down...
 const MIN_MEN = 10; // ...and with this few men or fewer, too
@@ -55,6 +58,7 @@ export function sinkShip(state, events) {
   if (state.sunk) return;
   state.sunk = true;
   events.emit('shipSunk', {});
+  endGame(state, 'sunk', events);
 }
 
 // How badly the crew fights, the more often you've fled: it multiplies the

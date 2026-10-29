@@ -15,7 +15,7 @@ function recordEvents() {
   const events = new EventBus();
   const log = [];
   for (const name of [
-    'shipMoved', 'arrivedAtPort', 'shipRanAground', 'shipDamaged', 'shipSunk', 'seaEvent',
+    'shipMoved', 'arrivedAtPort', 'shipRanAground', 'shipDamaged', 'shipSunk', 'seaEvent', 'gameOver',
   ]) {
     events.on(name, (data) => log.push({ name, data }));
   }
@@ -97,7 +97,7 @@ test('if the crew starves to death, the ship is lost and goes nowhere', () => {
   assert.equal(sail(state, 'left', events, nothingSpotted), false);
   assert.equal(state.sunk, true);
   assert.equal(state.repair, 200, 'the lost ship does not also run aground');
-  assert.deepEqual(log.map((e) => e.name), ['shipSunk']);
+  assert.deepEqual(log.map((e) => e.name), ['shipSunk', 'gameOver']);
 });
 
 test('sailing onto open water can make the lookout spot something', () => {
@@ -118,4 +118,16 @@ test('nothing is spotted when sailing into a port', () => {
   sail(state, 'left', events, () => 0);
 
   assert.deepEqual(log.map((e) => e.name), ['shipMoved', 'arrivedAtPort']);
+});
+
+test('the last move ends the game before the ship moves or the crew eats', () => {
+  const state = new GameState();
+  state.moves = 299; // the limit is 300
+  const { events, log } = recordEvents();
+
+  assert.equal(sail(state, 'left', events, nothingSpotted), false);
+  assert.equal(state.ending, 'jilted');
+  assert.deepEqual(state.ship, { col: 10, row: 10 });
+  assert.equal(state.grain, 30);
+  assert.deepEqual(log.map((e) => e.name), ['gameOver']);
 });

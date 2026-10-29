@@ -2,6 +2,8 @@
 // knows about the keyboard or the canvas: it takes the game state, changes
 // it, and announces what happened.
 import { tileAt, cityAt } from '../map.js';
+import { useMove } from './career.js';
+import { isGameOver } from './ending.js';
 import { rollSeaEvent } from './sea.js';
 import { crewEats, damageShip, isSunk } from './ship.js';
 
@@ -27,8 +29,10 @@ export function canSailTo(col, row) {
 // Try to sail one cell in a direction. Returns true if the ship moved.
 //
 //   - Off the edge of the map: nothing happens.
-//   - Every other attempt is a move (Træk), and the crew eats. If that
-//     starves the crew to death, the ship is lost and goes nowhere.
+//   - Every other attempt is a move (Træk). If it was the last one, the game
+//     is over and the ship goes nowhere.
+//   - The crew eats. If that starves them to death, the ship is lost and
+//     goes nowhere.
 //   - Into land: the ship runs aground. It stays where it is and loses Rep.
 //   - Onto open water: the lookout may spot something (see sea.js).
 //
@@ -46,7 +50,9 @@ export function sail(state, direction, events, random = Math.random) {
 
   if (tileAt(col, row) === null) return false;
 
-  state.moves += 1;
+  useMove(state, events);
+  if (isGameOver(state)) return false;
+
   crewEats(state, events);
   if (isSunk(state)) return false;
 
