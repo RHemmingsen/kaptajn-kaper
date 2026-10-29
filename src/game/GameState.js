@@ -1,5 +1,5 @@
 // Everything that belongs to "this playthrough": the ship's stats and where it
-// is. Every screen (map, harbor, combat, boarding) reads and changes the same
+// is. Every scene (map, harbor, combat, boarding) reads and changes the same
 // GameState object, which is how a battle's losses show up back on the map.
 //
 // A new GameState is created each time a new game starts.

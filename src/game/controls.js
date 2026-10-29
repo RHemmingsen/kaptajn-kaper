@@ -1,5 +1,5 @@
 // Every key the game uses, in one place. The engine's Input turns key presses
-// into these named actions, and the screens only ever ask about actions.
+// into these named actions, and the scenes only ever ask about actions.
 //
 // Key names are the browser's KeyboardEvent.code values, which name the
 // physical key whatever the keyboard layout: 'Digit7' is 7 on the number row,

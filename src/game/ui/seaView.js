@@ -5,7 +5,7 @@ const LEFT = 40;
 const TOP = 50;
 const LINE = 28; // pixels between lines
 
-// `view` is what the screen wants shown: { step, ship, outcome, rank }.
+// `view` is what the scene wants shown: { step, ship, outcome, rank }.
 export function drawSeaEvent(ctx, view) {
   linesFor(view).forEach((line, i) => {
     ctx.font = `bold 20px ${FONT}`;

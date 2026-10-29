@@ -31,7 +31,7 @@ export class EventBus {
   emit(name, data) {
     const fns = this.listeners.get(name);
     if (!fns) return;
-    // Copy first, so a listener that unsubscribes (or switches screen) while
+    // Copy first, so a listener that unsubscribes (or switches scene) while
     // we're looping doesn't disturb the loop.
     for (const fn of [...fns]) fn(data);
   }

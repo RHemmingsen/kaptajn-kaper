@@ -1,5 +1,5 @@
 // The game's colours, picked to match the old EGA/VGA look of the original.
-// Keeping them in one place means every screen uses exactly the same shades.
+// Keeping them in one place means every scene uses exactly the same shades.
 export const COLORS = {
   blue: '#2a32e8',
   white: '#e8e8d0',

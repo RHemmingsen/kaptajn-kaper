@@ -1,22 +1,22 @@
-import { Screen } from '../../engine/Screen.js';
+import { Scene } from '../../engine/Scene.js';
 import { rankTitle } from '../rules/career.js';
 import { flee, investigateFog } from '../rules/sea.js';
 import { clearScreen } from '../ui/draw.js';
 import { drawSeaEvent } from '../ui/seaView.js';
 import { drawStatusPanel } from '../ui/statusPanel.js';
-import { BattleScreen } from './BattleScreen.js';
-import { BoardingScreen } from './BoardingScreen.js';
-import { MapScreen } from './MapScreen.js';
+import { BattleScene } from './BattleScene.js';
+import { BoardingScene } from './BoardingScene.js';
+import { MapScene } from './MapScene.js';
 
 // The lookout has spotted something. As in the original, you answer by
 // typing a letter.
 //
-// The screen goes through these steps:
+// The scene goes through these steps:
 //   ship        a ship in sight: attack (a) or flee (f)?
-//   attackHow   board her (b) or shoot (s)? Each has its own screen.
+//   attackHow   board her (b) or shoot (s)? Each has its own scene.
 //   fog         a fog bank: investigate it (j/n)?
 //   outcome     what was in the fog; a ship from the fog goes on to 'ship'
-export class SeaEventScreen extends Screen {
+export class SeaEventScene extends Scene {
   constructor(game, state, seaEvent) {
     super(game);
     this.state = state;
@@ -38,9 +38,9 @@ export class SeaEventScreen extends Screen {
     } else if (this.step === 'attackHow') {
       // As in the original, with no guns left boarding is the only way.
       if (typed.includes('s') && this.state.guns > 0) {
-        this.game.setScreen(new BattleScreen(this.game, this.state, this.ship));
+        this.game.setScene(new BattleScene(this.game, this.state, this.ship));
       } else if (typed.includes('b') || typed.includes('s')) {
-        this.game.setScreen(new BoardingScreen(this.game, this.state, this.ship));
+        this.game.setScene(new BoardingScene(this.game, this.state, this.ship));
       }
     } else if (this.step === 'fog') {
       if (typed.includes('j')) this.searchFog();
@@ -58,7 +58,7 @@ export class SeaEventScreen extends Screen {
   }
 
   backToSea() {
-    this.game.setScreen(new MapScreen(this.game, this.state));
+    this.game.setScene(new MapScene(this.game, this.state));
   }
 
   render(ctx) {

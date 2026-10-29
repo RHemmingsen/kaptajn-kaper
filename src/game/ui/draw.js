@@ -1,4 +1,4 @@
-// Small drawing helpers shared by all screens.
+// Small drawing helpers shared by all scenes.
 import { COLORS, FONT } from '../palette.js';
 
 export function clearScreen(ctx, color = COLORS.blue) {

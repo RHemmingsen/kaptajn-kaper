@@ -64,6 +64,8 @@ Ved spillets slut vises point og rekord, og en ny rekord gemmes med navn.
 - Ind i land: −3 Rep, skibet bliver stående, trækket er brugt.
 - På vand: 25 % chance for en hændelse (se "Til søs").
 - Et felt, hvor et skib er kapret eller sænket, giver ikke flere hændelser.
+  (Bivirkning i koden: feltet sættes til 50, linje 3000 og 3080. Vi tager den
+  ikke med; se "Vores beslutninger".)
 
 ### Havne (linje 750–790), (x, y)
 
@@ -234,3 +236,5 @@ Har du over 500 mænd, smides resten "ud til hajerne".
   vindstød, skade og 18-skridts-længde omsat til tid og afstand.
 - Skærmen forbliver 640×480. Originalens koordinater (320×200) omregnes.
 - Fejlene ovenfor kopieres ikke.
+- Felter med kaprede eller sænkede skibe bliver ikke "rolige". Hændelser er
+  tilfældige, så der er ikke noget at forhindre ved at blive på samme felt.

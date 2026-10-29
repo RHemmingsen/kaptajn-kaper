@@ -1,17 +1,17 @@
-import { Screen } from '../../engine/Screen.js';
+import { Scene } from '../../engine/Scene.js';
 import { fightRound } from '../rules/boarding.js';
 import { clearScreen } from '../ui/draw.js';
 import { drawBoarding } from '../ui/boardingView.js';
 import { drawStatusPanel } from '../ui/statusPanel.js';
-import { MapScreen } from './MapScreen.js';
-import { SeaEventScreen } from './SeaEventScreen.js';
+import { MapScene } from './MapScene.js';
+import { SeaEventScene } from './SeaEventScene.js';
 
 // Boarding an enemy ship. The first round is fought as soon as you board.
 // After each round, as in the original, you answer by typing a letter: fight
 // on (k), or go back to your own ship (t) and choose again whether to attack
 // or flee. When she strikes her flag, any key takes you back to sea.
 // If your ship is lost, the shipSunk listener in main.js ends the game.
-export class BoardingScreen extends Screen {
+export class BoardingScene extends Scene {
   constructor(game, state, enemy) {
     super(game);
     this.state = state;
@@ -31,7 +31,7 @@ export class BoardingScreen extends Screen {
     const input = this.game.input;
 
     if (this.round.outcome === 'surrender') {
-      if (input.anyKeyPressed()) this.game.setScreen(new MapScreen(this.game, this.state));
+      if (input.anyKeyPressed()) this.game.setScene(new MapScene(this.game, this.state));
       return;
     }
 
@@ -40,7 +40,7 @@ export class BoardingScreen extends Screen {
       this.fight();
     } else if (typed.includes('t')) {
       const seaEvent = { kind: 'ship', ship: this.enemy };
-      this.game.setScreen(new SeaEventScreen(this.game, this.state, seaEvent));
+      this.game.setScene(new SeaEventScene(this.game, this.state, seaEvent));
     }
   }
 

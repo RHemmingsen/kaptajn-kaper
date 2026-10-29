@@ -1,7 +1,7 @@
 // A whole number being typed in, like the answer to "Hvor mange?".
 //
 // It only holds the text and decides what's allowed (digits, up to a maximum
-// length). It doesn't read the keyboard or draw anything; the screen feeds it
+// length). It doesn't read the keyboard or draw anything; the scene feeds it
 // typed text and draws it:
 //
 //   field.type(input.typedText());

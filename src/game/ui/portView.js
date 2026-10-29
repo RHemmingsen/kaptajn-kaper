@@ -24,7 +24,7 @@ const REFUSALS = {
   notEnough: 'Så mange har du ikke!',
 };
 
-// `view` is what the screen wants shown:
+// `view` is what the scene wants shown:
 //   { city, prices, step, trade, amountText, cursorOn, message, jewels }
 export function drawPort(ctx, view) {
   const { prices } = view;

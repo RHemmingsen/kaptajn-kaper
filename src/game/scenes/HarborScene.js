@@ -1,16 +1,16 @@
-import { Screen } from '../../engine/Screen.js';
+import { Scene } from '../../engine/Scene.js';
 import { COLORS } from '../palette.js';
 import { createHarbor, updateHarbor } from '../rules/harbor.js';
 import { clearScreen, centeredLabel } from '../ui/draw.js';
 import { drawHarbor } from '../ui/harborView.js';
-import { MapScreen } from './MapScreen.js';
-import { PortScreen } from './PortScreen.js';
+import { MapScene } from './MapScene.js';
+import { PortScene } from './PortScene.js';
 
 // The harbor minigame, played when the ship sails into a port on the map.
 // Steer left and right (hold the keys down), or leave to give up and go back
 // to sea. The keys are in controls.js.
 // If the ship sinks, the shipSunk listener in main.js ends the game.
-export class HarborScreen extends Screen {
+export class HarborScene extends Scene {
   constructor(game, state, city) {
     super(game);
     this.state = state;
@@ -22,7 +22,7 @@ export class HarborScreen extends Screen {
 
     if (this.harbor.status === 'docked') {
       if (input.anyKeyPressed()) {
-        this.game.setScreen(new PortScreen(this.game, this.state, this.harbor.city));
+        this.game.setScene(new PortScene(this.game, this.state, this.harbor.city));
       }
       return;
     }
@@ -40,7 +40,7 @@ export class HarborScreen extends Screen {
   }
 
   backToMap() {
-    this.game.setScreen(new MapScreen(this.game, this.state));
+    this.game.setScene(new MapScene(this.game, this.state));
   }
 
   render(ctx) {

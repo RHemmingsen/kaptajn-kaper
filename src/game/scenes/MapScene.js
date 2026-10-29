@@ -1,4 +1,4 @@
-import { Screen } from '../../engine/Screen.js';
+import { Scene } from '../../engine/Scene.js';
 import { COLORS } from '../palette.js';
 import { KATTEGAT, cityAt } from '../map.js';
 import { sail } from '../rules/sailing.js';
@@ -7,9 +7,9 @@ import {
   drawMap, drawCollisionOverlay, drawCities, drawCityName, drawShip,
 } from '../ui/mapView.js';
 import { drawStatusPanel } from '../ui/statusPanel.js';
-import { HarborScreen } from './HarborScreen.js';
-import { SeaEventScreen } from './SeaEventScreen.js';
-import { TitleScreen } from './TitleScreen.js';
+import { HarborScene } from './HarborScene.js';
+import { SeaEventScene } from './SeaEventScene.js';
+import { TitleScene } from './TitleScene.js';
 
 // Which action sails which way. The keys for each action are in controls.js.
 const SAIL_ACTIONS = {
@@ -23,10 +23,10 @@ const SAIL_ACTIONS = {
   sailDownRight: 'downRight',
 };
 
-// The main screen: sail the ship around the Kattegat, one tile per key press.
-// The screen only connects things: keys go to the sailing rules, and the
+// The main scene: sail the ship around the Kattegat, one tile per key press.
+// The scene only connects things: keys go to the sailing rules, and the
 // state is handed to the drawing code.
-export class MapScreen extends Screen {
+export class MapScene extends Scene {
   constructor(game, state) {
     super(game);
     this.state = state;
@@ -38,10 +38,10 @@ export class MapScreen extends Screen {
   enter() {
     this.listen('shipMoved', () => { this.portCity = null; });
     this.listen('arrivedAtPort', ({ city }) => {
-      this.game.setScreen(new HarborScreen(this.game, this.state, city));
+      this.game.setScene(new HarborScene(this.game, this.state, city));
     });
     this.listen('seaEvent', (seaEvent) => {
-      this.game.setScreen(new SeaEventScreen(this.game, this.state, seaEvent));
+      this.game.setScene(new SeaEventScene(this.game, this.state, seaEvent));
     });
   }
 
@@ -49,7 +49,7 @@ export class MapScreen extends Screen {
     const input = this.game.input;
 
     if (input.wasActionPressed('leave')) {
-      this.game.setScreen(new TitleScreen(this.game));
+      this.game.setScene(new TitleScene(this.game));
       return;
     }
 
@@ -57,8 +57,8 @@ export class MapScreen extends Screen {
       this.game.debug.showCollision = !this.game.debug.showCollision;
     }
 
-    // One step per update at most. Sailing can switch to the harbor screen,
-    // and this screen must not keep moving the ship after that.
+    // One step per update at most. Sailing can switch to the harbor scene,
+    // and this scene must not keep moving the ship after that.
     for (const [action, direction] of Object.entries(SAIL_ACTIONS)) {
       if (input.wasActionPressed(action)) {
         sail(this.state, direction, this.game.events);

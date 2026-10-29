@@ -1,12 +1,12 @@
-import { Screen } from '../../engine/Screen.js';
+import { Scene } from '../../engine/Scene.js';
 import { COLORS, FONT } from '../palette.js';
 import { GameState } from '../GameState.js';
 import { clearScreen } from '../ui/draw.js';
 import { drawTitleArt } from '../ui/titleArt.js';
-import { MapScreen } from './MapScreen.js';
+import { MapScene } from './MapScene.js';
 
-// The title screen: a picture and "press any key to continue".
-export class TitleScreen extends Screen {
+// The title scene: a picture and "press any key to continue".
+export class TitleScene extends Scene {
   enter() {
     this.time = 0;
   }
@@ -15,7 +15,7 @@ export class TitleScreen extends Screen {
     this.time += dt;
 
     if (this.game.input.anyKeyPressed()) {
-      this.game.setScreen(new MapScreen(this.game, new GameState()));
+      this.game.setScene(new MapScene(this.game, new GameState()));
     }
   }
 

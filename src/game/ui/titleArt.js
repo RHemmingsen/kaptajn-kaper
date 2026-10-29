@@ -1,4 +1,4 @@
-// The title screen's picture: ship, title, cannon, skull and treasure chest.
+// The title scene's picture: ship, title, cannon, skull and treasure chest.
 //
 // All drawn with plain canvas shapes (rectangles, polygons, circles). Later we
 // might swap these for image files.

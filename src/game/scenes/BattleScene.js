@@ -1,9 +1,9 @@
-import { Screen } from '../../engine/Screen.js';
+import { Scene } from '../../engine/Scene.js';
 import { breakOff, fire, moveAim, startBattle } from '../rules/battle.js';
 import { clearScreen } from '../ui/draw.js';
 import { drawBattle } from '../ui/battleView.js';
-import { MapScreen } from './MapScreen.js';
-import { SeaEventScreen } from './SeaEventScreen.js';
+import { MapScene } from './MapScene.js';
+import { SeaEventScene } from './SeaEventScene.js';
 
 // How each aiming action moves the sights, as [elevation, side]. Up means
 // aiming higher, which is a lower elevation number and a longer shot.
@@ -18,11 +18,11 @@ const AIM_ACTIONS = {
   aimDownRight: [1, 1],
 };
 
-// A gun battle ("Sigte"). The screen has two steps:
+// A gun battle ("Sigte"). The scene has two steps:
 //   aim     move the sights; fire, or break off the battle
 //   result  where the shot landed and what the enemy hit; any key goes on
 // If your ship is sunk, the shipSunk listener in main.js ends the game.
-export class BattleScreen extends Screen {
+export class BattleScene extends Scene {
   constructor(game, state, enemy) {
     super(game);
     this.state = state;
@@ -49,12 +49,12 @@ export class BattleScreen extends Screen {
     } else if (input.wasActionPressed('breakOff')) {
       breakOff(this.battle);
       const seaEvent = { kind: 'ship', ship: this.battle.enemy };
-      this.game.setScreen(new SeaEventScreen(this.game, this.state, seaEvent));
+      this.game.setScene(new SeaEventScene(this.game, this.state, seaEvent));
     }
   }
 
   afterShot() {
-    if (this.result.outcome) this.game.setScreen(new MapScreen(this.game, this.state));
+    if (this.result.outcome) this.game.setScene(new MapScene(this.game, this.state));
     else this.step = 'aim';
   }
 

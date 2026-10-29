@@ -1,10 +1,10 @@
-import { Screen } from '../../engine/Screen.js';
+import { Scene } from '../../engine/Scene.js';
 import { NumberField } from '../../engine/NumberField.js';
 import { rollPrices, buy, sell } from '../rules/trade.js';
 import { clearScreen } from '../ui/draw.js';
 import { drawPort } from '../ui/portView.js';
 import { drawStatusPanel } from '../ui/statusPanel.js';
-import { MapScreen } from './MapScreen.js';
+import { MapScene } from './MapScene.js';
 
 // The menu, as in the original: type a number to choose.
 const BUY_CHOICES = { 1: 'men', 2: 'repair', 3: 'guns', 4: 'grain' };
@@ -15,11 +15,11 @@ const SELL_CHOICES = { k: 'grain', s: 'guns', j: 'jewels' };
 
 // A port, reached by docking in the harbor. Trade, then set sail again.
 //
-// The screen goes through three steps:
+// The scene goes through three steps:
 //   menu      choose 1-6
 //   sellWhat  choose what to sell (k, s or j)
 //   amount    type how many, Enter to trade, leave to change your mind
-export class PortScreen extends Screen {
+export class PortScene extends Scene {
   constructor(game, state, city) {
     super(game);
     this.state = state;
@@ -104,7 +104,7 @@ export class PortScreen extends Screen {
   }
 
   setSail() {
-    this.game.setScreen(new MapScreen(this.game, this.state));
+    this.game.setScene(new MapScene(this.game, this.state));
   }
 
   render(ctx) {

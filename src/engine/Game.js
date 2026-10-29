@@ -10,7 +10,7 @@ const STEP = 1 / 60;
 const MAX_FRAME_TIME = 0.25;
 
 // The Game owns the canvas, the input, the event bus and the loop, and holds
-// the active screen.
+// the active scene.
 //
 // `controls` is the game's key bindings, { actionName: [keyCode, ...], ... },
 // handed on to the Input. See Input.js.
@@ -23,24 +23,24 @@ export class Game {
 
     this.input = new Input(controls);
     this.events = new EventBus();
-    this.screen = null;
+    this.scene = null;
 
     // Developer switches, like showing collision boxes. They live on the
-    // Game rather than a screen, so they stay on when the screen changes.
+    // Game rather than a scene, so they stay on when the scene changes.
     this.debug = {};
 
     this.lastTime = 0;
     this.accumulator = 0;
   }
 
-  // Swap the active screen. The old one gets exit(), the new one enter().
-  setScreen(screen) {
-    if (this.screen) {
-      this.screen.exit();
-      this.screen.stopListening();
+  // Swap the active scene. The old one gets exit(), the new one enter().
+  setScene(scene) {
+    if (this.scene) {
+      this.scene.exit();
+      this.scene.stopListening();
     }
-    this.screen = screen;
-    this.screen.enter();
+    this.scene = scene;
+    this.scene.enter();
   }
 
   start() {
@@ -61,12 +61,12 @@ export class Game {
     this.accumulator += elapsed;
 
     while (this.accumulator >= STEP) {
-      this.screen.update(STEP);
+      this.scene.update(STEP);
       this.input.endStep();
       this.accumulator -= STEP;
     }
 
-    this.screen.render(this.ctx);
+    this.scene.render(this.ctx);
 
     requestAnimationFrame(this.frame);
   };
