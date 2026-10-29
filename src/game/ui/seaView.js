@@ -52,13 +52,6 @@ function linesFor({ step, ship, outcome, rank }) {
       ];
     case 'outcome':
       return [...outcomeLines(outcome), '', pressAnyKey];
-    case 'noBoarding':
-      return [
-        'Bordning er ikke bygget endnu.',
-        `${shipName(ship)} sejler sin vej.`,
-        '',
-        pressAnyKey,
-      ];
     default:
       throw new Error(`Unknown sea event step '${step}'`);
   }

@@ -5,6 +5,7 @@ import { clearScreen } from '../ui/draw.js';
 import { drawSeaEvent } from '../ui/seaView.js';
 import { drawStatusPanel } from '../ui/statusPanel.js';
 import { BattleScreen } from './BattleScreen.js';
+import { BoardingScreen } from './BoardingScreen.js';
 import { MapScreen } from './MapScreen.js';
 
 // The lookout has spotted something. As in the original, you answer by
@@ -12,10 +13,9 @@ import { MapScreen } from './MapScreen.js';
 //
 // The screen goes through these steps:
 //   ship        a ship in sight: attack (a) or flee (f)?
-//   attackHow   board her (b) or shoot (s)? Shooting starts a gun battle.
+//   attackHow   board her (b) or shoot (s)? Each has its own screen.
 //   fog         a fog bank: investigate it (j/n)?
 //   outcome     what was in the fog; a ship from the fog goes on to 'ship'
-//   noBoarding  stand-in until boarding is made: the ship sails off
 export class SeaEventScreen extends Screen {
   constructor(game, state, seaEvent) {
     super(game);
@@ -40,7 +40,7 @@ export class SeaEventScreen extends Screen {
       if (typed.includes('s') && this.state.guns > 0) {
         this.game.setScreen(new BattleScreen(this.game, this.state, this.ship));
       } else if (typed.includes('b') || typed.includes('s')) {
-        this.step = 'noBoarding';
+        this.game.setScreen(new BoardingScreen(this.game, this.state, this.ship));
       }
     } else if (this.step === 'fog') {
       if (typed.includes('j')) this.searchFog();

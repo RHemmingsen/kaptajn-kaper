@@ -49,6 +49,7 @@ src/
       trade.js           prices, buying and selling in a port
       sea.js             what the lookout spots: ships and fog banks
       battle.js          the gun battle: wind, aim, fire, damage both ways
+      boarding.js        boarding: fight on her deck, one round at a time
       career.js          your rank (skibsfører ... admiral)
     ui/                drawing code, shared between screens
       draw.js            small helpers: clearScreen, polygon, label
@@ -57,6 +58,8 @@ src/
       portView.js        the trading menu in a port
       seaView.js         what the lookout reports, and what was in the fog
       battleView.js      the "Sigte" screen: panels, sights, table
+      boardingView.js    the fight on the enemy's deck
+      shipArt.js         a three-master from the side, at any place and size
       statusPanel.js     the Træk/Rgsdl/Korn... table
       titleArt.js        the title screen picture
     screens/           thin glue: read input -> call rules -> draw
@@ -66,6 +69,7 @@ src/
       PortScreen.js
       SeaEventScreen.js
       BattleScreen.js
+      BoardingScreen.js
 assets/
   kattegat.svg         the map's land, drawn as SVG (10 units per cell)
 tests/                 Node tests for engine and rules: npm test

@@ -2,6 +2,7 @@
 // enemy ("Fjende") and your ship ("Egen") from above with the splashes, the
 // sights on the enemy ship, and a table of both ships.
 import { COLORS, FONT } from '../palette.js';
+import { drawSideViewShip } from './shipArt.js';
 
 // The three panels.
 const ENEMY_PANEL = { x: 16, y: 16, w: 284, h: 114 };
@@ -38,7 +39,7 @@ export function drawBattle(ctx, { battle, state, step, result }) {
   if (result) drawEnemyHits(ctx, result.enemyFire);
 
   drawPanel(ctx, SIGHTS_PANEL, null);
-  drawShip(ctx);
+  drawSideViewShip(ctx, 392, 44); // the target
   drawSights(ctx, battle.aim);
   if (step === 'aim') text(ctx, 'Sigte', 440, 236, COLORS.white);
   else text(ctx, 'Tryk på en tast.', 372, 236, COLORS.white);
@@ -181,32 +182,6 @@ function drawEnemyHits(ctx, { repair, men, gun }) {
   if (repair > 0) drawSplash(ctx, 118, 200);
   if (men > 0) drawSplash(ctx, 196, 200);
   if (gun) drawSplash(ctx, 158, 192);
-}
-
-// The enemy ship, seen from the side, as a target.
-function drawShip(ctx) {
-  // Hull.
-  ctx.fillStyle = COLORS.magenta;
-  ctx.beginPath();
-  ctx.moveTo(392, 170);
-  ctx.lineTo(548, 170);
-  ctx.lineTo(530, 202);
-  ctx.lineTo(410, 202);
-  ctx.closePath();
-  ctx.fill();
-  ctx.fillStyle = COLORS.white;
-  ctx.fillRect(400, 180, 140, 3);
-
-  // Masts and sails, smaller towards the top.
-  for (const x of [430, 470, 510]) {
-    ctx.fillStyle = COLORS.white;
-    ctx.fillRect(x - 1, 50, 3, 120);
-    for (const [y, half] of [[66, 12], [92, 16], [122, 20]]) {
-      ctx.fillRect(x - half, y, half * 2, 22);
-    }
-  }
-  ctx.fillStyle = COLORS.cyan;
-  ctx.fillRect(471, 44, 12, 8); // flag
 }
 
 // The crosshair, moved by the aim.

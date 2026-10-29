@@ -7,7 +7,22 @@ const TOP = 388;
 const BOTTOM = 472;
 const COLUMNS = [LEFT, 208, 424, RIGHT];
 
-export function drawStatusPanel(ctx, state) {
+// What the table shows. At sea and in port it has grain; while boarding it
+// has points instead, as in the original.
+const LAYOUTS = {
+  // Grain can be a fraction (the crew eats half sacks); show whole sacks, as
+  // the original did.
+  sailing: (state) => [
+    [`Træk: ${state.moves}`, `Rgsdl: ${state.money}`, `Korn: ${Math.floor(state.grain)}`],
+    [`Mænd: ${state.men}`, `Skyts: ${state.guns}`, `Rep: ${state.repair}`],
+  ],
+  boarding: (state) => [
+    [`Træk: ${state.moves}`, `Rgsdl: ${state.money}`, `Skyts: ${state.guns}`],
+    [`Mænd: ${state.men}`, `Point: ${state.points}`, `Rep: ${state.repair}`],
+  ],
+};
+
+export function drawStatusPanel(ctx, state, layout = 'sailing') {
   const mid = (TOP + BOTTOM) / 2;
 
   ctx.strokeStyle = COLORS.salmon;
@@ -22,12 +37,7 @@ export function drawStatusPanel(ctx, state) {
   }
   ctx.stroke();
 
-  // Grain can be a fraction (the crew eats half sacks); show whole sacks, as
-  // the original did.
-  const cells = [
-    [`Træk: ${state.moves}`, `Rgsdl: ${state.money}`, `Korn: ${Math.floor(state.grain)}`],
-    [`Mænd: ${state.men}`, `Skyts: ${state.guns}`, `Rep: ${state.repair}`],
-  ];
+  const cells = LAYOUTS[layout](state);
   ctx.fillStyle = COLORS.salmon;
   ctx.font = `bold 20px ${FONT}`;
   ctx.textAlign = 'left';
