@@ -66,7 +66,7 @@ Ved spillets slut vises point og rekord, og en ny rekord gemmes med navn.
 - Et felt, hvor et skib er kapret eller sænket, giver ikke flere hændelser.
   (Feltet sættes til 50, linje 3000 og 3080. Det er en tilsigtet regel:
   hjælpen siger "Der, hvor du har nedkæmpet en fjende, tør englænderne ikke
-  komme mere!" Vi har ikke taget den med; se "Vores beslutninger".)
+  komme mere!" Den er med; se "Vores beslutninger".)
 
 ### Havne (linje 750–790), (x, y)
 
@@ -237,9 +237,11 @@ Har du over 500 mænd, smides resten "ud til hajerne".
   vindstød, skade og 18-skridts-længde omsat til tid og afstand.
 - Skærmen forbliver 640×480. Originalens koordinater (320×200) omregnes.
 - Fejlene ovenfor kopieres ikke.
-- Felter med kaprede eller sænkede skibe bliver ikke "rolige". Hændelser er
-  tilfældige, så der er ikke noget at forhindre ved at blive på samme felt.
-  (Besluttet, før vi læste hjælpen og så, at reglen var tilsigtet.)
+- Felter med kaprede eller sænkede skibe bliver "rolige", som i originalen
+  (`quietenWaters` i `rules/sea.js`). Vi droppede først reglen, fordi den
+  lignede et værn mod farming; hjælpen viste, at den var tilsigtet, så den
+  kom tilbage. Til forskel fra originalen viser kortet de rolige felter med
+  et lille dannebrogsflag.
 - Prisepenge i København fylder skibet op til 30.000 rigsdaler, og resten
   bliver tilbage, som originalen havde tænkt det (fejlen `irdsd=3000`).
 - Hjælpens stavefejl er rettet, og to linjer, den aldrig viste, er med.

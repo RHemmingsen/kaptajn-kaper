@@ -12,6 +12,7 @@
 //
 // Random numbers come from a `random` function returning 0..1, so tests can
 // decide what happens.
+import { quietenWaters } from './sea.js';
 import { damageShip, isSunk, loseGun, loseMen, moraleFactor } from './ship.js';
 
 const MAX_ELEVATION = 30;
@@ -78,6 +79,7 @@ export function fire(battle, state, events, random = Math.random) {
     if (result.outcome === 'sunk') {
       result.points = Math.floor(battle.enemy.money / 10);
       state.points += result.points;
+      quietenWaters(state);
     }
   }
   events.emit('shotFired', result);

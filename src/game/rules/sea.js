@@ -27,8 +27,10 @@ const FOG_OUTCOMES = [
 const TREASURE = 600; // rigsdaler in the chest
 
 // After a move onto open water: maybe the lookout spots something.
-// Returns null, { kind: 'ship', ship } or { kind: 'fog' }.
+// Returns null, { kind: 'ship', ship } or { kind: 'fog' }. In quiet waters,
+// always null.
 export function rollSeaEvent(state, random = Math.random) {
+  if (isQuiet(state, state.ship)) return null;
   if (random() >= SEA_EVENT_CHANCE) return null;
 
   const n = Math.floor(random() * 10); // 0-7 a ship type, 8-9 a fog bank
@@ -92,6 +94,19 @@ function findInFog(state, events, random) {
     default:
       return { kind: 'nothing' };
   }
+}
+
+// Where you beat an enemy, the English don't dare come any more: the cell
+// the ship is in becomes quiet, and nothing more happens there. Called when
+// an enemy strikes her flag or is sunk. (The original's lines 3000 and 3080;
+// its help: "Der, hvor du har nedkæmpet en fjende, tør englænderne ikke
+// komme mere!")
+export function quietenWaters(state) {
+  if (!isQuiet(state, state.ship)) state.quietWaters.push({ ...state.ship });
+}
+
+export function isQuiet(state, { col, row }) {
+  return state.quietWaters.some((cell) => cell.col === col && cell.row === row);
 }
 
 // Sail away from a ship. It always works, but it's remembered.

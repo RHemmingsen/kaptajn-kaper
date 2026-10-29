@@ -3,7 +3,7 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { EventBus } from '../src/engine/EventBus.js';
 import { GameState } from '../src/game/GameState.js';
-import { rollSeaEvent, investigateFog, flee } from '../src/game/rules/sea.js';
+import { flee, investigateFog, isQuiet, quietenWaters, rollSeaEvent } from '../src/game/rules/sea.js';
 
 // A stand-in for Math.random that returns these numbers in order, so a test
 // decides exactly what happens. Runs out loudly if the rules ask for more.
@@ -115,4 +115,22 @@ test('what was found in the fog is told as a fogInvestigated event', () => {
   events.on('fogInvestigated', (found) => told.push(found));
   const found = investigateFog(state, events);
   assert.deepEqual(told, [found]);
+});
+
+test('where you beat an enemy, nothing more happens', () => {
+  const state = new GameState();
+  quietenWaters(state);
+  // A roll that would otherwise spot a ship; no dice are even rolled.
+  assert.equal(rollSeaEvent(state, dice()), null);
+});
+
+test('only that cell is quiet, and it is only counted once', () => {
+  const state = new GameState();
+  quietenWaters(state);
+  quietenWaters(state);
+  assert.deepEqual(state.quietWaters, [{ col: 10, row: 10 }]);
+  assert.equal(isQuiet(state, { col: 10, row: 10 }), true);
+  assert.equal(isQuiet(state, { col: 11, row: 10 }), false);
+  state.ship.col = 11;
+  assert.notEqual(rollSeaEvent(state, dice(0.1, 0.85)), null);
 });

@@ -50,5 +50,9 @@ export class GameState {
     this.ending = null;
 
     this.ship = { col: 10, row: 10 }; // as in the original
+
+    // Cells where you beat an enemy, [{ col, row }, ...]. Nothing happens
+    // there any more. See quietenWaters in rules/sea.js.
+    this.quietWaters = [];
   }
 }

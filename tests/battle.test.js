@@ -142,6 +142,12 @@ test('sinking her earns her rigsdaler / 10 in points', () => {
   assert.equal(state.points, 45);
 });
 
+test('where she sank, the waters are quiet', () => {
+  const { battle, state, events } = setup({ repair: 30 });
+  fire(battle, state, events, dice(...ENEMY_MISSES, ...DEAD_ON, 0));
+  assert.deepEqual(state.quietWaters, [{ col: 10, row: 10 }]);
+});
+
 test('she strikes her flag when low on Rep, guns or men', () => {
   const lowRep = setup({ repair: 50 }); // 50 - 20 = 30, under 40 - 2
   assert.equal(fire(lowRep.battle, lowRep.state, lowRep.events, dice(...ENEMY_MISSES, ...DEAD_ON, 0)).outcome, 'surrender');

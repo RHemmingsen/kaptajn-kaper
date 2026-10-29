@@ -99,3 +99,9 @@ test('prize money fills the ship up to 30000 rigsdaler; the rest is left behind'
   assert.equal(state.money, 30000);
   assert.equal(state.points, 45, 'points for all of it');
 });
+
+test('where she struck her flag, the waters are quiet', () => {
+  const state = new GameState();
+  plunder(galease(), state);
+  assert.deepEqual(state.quietWaters, [{ col: 10, row: 10 }]);
+});

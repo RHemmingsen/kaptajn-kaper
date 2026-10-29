@@ -107,6 +107,21 @@ export function drawShip(ctx, ship) {
   ctx.fillRect(x + 9, y + 2, 4, 3);
 }
 
+// A small Dannebrog in each cell where you beat an enemy: quiet waters,
+// where nothing happens any more.
+export function drawQuietWaters(ctx, cells) {
+  for (const { col, row } of cells) {
+    const [cx, cy] = tileCenter(col, row);
+    const x = Math.round(cx - 6);
+    const y = Math.round(cy - 4);
+    ctx.fillStyle = COLORS.red;
+    ctx.fillRect(x, y, 12, 8);
+    ctx.fillStyle = COLORS.white;
+    ctx.fillRect(x + 3, y, 2, 8);
+    ctx.fillRect(x, y + 3, 12, 2);
+  }
+}
+
 // Pixel position of the top-left corner of a map cell (numbered from 1).
 function cellCorner(col, row) {
   return [MAP_X + (col - 1) * TILE_W, MAP_Y + (row - 1) * TILE_H];

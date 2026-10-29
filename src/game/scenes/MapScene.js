@@ -6,7 +6,7 @@ import { sail } from '../rules/sailing.js';
 import { checkCargo } from '../rules/ship.js';
 import { clearScreen, label } from '../ui/draw.js';
 import {
-  drawMap, drawCollisionOverlay, drawCities, drawCityName, drawShip,
+  drawMap, drawCollisionOverlay, drawCities, drawCityName, drawQuietWaters, drawShip,
 } from '../ui/mapView.js';
 import { drawStatusPanel } from '../ui/statusPanel.js';
 import { HarborScene } from './HarborScene.js';
@@ -87,6 +87,7 @@ export class MapScene extends Scene {
     drawMap(ctx, KATTEGAT);
     if (this.game.debug.showCollision) drawCollisionOverlay(ctx);
     drawCities(ctx);
+    drawQuietWaters(ctx, this.state.quietWaters);
     if (this.portCity) drawCityName(ctx, this.portCity);
     drawShip(ctx, this.state.ship);
     drawStatusPanel(ctx, this.state);
