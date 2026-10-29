@@ -13,7 +13,7 @@ import { MapScene } from './MapScene.js';
 //   plunder  what you took; sink her (s) or take her as a prize (p)?
 //   sunk     she sank, and her survivors joined you; any key: back to sea
 //   prize    she's on her way to København; any key: back to sea
-// If sending a prize crew leaves too few men, the shipSunk listener in
+// If sending a prize crew leaves too few men, the gameOver listener in
 // main.js ends the game.
 export class VictoryScene extends Scene {
   constructor(game, state, enemy) {

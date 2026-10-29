@@ -22,7 +22,7 @@ const AIM_ACTIONS = {
 // A gun battle ("Sigte"). The scene has two steps:
 //   aim     move the sights; fire, or break off the battle
 //   result  where the shot landed and what the enemy hit; any key goes on
-// If your ship is sunk, the shipSunk listener in main.js ends the game.
+// If your ship is sunk, the gameOver listener in main.js ends the game.
 export class BattleScene extends Scene {
   constructor(game, state, enemy) {
     super(game);

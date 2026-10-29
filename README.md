@@ -47,7 +47,7 @@ src/
     rules/             the game's rules: change GameState, emit events.
       sailing.js         No drawing, no keyboard.
       ship.js            damage and sinking, shared by every mode
-      harbor.js          the harbor minigame: steering, wind, crashes
+      harbor.js          the harbor minigame: steering, gusts, crashes, the gap
       trade.js           prices, buying and selling in a port
       sea.js             what the lookout spots: ships and fog banks
       battle.js          the gun battle: wind, aim, fire, damage both ways
@@ -147,8 +147,9 @@ parts of the game care about; everything else is a direct function call.
 original, every move costs grain, and sailing into land costs 3 Rep. The
 harbor runs in real time: the ship's position is in pixels and moves by
 `speed * dt` every step, so speeds are in pixels per second whatever the frame
-rate. The ship sails down on its own, held keys (`isDown`) steer left and
-right, and the wind adds a constant sideways speed.
+rate. The ship sails down on its own, held keys steer left and right, and
+gusts of wind from one side push it off course now and then. The trip takes
+about 18 of the original's steps, and a gust can come once per step.
 
 **Controlling chance.** Rules that roll dice take a `random` function
 (returning 0..1, `Math.random` by default). The game uses the real thing; tests

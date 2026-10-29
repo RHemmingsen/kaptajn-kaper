@@ -10,7 +10,7 @@ import { VictoryScene } from './VictoryScene.js';
 // After each round, as in the original, you answer by typing a letter: fight
 // on (k), or go back to your own ship (t) and choose again whether to attack
 // or flee. When she strikes her flag, any key goes on to the victory.
-// If your ship is lost, the shipSunk listener in main.js ends the game.
+// If your ship is lost, the gameOver listener in main.js ends the game.
 export class BoardingScene extends Scene {
   constructor(game, state, enemy) {
     super(game);
