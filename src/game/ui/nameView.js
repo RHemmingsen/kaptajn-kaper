@@ -26,7 +26,7 @@ export function drawName(ctx, { step, text, cursorOn, name, record }) {
       'Enter: ok   Esc: tilbage',
       '',
       '',
-      record ? recordLine(record) : 'Der er ingen rekord endnu.',
+      recordLine(record),
     ];
 
   lines.forEach((line, i) => {

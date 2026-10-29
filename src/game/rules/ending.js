@@ -4,7 +4,8 @@
 //   'won'     every goal reached (see career.js)
 //
 // Whatever the reason, the game ends here, once, with one event:
-//   gameOver  { ending, name, points, money, men, repair }
+//   gameOver  { ending, sunkBy, name, points, money, men, repair }
+// where sunkBy says which cargo was too heavy, if that's what sank the ship.
 // so whoever shows the ending doesn't need to know every way to get there.
 
 export function endGame(state, ending, events) {
@@ -12,6 +13,7 @@ export function endGame(state, ending, events) {
   state.ending = ending;
   events.emit('gameOver', {
     ending,
+    sunkBy: state.sunkBy,
     name: state.name,
     points: state.points,
     money: state.money,

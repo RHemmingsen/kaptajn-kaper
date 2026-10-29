@@ -48,7 +48,7 @@ src/
     map.js             the Kattegat tile map; grid and ports as in the original
     rules/             the game's rules: change GameState, emit events.
       sailing.js         No drawing, no keyboard.
-      ship.js            damage and sinking, shared by every mode
+      ship.js            damage, sinking and what she can carry, shared by all
       harbor.js          the harbor minigame: steering, gusts, crashes, the gap
       trade.js           prices, buying and selling in a port
       sea.js             what the lookout spots: ships and fog banks

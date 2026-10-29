@@ -1,6 +1,7 @@
 import { Scene } from '../../engine/Scene.js';
 import { NumberField } from '../../engine/NumberField.js';
 import { rollPrices, buy, sell } from '../rules/trade.js';
+import { checkCargo } from '../rules/ship.js';
 import { collectPrizes } from '../rules/victory.js';
 import { clearScreen } from '../ui/draw.js';
 import { drawPort } from '../ui/portView.js';
@@ -16,6 +17,9 @@ const SELL_CHOICES = { k: 'grain', s: 'guns', j: 'jewels' };
 
 // A port, reached by docking in the harbor. Trade, then set sail again. In
 // the prize port (København), prizes you sent there are paid out first.
+// As in the original, the cargo is checked whenever the menu comes up: on
+// arrival, after you've seen the payout, and after each trade. Too much, and
+// she sinks (the gameOver listener in main.js ends the game).
 //
 // The scene goes through these steps:
 //   prizes    the prize crews and prize money waiting here; any key: menu
@@ -39,6 +43,13 @@ export class PortScene extends Scene {
   enter() {
     if (this.city.prizePort) this.prizes = collectPrizes(this.state);
     if (this.prizes) this.step = 'prizes';
+    else this.showMenu();
+  }
+
+  // The menu comes up, and with it the check of the cargo.
+  showMenu() {
+    this.step = 'menu';
+    checkCargo(this.state, this.game.events);
   }
 
   update(dt) {
@@ -46,7 +57,7 @@ export class PortScene extends Scene {
     const input = this.game.input;
 
     if (this.step === 'prizes') {
-      if (input.anyKeyPressed()) this.step = 'menu';
+      if (input.anyKeyPressed()) this.showMenu();
     } else if (this.step === 'menu') this.updateMenu(input);
     else if (this.step === 'sellWhat') this.updateSellWhat(input);
     else this.updateAmount(input);
@@ -112,6 +123,7 @@ export class PortScene extends Scene {
     const trade = action === 'buy' ? buy : sell;
     const result = trade(this.state, this.prices, good, count);
     this.message = { action, result };
+    this.showMenu();
   }
 
   setSail() {

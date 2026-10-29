@@ -26,11 +26,13 @@ export function currentRecord(storage = browserStorage) {
 }
 
 // Compare a finished game's points with the record, and keep them, with the
-// name, if they're better. Returns { record, isNew }: the record now, and
+// name, if they're better. As in the original, a record has to beat
+// something: with no record yet, any points above 0 will do. Returns
+// { record, isNew }: the record now (null if there still isn't one), and
 // whether you set it.
 export function recordScore(points, name, storage = browserStorage) {
   const previous = currentRecord(storage);
-  if (previous === null || points > previous.points) {
+  if (points > (previous?.points ?? 0)) {
     const record = { points, name };
     storage.write(RECORD_KEY, JSON.stringify(record));
     return { record, isNew: true };

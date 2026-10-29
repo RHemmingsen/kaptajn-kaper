@@ -3,6 +3,7 @@ import { COLORS } from '../palette.js';
 import { KATTEGAT, cityAt } from '../map.js';
 import { goalReached } from '../rules/career.js';
 import { sail } from '../rules/sailing.js';
+import { checkCargo } from '../rules/ship.js';
 import { clearScreen, label } from '../ui/draw.js';
 import {
   drawMap, drawCollisionOverlay, drawCities, drawCityName, drawShip,
@@ -50,8 +51,12 @@ export class MapScene extends Scene {
   update(dt) {
     const input = this.game.input;
 
-    // Back at sea with enough points, e.g. after a victory or a payout in
-    // København: the news of your promotion comes first.
+    // Back at sea, first the original's checks: is she carrying too much? If
+    // so she sinks, and the gameOver listener in main.js ends the game.
+    if (checkCargo(this.state, this.game.events)) return;
+
+    // With enough points, e.g. after a victory or a payout in København,
+    // the news of your promotion comes next.
     if (goalReached(this.state)) {
       this.game.setScene(new PromotionScene(this.game, this.state));
       return;

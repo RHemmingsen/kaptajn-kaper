@@ -20,11 +20,21 @@ const HEADLINES = {
   won: ['Komtesse Julie er din!'],
 };
 
-// `view` is { ending, name, points, money, men, repair, record, isNew }, where
-// record is { points, name }.
+// When it was the weight of the cargo that sank her.
+const TOO_HEAVY = {
+  money: 'Vægten af alle dine penge',
+  men: 'Vægten af alle dine folk',
+  guns: 'Vægten af alle dine kanoner',
+  grain: 'Vægten af alt dit korn',
+};
+
+// `view` is { ending, sunkBy, name, points, money, men, repair, record, isNew },
+// where record is { points, name }, or null if there's none yet.
 export function drawEnding(ctx, view) {
+  const why = view.sunkBy ? [TOO_HEAVY[view.sunkBy], 'fik skibet til at synke!'] : [];
   const lines = [
     ...HEADLINES[view.ending],
+    ...why,
     '',
     `Du fik ${view.points} point og havde ${view.money} rigsdaler!`,
     `Du sluttede med ${view.men} mand og ${view.repair} Rep.`,

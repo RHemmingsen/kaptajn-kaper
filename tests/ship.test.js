@@ -2,7 +2,7 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { EventBus } from '../src/engine/EventBus.js';
 import { GameState } from '../src/game/GameState.js';
-import { crewEats, damageShip, isSunk, sinkShip } from '../src/game/rules/ship.js';
+import { checkCargo, crewEats, damageShip, isSunk, overload, sinkShip } from '../src/game/rules/ship.js';
 
 function recordEvents() {
   const events = new EventBus();
@@ -120,4 +120,35 @@ test('without enough grain, the grain runs out and a tenth of the crew dies', ()
 
   crewEats(state, events);
   assert.equal(state.men, 162);
+});
+
+test('the ship can carry up to 30000 rigsdaler, 500 men, 150 guns and 700 sacks of grain', () => {
+  const state = new GameState();
+  Object.assign(state, { money: 30000, men: 500, guns: 150, grain: 700 });
+  assert.equal(overload(state), null);
+
+  for (const [cargo, tooMuch] of [['money', 30001], ['men', 501], ['guns', 151], ['grain', 700.5]]) {
+    const loaded = new GameState();
+    loaded[cargo] = tooMuch;
+    assert.equal(overload(loaded), cargo);
+  }
+});
+
+test('too much cargo sinks the ship, and says what was too heavy', () => {
+  const state = new GameState();
+  state.money = 31000;
+  const events = new EventBus();
+  const endings = [];
+  events.on('gameOver', (summary) => endings.push(summary));
+
+  assert.equal(checkCargo(state, events), true);
+  assert.equal(state.sunk, true);
+  assert.equal(endings[0].ending, 'sunk');
+  assert.equal(endings[0].sunkBy, 'money');
+});
+
+test('a ship within her limits is left alone', () => {
+  const state = new GameState();
+  assert.equal(checkCargo(state, new EventBus()), false);
+  assert.equal(state.sunk, false);
 });

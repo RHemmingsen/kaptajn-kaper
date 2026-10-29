@@ -19,6 +19,12 @@ test('the first finished game sets the record, with the name', () => {
   assert.deepEqual(currentRecord(storage), { points: 450, name: 'Ronnie' });
 });
 
+test('a game with no points sets no record', () => {
+  const storage = memoryStorage();
+  assert.deepEqual(recordScore(0, 'Ronnie', storage), { record: null, isNew: false });
+  assert.equal(currentRecord(storage), null);
+});
+
 test('a better score beats the record; a worse one does not', () => {
   const storage = memoryStorage();
   recordScore(1200, 'Søren', storage);

@@ -41,6 +41,9 @@ export class GameState {
     // True once the ship is lost, by damage, a starved crew or a wreck. The
     // game is over then. See rules/ship.js.
     this.sunk = false;
+    // What sank her, if it was too much cargo: 'money', 'men', 'guns' or
+    // 'grain'. See checkCargo in rules/ship.js.
+    this.sunkBy = null;
 
     // How the game ended, once it has: 'sunk', 'jilted' (out of moves, and
     // Julie marries another) or 'won'. See rules/ending.js.

@@ -17,6 +17,9 @@ import { endGame } from './ending.js';
 
 const MIN_REPAIR = 20; // at this Rep or less, the ship goes down...
 const MIN_MEN = 10; // ...and with this few men or fewer, too
+// The most the ship can carry (the original's lines 960-963). Any more, and
+// the weight sinks her.
+const MAX_CARGO = { money: 30000, men: 500, guns: 150, grain: 700 };
 const STARVING_SURVIVORS = 0.9; // share of the crew left after a meal without grain
 
 // Lose `amount` Rep, never going below 0.
@@ -54,11 +57,28 @@ export function loseGun(state) {
 }
 
 // The ship is lost, whatever its Rep and crew, e.g. wrecked on a pier.
-export function sinkShip(state, events) {
+// `sunkBy` is the cargo that was too heavy, if that's what sank her.
+export function sinkShip(state, events, sunkBy = null) {
   if (state.sunk) return;
   state.sunk = true;
+  state.sunkBy = sunkBy;
   events.emit('shipSunk', {});
   endGame(state, 'sunk', events);
+}
+
+// What she's carrying too much of: 'money', 'men', 'guns' or 'grain' (the
+// first, in that order), or null if nothing.
+export function overload(state) {
+  return Object.keys(MAX_CARGO).find((cargo) => state[cargo] > MAX_CARGO[cargo]) ?? null;
+}
+
+// Check the cargo, at the moments the original did: when the ship is back at
+// sea, and in port after trading. Carrying too much sinks her. Returns true
+// if it did.
+export function checkCargo(state, events) {
+  const tooHeavy = overload(state);
+  if (tooHeavy) sinkShip(state, events, tooHeavy);
+  return tooHeavy !== null;
 }
 
 // How badly the crew fights, the more often you've fled: it multiplies the

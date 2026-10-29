@@ -20,7 +20,9 @@ test('the game ends with a summary of how it went', () => {
   endGame(state, 'won', events);
 
   assert.equal(isGameOver(state), true);
-  assert.deepEqual(log, [{ ending: 'won', name: 'Ronnie', points: 1250, money: 600, men: 200, repair: 200 }]);
+  assert.deepEqual(log, [{
+    ending: 'won', sunkBy: null, name: 'Ronnie', points: 1250, money: 600, men: 200, repair: 200,
+  }]);
 });
 
 test('the game only ends once; the first ending stands', () => {
