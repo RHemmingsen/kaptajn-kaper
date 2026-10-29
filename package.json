@@ -1,6 +1,7 @@
 {
   "name": "kaptajn-kaper",
   "private": true,
+  "license": "GPL-3.0-only",
   "type": "module",
   "scripts": {
     "test": "node --test"

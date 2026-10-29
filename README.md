@@ -197,3 +197,13 @@ are set up once in `main.js` with `game.events.on(...)`. The game can end in
 many places (the ship lost in the harbor or in battle, out of moves, every
 goal reached), but always through `endGame` in `rules/ending.js`, which emits
 one `gameOver` event; `main.js` answers it with the end scene.
+
+## License
+
+GNU General Public License version 3; see [LICENSE](LICENSE).
+
+Kaptajn Kaper i Kattegat was written by P.O. Frederiksen in 1985. His source
+code was released under GPL v3 together with his sons, Jan Thorhauge
+Frederiksen and Morten Frederiksen (see `KaptajnKaper_original/`). This
+remake builds on it (the rules, texts, help, tunes and the map's layout), so
+it is under the same license.
