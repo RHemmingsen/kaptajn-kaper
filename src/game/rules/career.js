@@ -32,12 +32,14 @@ export function goalReached(state) {
 // Promote: a higher difficulty, rank and title, and a new goal, counted from
 // where you are now. Returns { won }: after the fourth goal there is no new
 // goal; you've won. (Ending the game is left to the caller, after the news
-// has been shown; see endGame.)
-export function promote(state) {
+// has been shown; see endGame.) Tells it as a 'promoted' event.
+export function promote(state, events) {
   state.difficulty += STEP;
   state.goal = state.points + 500 + 250 * state.difficulty;
   state.maxMoves = state.moves + 325 - 12.5 * state.difficulty;
-  return { won: state.difficulty >= WON_AT };
+  const won = state.difficulty >= WON_AT;
+  events.emit('promoted', { won });
+  return { won };
 }
 
 // Use up one move. The move that reaches the limit is the last: the game

@@ -17,6 +17,10 @@ export class HelpScene extends Scene {
     this.pageIndex = 0;
   }
 
+  enter() {
+    this.game.events.emit('helpOpened', {});
+  }
+
   update(dt) {
     const input = this.game.input;
 

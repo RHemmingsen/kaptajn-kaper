@@ -34,6 +34,14 @@ test('both sides lose men; the weaker enemy loses more', () => {
   assert.equal(result.outcome, null);
 });
 
+test('each round is told as a boardingRound event', () => {
+  const { enemy, state, events } = setup();
+  const told = [];
+  events.on('boardingRound', (round) => told.push(round));
+  const result = fightRound(enemy, state, events, dice(0.5));
+  assert.deepEqual(told, [result]);
+});
+
 test('the enemy always loses at least a tenth of her men', () => {
   const { enemy, state, events } = setup();
 

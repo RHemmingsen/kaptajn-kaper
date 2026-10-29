@@ -33,7 +33,7 @@ test('a promotion raises the difficulty, rank and title, and sets a new goal fro
   state.points = 1010;
   state.moves = 120;
 
-  assert.deepEqual(promote(state), { won: false });
+  assert.deepEqual(promote(state, new EventBus()), { won: false });
   assert.equal(state.difficulty, 4);
   assert.equal(rankTitle(state), 'kaptajn');
   assert.equal(nobleTitle(state), 'Baron');
@@ -43,10 +43,10 @@ test('a promotion raises the difficulty, rank and title, and sets a new goal fro
 
 test('the fourth promotion wins the game, as kronprins', () => {
   const state = new GameState();
-  assert.equal(promote(state).won, false); // baron
-  assert.equal(promote(state).won, false); // greve
-  assert.equal(promote(state).won, false); // kammerherre
-  assert.equal(promote(state).won, true);
+  assert.equal(promote(state, new EventBus()).won, false); // baron
+  assert.equal(promote(state, new EventBus()).won, false); // greve
+  assert.equal(promote(state, new EventBus()).won, false); // kammerherre
+  assert.equal(promote(state, new EventBus()).won, true);
   assert.equal(nobleTitle(state), 'Kronprins');
 });
 
@@ -67,4 +67,13 @@ test('the move that reaches the limit ends the game: Julie marries another', () 
 test('you are addressed by rank and name', () => {
   assert.equal(addressedAs(new GameState('Ronnie')), 'skibsfører Ronnie');
   assert.equal(addressedAs(new GameState()), 'skibsfører', 'no name, just the rank');
+});
+
+test('a promotion is told as a promoted event', () => {
+  const state = new GameState();
+  const events = new EventBus();
+  const told = [];
+  events.on('promoted', (news) => told.push(news));
+  promote(state, events);
+  assert.deepEqual(told, [{ won: false }]);
 });

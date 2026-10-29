@@ -108,6 +108,7 @@ function placeObstacles(count, random) {
 //
 // Events emitted (plus the ones from ship.js):
 //   harborGust     {}       a gust starts pushing the ship
+//   harborCrash    { damage }  you hit a ship at anchor
 //   enteredHarbor  { city }
 export function updateHarbor(harbor, controls, dt, state, events, random = Math.random) {
   if (harbor.status !== 'sailing') return;
@@ -153,6 +154,7 @@ export function updateHarbor(harbor, controls, dt, state, events, random = Math.
     hit.hit = true;
     harbor.lastCrash = 15 * state.difficulty;
     harbor.crashTimer = CRASH_MESSAGE_TIME;
+    events.emit('harborCrash', { damage: harbor.lastCrash });
     damageShip(state, harbor.lastCrash, events);
     if (isSunk(state)) {
       harbor.status = 'sunk';

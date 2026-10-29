@@ -37,7 +37,7 @@ function play(harbor, controls, seconds, state, events, random = noGusts) {
 function recordEvents() {
   const events = new EventBus();
   const log = [];
-  for (const name of ['shipDamaged', 'shipSunk', 'enteredHarbor', 'harborGust']) {
+  for (const name of ['harborCrash', 'shipDamaged', 'shipSunk', 'enteredHarbor', 'harborGust']) {
     events.on(name, (data) => log.push({ name, data }));
   }
   return { events, log };
@@ -138,7 +138,10 @@ test('hitting a ship at anchor costs 15 x difficulty Rep, once, and you sail on'
   play(harbor, NO_KEYS, 1.5, state, events); // right across it
 
   assert.equal(state.repair, 170);
-  assert.deepEqual(log, [{ name: 'shipDamaged', data: { amount: 30 } }]);
+  assert.deepEqual(log, [
+    { name: 'harborCrash', data: { damage: 30 } },
+    { name: 'shipDamaged', data: { amount: 30 } },
+  ]);
   assert.ok(harbor.ship.y > start.y + 50, 'the ship carries on, not back to the start');
 });
 
@@ -164,7 +167,7 @@ test('a crash that takes Rep down to 20 or less sinks the ship', () => {
 
   assert.equal(harbor.status, 'sunk');
   assert.equal(state.sunk, true);
-  assert.deepEqual(log.map((e) => e.name), ['shipDamaged', 'shipSunk']);
+  assert.deepEqual(log.map((e) => e.name), ['harborCrash', 'shipDamaged', 'shipSunk']);
 });
 
 test('sailing through the gap docks the ship', () => {

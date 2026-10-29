@@ -243,3 +243,10 @@ Har du over 500 mænd, smides resten "ud til hajerne".
 - Prisepenge i København fylder skibet op til 30.000 rigsdaler, og resten
   bliver tilbage, som originalen havde tænkt det (fejlen `irdsd=3000`).
 - Hjælpens stavefejl er rettet, og to linjer, den aldrig viste, er med.
+- Lyden er originalens: SOUND-effekterne genskabt med Web Audio, og
+  PLAY-melodierne ordret, spillet af vores egen fortolker (`engine/mml.js`).
+  PLAY husker sine indstillinger fra gang til gang, og nogle af melodierne
+  regner med det; hvad de arver, står foran dem i `game/music.js`.
+  Titelmelodien, som originalen spillede i fem dele, mens den indlæste, er
+  én melodi her. Lydspørgsmålet kommer først, som i originalen, og valget
+  huskes.

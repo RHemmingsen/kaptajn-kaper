@@ -14,7 +14,8 @@ const SURRENDERS_BELOW = 20; // the enemy strikes her flag with fewer men
 //
 // Returns { ownLosses, enemyLosses, outcome }, where outcome is null (the
 // fight goes on), 'surrender' (she strikes her flag) or 'lost' (your ship is
-// lost, too few men left to sail her).
+// lost, too few men left to sail her). Tells the same as a 'boardingRound'
+// event.
 export function fightRound(enemy, state, events, random = Math.random) {
   const morale = moraleFactor(state);
   // How strong the enemy is against you: more men, worse morale and a higher
@@ -27,7 +28,7 @@ export function fightRound(enemy, state, events, random = Math.random) {
   // You lose up to a tenth or so of the crew (at the start), more if you've fled a lot.
   const ownLosses = Math.floor(state.men * morale * ((state.difficulty * random()) / 30));
   loseMen(state, ownLosses, events);
-  if (isSunk(state)) return { ownLosses, enemyLosses: 0, outcome: 'lost' };
+  if (isSunk(state)) return told({ ownLosses, enemyLosses: 0, outcome: 'lost' }, events);
 
   // She loses more the weaker she is, and always at least a tenth of her men.
   const enemyLosses = Math.min(
@@ -37,5 +38,10 @@ export function fightRound(enemy, state, events, random = Math.random) {
   enemy.men -= enemyLosses;
 
   const outcome = enemy.men < SURRENDERS_BELOW ? 'surrender' : null;
-  return { ownLosses, enemyLosses, outcome };
+  return told({ ownLosses, enemyLosses, outcome }, events);
+}
+
+function told(round, events) {
+  events.emit('boardingRound', round);
+  return round;
 }

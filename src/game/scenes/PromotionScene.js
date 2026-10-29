@@ -18,7 +18,7 @@ export class PromotionScene extends Scene {
   }
 
   enter() {
-    this.won = promote(this.state).won;
+    this.won = promote(this.state, this.game.events).won;
   }
 
   update(dt) {

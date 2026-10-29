@@ -48,7 +48,14 @@ export function rollSeaEvent(state, random = Math.random) {
 //   { kind: 'nothing' }
 //   { kind: 'grain', count }
 //   { kind: 'plague', count }    men who died of it
+// and tells the same as a 'fogInvestigated' event.
 export function investigateFog(state, events, random = Math.random) {
+  const found = findInFog(state, events, random);
+  events.emit('fogInvestigated', found);
+  return found;
+}
+
+function findInFog(state, events, random) {
   const kind = FOG_OUTCOMES[Math.floor(random() * FOG_OUTCOMES.length)];
 
   switch (kind) {

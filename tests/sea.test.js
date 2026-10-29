@@ -107,3 +107,12 @@ test('fleeing is counted, and told', () => {
   assert.equal(state.flights, 2);
   assert.equal(told, 1);
 });
+
+test('what was found in the fog is told as a fogInvestigated event', () => {
+  const state = new GameState();
+  const events = new EventBus();
+  const told = [];
+  events.on('fogInvestigated', (found) => told.push(found));
+  const found = investigateFog(state, events);
+  assert.deepEqual(told, [found]);
+});

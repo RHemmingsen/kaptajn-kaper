@@ -45,6 +45,7 @@ src/
     controls.js        every key the game uses, as named actions
     helpText.js        the help (F1): the original's topics, and about this version
     sounds.js          which events make which sounds
+    music.js           the original's tunes, in BASIC's PLAY language
     assets.js          loads the game's images before it starts
     records.js         kept between visits: the record and who set it,
                        the last name played with, and sound on or off

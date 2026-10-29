@@ -9,6 +9,7 @@ import { NameScene } from './NameScene.js';
 export class TitleScene extends Scene {
   enter() {
     this.time = 0;
+    this.game.events.emit('titleShown', {});
   }
 
   update(dt) {
