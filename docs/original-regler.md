@@ -240,8 +240,7 @@ Har du over 500 mænd, smides resten "ud til hajerne".
 - Felter med kaprede eller sænkede skibe bliver "rolige", som i originalen
   (`quietenWaters` i `rules/sea.js`). Vi droppede først reglen, fordi den
   lignede et værn mod farming; hjælpen viste, at den var tilsigtet, så den
-  kom tilbage. Til forskel fra originalen viser kortet de rolige felter med
-  et lille dannebrogsflag.
+  kom tilbage. Som i originalen kan de rolige felter ikke ses på kortet.
 - Prisepenge i København fylder skibet op til 30.000 rigsdaler, og resten
   bliver tilbage, som originalen havde tænkt det (fejlen `irdsd=3000`).
 - Hjælpens stavefejl er rettet, og to linjer, den aldrig viste, er med.
