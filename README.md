@@ -34,14 +34,16 @@ src/
     collision.js       rectsOverlap(a, b) for box collisions
     loadImage.js       load an image file and wait until it's ready
     storage.js         localStorage that can't crash the game
-    NumberField.js     a whole number being typed in ("Hvor mange?")
+    TextField.js       text being typed in, like a name
+    NumberField.js     a TextField for whole numbers ("Hvor mange?")
     Scene.js           base class for a part of the game
     TileMap.js         grid of tiles built from strings
   game/                everything specific to Kaptajn Kaper
     palette.js         colours and font
     controls.js        every key the game uses, as named actions
     assets.js          loads the game's images before it starts
-    records.js         the record: most points in a finished game
+    records.js         kept between visits: the record and who set it,
+                       and the last name played with
     GameState.js       the ship's stats for the current playthrough
     map.js             the Kattegat tile map; grid and ports as in the original
     rules/             the game's rules: change GameState, emit events.
@@ -66,11 +68,14 @@ src/
       victoryView.js     what you took, and what you do with her
       promotionView.js   the news of a promotion
       endingView.js      how the game ended, and the record
+      nameView.js        "Hvad er dit navn?", and the greeting
+      recordText.js      how the record is written
       shipArt.js         a three-master from the side, at any place and size
       statusPanel.js     the Træk/Rgsdl/Korn... table
       titleArt.js        the title scene's picture
     scenes/            each part of the game: input -> rules -> drawing
       TitleScene.js
+      NameScene.js
       MapScene.js
       HarborScene.js
       PortScene.js
@@ -111,7 +116,8 @@ one place, `game/controls.js`. `main.js` hands them over when the game is made,
 `new Game(canvas, { controls: CONTROLS })`, so there is no Input without keys.
 Scenes never ask about keys directly.
 Typing is different: `typedText()` gives the characters typed since the last
-update, for answering questions like "Hvor mange?" with a `NumberField`.
+update, for answering questions like "Hvad er dit navn?" with a `TextField`,
+or "Hvor mange?" with a `NumberField`.
 
 **Tile maps.** The map is an array of strings, one character per tile (`.` water,
 `#` land). `TileMap` answers "what's at (col, row)?"; the game decides what each

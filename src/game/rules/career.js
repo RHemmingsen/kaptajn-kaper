@@ -20,6 +20,11 @@ export function nobleTitle(state) {
   return NOBLE_TITLES[state.difficulty / STEP - 1];
 }
 
+// How you're addressed: your rank and name, "skibsfører Ronnie".
+export function addressedAs(state) {
+  return [rankTitle(state), state.name].filter(Boolean).join(' ');
+}
+
 export function goalReached(state) {
   return state.points >= state.goal;
 }

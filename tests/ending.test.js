@@ -13,14 +13,14 @@ function recordGameOver() {
 }
 
 test('the game ends with a summary of how it went', () => {
-  const state = new GameState();
+  const state = new GameState('Ronnie');
   state.points = 1250;
   const { events, log } = recordGameOver();
 
   endGame(state, 'won', events);
 
   assert.equal(isGameOver(state), true);
-  assert.deepEqual(log, [{ ending: 'won', points: 1250, money: 600, men: 200, repair: 200 }]);
+  assert.deepEqual(log, [{ ending: 'won', name: 'Ronnie', points: 1250, money: 600, men: 200, repair: 200 }]);
 });
 
 test('the game only ends once; the first ending stands', () => {

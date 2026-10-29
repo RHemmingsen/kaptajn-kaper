@@ -1,5 +1,6 @@
 // Drawing the end of the game, in the original's words.
 import { COLORS, FONT } from '../palette.js';
+import { recordLine } from './recordText.js';
 
 const LEFT = 40;
 const TOP = 60;
@@ -19,7 +20,8 @@ const HEADLINES = {
   won: ['Komtesse Julie er din!'],
 };
 
-// `view` is { ending, points, money, men, repair, record, isNew }.
+// `view` is { ending, name, points, money, men, repair, record, isNew }, where
+// record is { points, name }.
 export function drawEnding(ctx, view) {
   const lines = [
     ...HEADLINES[view.ending],
@@ -27,7 +29,7 @@ export function drawEnding(ctx, view) {
     `Du fik ${view.points} point og havde ${view.money} rigsdaler!`,
     `Du sluttede med ${view.men} mand og ${view.repair} Rep.`,
     '',
-    view.isNew ? `Ny rekord: ${view.record} point!` : `Rekorden er ${view.record} point.`,
+    view.isNew ? `Ny rekord: ${view.record.points} point!` : recordLine(view.record),
     '',
     'Tryk på en tast.',
   ];

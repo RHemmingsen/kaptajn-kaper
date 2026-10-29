@@ -4,7 +4,7 @@
 //   'won'     every goal reached (see career.js)
 //
 // Whatever the reason, the game ends here, once, with one event:
-//   gameOver  { ending, points, money, men, repair }
+//   gameOver  { ending, name, points, money, men, repair }
 // so whoever shows the ending doesn't need to know every way to get there.
 
 export function endGame(state, ending, events) {
@@ -12,6 +12,7 @@ export function endGame(state, ending, events) {
   state.ending = ending;
   events.emit('gameOver', {
     ending,
+    name: state.name,
     points: state.points,
     money: state.money,
     men: state.men,

@@ -5,7 +5,7 @@ const LEFT = 40;
 const TOP = 40;
 const LINE = 26; // pixels between lines
 
-// `view` is what the scene wants shown: { won, rank, title, goal, maxMoves }.
+// `view` is what the scene wants shown: { won, rank, title, name, goal, maxMoves }.
 export function drawPromotion(ctx, view) {
   linesFor(view).forEach((line, i) => {
     ctx.font = `bold 20px ${FONT}`;
@@ -16,7 +16,9 @@ export function drawPromotion(ctx, view) {
   });
 }
 
-function linesFor({ won, rank, title, goal, maxMoves }) {
+function linesFor({ won, rank, title, name, goal, maxMoves }) {
+  // "BARON Ronnie", as the original wrote it.
+  const titled = [title.toUpperCase(), name].filter(Boolean).join(' ');
   const news = [
     'Tillykke!!!!',
     '',
@@ -33,7 +35,7 @@ function linesFor({ won, rank, title, goal, maxMoves }) {
       '',
       'Du har klaret det hele.',
       'Du får også det halve kongerige,',
-      `${title.toUpperCase()}!`,
+      `${titled}!`,
       '',
       'Tryk på en tast.',
     ];
@@ -45,7 +47,7 @@ function linesFor({ won, rank, title, goal, maxMoves }) {
     julie,
     '',
     'Lad os se, om du kan klare',
-    `det næste mål, ${title.toUpperCase()}!`,
+    `det næste mål, ${titled}!`,
     `${goal} point inden træk ${maxMoves}.`,
     '',
     'Tryk på en tast.',

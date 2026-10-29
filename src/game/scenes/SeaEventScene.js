@@ -1,5 +1,5 @@
 import { Scene } from '../../engine/Scene.js';
-import { rankTitle } from '../rules/career.js';
+import { addressedAs } from '../rules/career.js';
 import { flee, investigateFog } from '../rules/sea.js';
 import { clearScreen } from '../ui/draw.js';
 import { drawSeaEvent } from '../ui/seaView.js';
@@ -67,7 +67,7 @@ export class SeaEventScene extends Scene {
       step: this.step,
       ship: this.ship,
       outcome: this.outcome,
-      rank: rankTitle(this.state),
+      addressedAs: addressedAs(this.state),
     });
     drawStatusPanel(ctx, this.state);
   }

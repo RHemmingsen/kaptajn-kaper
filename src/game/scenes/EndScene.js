@@ -6,7 +6,7 @@ import { TitleScene } from './TitleScene.js';
 
 // The game is over: how it ended, how it went, and the record. Any key goes
 // back to the title. main.js brings you here when the gameOver event comes,
-// with its summary: { ending, points, money, men, repair }.
+// with its summary: { ending, name, points, money, men, repair }.
 export class EndScene extends Scene {
   constructor(game, summary) {
     super(game);
@@ -15,7 +15,7 @@ export class EndScene extends Scene {
   }
 
   enter() {
-    this.record = recordScore(this.summary.points);
+    this.record = recordScore(this.summary.points, this.summary.name);
   }
 
   update(dt) {

@@ -2,9 +2,11 @@
 // is. Every scene (map, harbor, combat, boarding) reads and changes the same
 // GameState object, which is how a battle's losses show up back on the map.
 //
-// A new GameState is created each time a new game starts.
+// A new GameState is created each time a new game starts, with the player's
+// name.
 export class GameState {
-  constructor() {
+  constructor(name = '') {
+    this.name = name;
     this.points = 0;
     // The current goal: reach `goal` points before move number `maxMoves`.
     // Both are raised each time you reach a goal; see rules/career.js.

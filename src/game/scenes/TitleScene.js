@@ -1,11 +1,11 @@
 import { Scene } from '../../engine/Scene.js';
 import { COLORS, FONT } from '../palette.js';
-import { GameState } from '../GameState.js';
 import { clearScreen } from '../ui/draw.js';
 import { drawTitleArt } from '../ui/titleArt.js';
-import { MapScene } from './MapScene.js';
+import { NameScene } from './NameScene.js';
 
-// The title scene: a picture and "press any key to continue".
+// The title scene: a picture and "press any key to continue", on to the name
+// question before a new game.
 export class TitleScene extends Scene {
   enter() {
     this.time = 0;
@@ -15,7 +15,7 @@ export class TitleScene extends Scene {
     this.time += dt;
 
     if (this.game.input.anyKeyPressed()) {
-      this.game.setScene(new MapScene(this.game, new GameState()));
+      this.game.setScene(new NameScene(this.game));
     }
   }
 

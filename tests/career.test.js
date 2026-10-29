@@ -3,7 +3,7 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { EventBus } from '../src/engine/EventBus.js';
 import { GameState } from '../src/game/GameState.js';
-import { goalReached, nobleTitle, promote, rankTitle, useMove } from '../src/game/rules/career.js';
+import { addressedAs, goalReached, nobleTitle, promote, rankTitle, useMove } from '../src/game/rules/career.js';
 
 function recordGameOver() {
   const events = new EventBus();
@@ -62,4 +62,9 @@ test('the move that reaches the limit ends the game: Julie marries another', () 
   assert.equal(state.ending, 'jilted');
   assert.equal(log.length, 1);
   assert.equal(log[0].ending, 'jilted');
+});
+
+test('you are addressed by rank and name', () => {
+  assert.equal(addressedAs(new GameState('Ronnie')), 'skibsfører Ronnie');
+  assert.equal(addressedAs(new GameState()), 'skibsfører', 'no name, just the rank');
 });

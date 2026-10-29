@@ -33,6 +33,7 @@ export class PromotionScene extends Scene {
       won: this.won,
       rank: rankTitle(this.state),
       title: nobleTitle(this.state),
+      name: this.state.name,
       goal: this.state.goal,
       maxMoves: this.state.maxMoves,
     });
