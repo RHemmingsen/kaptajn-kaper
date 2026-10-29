@@ -30,6 +30,12 @@ export class Scene {
   // Called once when we switch away from this scene.
   exit() {}
 
+  // Called when another scene is pushed on top of this one (see
+  // Game.pushScene), and when it's taken off again. In between, this scene
+  // isn't updated or drawn, but it isn't ended either.
+  pause() {}
+  resume() {}
+
   // Advance the scene's logic by dt seconds. No drawing here.
   update(dt) {}
 
