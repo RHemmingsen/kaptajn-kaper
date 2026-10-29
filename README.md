@@ -46,7 +46,7 @@ src/
     helpText.js        the help (F1): the original's topics, and about this version
     assets.js          loads the game's images before it starts
     records.js         kept between visits: the record and who set it,
-                       and the last name played with
+                       the last name played with, and sound on or off
     GameState.js       the ship's stats for the current playthrough
     map.js             the Kattegat tile map; grid and ports as in the original
     rules/             the game's rules: change GameState, emit events.
@@ -72,12 +72,14 @@ src/
       promotionView.js   the news of a promotion
       endingView.js      how the game ended, and the record
       nameView.js        "Hvad er dit navn?", and the greeting
+      soundView.js       the question about sound at the start
       recordText.js      how the record is written
       helpView.js        the help's menu and pages
       shipArt.js         a three-master from the side, at any place and size
       statusPanel.js     the Træk/Rgsdl/Korn... table
       titleArt.js        the title scene's picture
     scenes/            each part of the game: input -> rules -> drawing
+      SoundScene.js
       TitleScene.js
       NameScene.js
       HelpScene.js
@@ -117,7 +119,8 @@ help over a battle, and the one below is paused (`pause()`), not ended, until
 `game.popScene()` takes it back up (`resume()`).
 
 **Global actions.** `game.onAction('help', ...)` works whatever scene is
-showing; `main.js` uses it to open the help from anywhere with F1.
+showing; `main.js` uses it to open the help from anywhere with F1, and to
+turn the sound on or off with F2.
 
 **Input.** Keyboard events are turned into state the game can query, as
 named actions: `isActionDown('steerLeft')` for held keys,

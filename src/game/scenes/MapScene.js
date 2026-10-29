@@ -103,7 +103,7 @@ export class MapScene extends Scene {
     label(ctx, `Point: ${s.points}`, 44, 19);
     label(ctx, `Mål: ${s.goal} på ${s.maxMoves} træk`, 262, 19);
     label(ctx, 'F1:Hjælp', 44, 354);
-    label(ctx, 'F2:lyd', 262, 354);
+    label(ctx, `F2:lyd ${this.game.sound.enabled ? 'til' : 'fra'}`, 262, 354);
     label(ctx, 'Esc:Slut', 466, 354);
   }
 }

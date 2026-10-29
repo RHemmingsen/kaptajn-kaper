@@ -5,12 +5,14 @@ import { loadAssets } from './game/assets.js';
 import { CONTROLS } from './game/controls.js';
 import { EndScene } from './game/scenes/EndScene.js';
 import { HelpScene } from './game/scenes/HelpScene.js';
-import { TitleScene } from './game/scenes/TitleScene.js';
+import { SoundScene } from './game/scenes/SoundScene.js';
+import { rememberSound, soundOn } from './game/records.js';
 
 await loadAssets();
 
 const canvas = document.getElementById('game');
 const game = new Game(canvas, { controls: CONTROLS });
+game.sound.setEnabled(soundOn());
 
 // Game-wide reactions, which apply whatever scene is running. The game can
 // end in many places (the ship lost in the harbor or in battle, out of
@@ -23,5 +25,14 @@ game.onAction('help', () => {
   if (!(game.scene instanceof HelpScene)) game.pushScene(new HelpScene(game));
 });
 
-game.setScene(new TitleScene(game));
+// F2 turns the sound on or off from anywhere, as in the original, and the
+// choice is kept for next time.
+game.onAction('toggleSound', () => {
+  game.sound.setEnabled(!game.sound.enabled);
+  rememberSound(game.sound.enabled);
+});
+
+// As in the original, the first thing is the question about sound; then the
+// title.
+game.setScene(new SoundScene(game));
 game.start();

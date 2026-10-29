@@ -2,6 +2,7 @@
 //   - the record: the most points anyone has finished a game with, and who
 //     set it (the original's "Rekord ... Indehaver")
 //   - the last name played with, so it's ready to use next time
+//   - whether the sound is on
 //
 // `storage` is anything with read(key) and write(key, value): the browser's
 // storage in the game, a plain object in tests.
@@ -9,6 +10,7 @@ import { browserStorage } from '../engine/storage.js';
 
 const RECORD_KEY = 'kaptajn-kaper.record';
 const NAME_KEY = 'kaptajn-kaper.name';
+const SOUND_KEY = 'kaptajn-kaper.sound';
 
 // The record, or null if there isn't one: { points, name }.
 export function currentRecord(storage = browserStorage) {
@@ -46,4 +48,13 @@ export function lastName(storage = browserStorage) {
 
 export function rememberName(name, storage = browserStorage) {
   storage.write(NAME_KEY, name);
+}
+
+// Off until you turn it on, as in the original.
+export function soundOn(storage = browserStorage) {
+  return storage.read(SOUND_KEY) === 'on';
+}
+
+export function rememberSound(on, storage = browserStorage) {
+  storage.write(SOUND_KEY, on ? 'on' : 'off');
 }

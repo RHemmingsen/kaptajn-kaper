@@ -1,6 +1,6 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { currentRecord, lastName, recordScore, rememberName } from '../src/game/records.js';
+import { currentRecord, lastName, recordScore, rememberName, rememberSound, soundOn } from '../src/game/records.js';
 import { browserStorage } from '../src/engine/storage.js';
 
 // Storage that keeps things in a plain object, like localStorage would.
@@ -43,6 +43,15 @@ test('the last name is remembered for next time', () => {
   assert.equal(lastName(storage), '');
   rememberName('Ronnie', storage);
   assert.equal(lastName(storage), 'Ronnie');
+});
+
+test('sound is off until turned on, and the choice is remembered', () => {
+  const storage = memoryStorage();
+  assert.equal(soundOn(storage), false);
+  rememberSound(true, storage);
+  assert.equal(soundOn(storage), true);
+  rememberSound(false, storage);
+  assert.equal(soundOn(storage), false);
 });
 
 test('without a browser, storage quietly keeps nothing', () => {

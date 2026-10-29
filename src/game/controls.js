@@ -46,8 +46,7 @@ export const CONTROLS = {
   // opening its own help page on F1.)
   help: ['F1'],
 
-  // Shown on the map ("F2:lyd") but not made yet. Bound already so the
-  // browser leaves the key alone.
+  // Anywhere: sound on or off, as in the original.
   toggleSound: ['F2'],
 
   // Developer tools.
