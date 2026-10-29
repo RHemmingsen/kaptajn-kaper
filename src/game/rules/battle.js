@@ -12,7 +12,7 @@
 //
 // Random numbers come from a `random` function returning 0..1, so tests can
 // decide what happens.
-import { damageShip, isSunk, loseGun, loseMen } from './ship.js';
+import { damageShip, isSunk, loseGun, loseMen, moraleFactor } from './ship.js';
 
 const MAX_ELEVATION = 30;
 const MAX_SIDE = 50;
@@ -81,12 +81,6 @@ export function fire(battle, state, events, random = Math.random) {
     state.points += result.points;
   }
   return result;
-}
-
-// How much worse the enemy's fire hurts, the more often you've fled. 1.5 at
-// the start (the original's odd start values), less as you fight more.
-export function moraleFactor(state) {
-  return (state.encounters + state.flights) / state.encounters;
 }
 
 // The enemy's broadside: Rep and men, each with a 60% chance, and sometimes

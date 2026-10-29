@@ -8,7 +8,8 @@ import assert from 'node:assert/strict';
 import { EventBus } from '../src/engine/EventBus.js';
 import { GameState } from '../src/game/GameState.js';
 import { SHIP_TYPES } from '../src/game/rules/sea.js';
-import { startBattle, moveAim, breakOff, fire, moraleFactor } from '../src/game/rules/battle.js';
+import { startBattle, moveAim, breakOff, fire } from '../src/game/rules/battle.js';
+import { moraleFactor } from '../src/game/rules/ship.js';
 
 function dice(...values) {
   return () => {

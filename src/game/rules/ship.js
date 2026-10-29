@@ -57,6 +57,13 @@ export function sinkShip(state, events) {
   events.emit('shipSunk', {});
 }
 
+// How badly the crew fights, the more often you've fled: it multiplies the
+// losses in battle and boarding. 1.5 at the start (the original's odd start
+// values), going down as you meet more ships and up each time you flee.
+export function moraleFactor(state) {
+  return (state.encounters + state.flights) / state.encounters;
+}
+
 export function isSunk(state) {
   return state.sunk;
 }
