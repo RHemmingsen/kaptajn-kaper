@@ -5,6 +5,9 @@
 //
 // Only one scene is active at a time, and the Game forwards update/render to
 // it. Every scene extends this class and overrides the methods it needs.
+// Asking the Game for another scene (game.setScene...) takes effect when the
+// step is over, so the rest of the scene's update() still runs, on this
+// scene.
 export class Scene {
   constructor(game) {
     this.game = game;

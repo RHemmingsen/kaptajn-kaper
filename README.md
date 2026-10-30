@@ -123,6 +123,15 @@ Scenes can also be stacked: `game.pushScene(...)` puts one on top, like the
 help over a battle, and the one below is paused (`pause()`), not ended, until
 `game.popScene()` takes it back up (`resume()`).
 
+**Scene changes wait for the end of the step.** `setScene`, `pushScene` and
+`popScene` only ask; the Game makes the change when the scene's `update()`
+has finished. So the rest of a scene's code always runs, on that scene, even
+when a rule deep inside it ends the game, and scenes change in one place
+only (`Game.changeScenes`). A new scene's `enter()` may ask for another
+change, which follows in the same step. Asking twice in one step is a
+mistake, and throws. (The pattern: deferred state transitions. Unity's
+`SceneManager.LoadScene` works this way too.)
+
 **Global actions.** `game.onAction('help', ...)` works whatever scene is
 showing; `main.js` uses it to open the help from anywhere with F1, and to
 turn the sound on or off with F2.

@@ -61,22 +61,6 @@ keeps its own state, the "back to sea" code and most imports disappear, and
 each sub-flow knows only its own next step. (Search: "pushdown automaton",
 "scene stack".)
 
-**A2. Scene switches happen synchronously, in the middle of other code.**
-`setScene` runs `exit()` and `enter()` immediately, wherever it's called
-from. A concrete case today: `HarborScene.update` → `setScene(PortScene)` →
-`PortScene.enter` → `checkCargo` → `sinkShip` → `endGame` → `gameOver` →
-`main.js` → `setScene(EndScene)`. So `PortScene.exit()` runs *before its own
-`enter()` has finished*. Likewise, when your ship sinks in `fire()` or
-`sendPrize()`, `BattleScene`/`VictoryScene` go on setting `this.step` on a
-scene that is no longer running.
-It works today because each case was checked by hand. That's the problem:
-correctness depends on every scene and rule knowing that any call might
-replace the scene under it.
-**Best practice:** deferred transitions. `setScene`/`pushScene`/`popScene`
-record a request; `Game.step` applies it after the scene's `update` returns.
-Then a scene's code always runs to the end, and there is one place where
-switches happen. Easy to test with the `LoggingScene` in `tests/game.test.js`.
-
 **A3. Rules report what happened in three different ways.**
 - `sail()` returns only a boolean; the scene learns about a port or a sea
   event through events *it listens to itself* (`arrivedAtPort`, `seaEvent`,
@@ -149,10 +133,9 @@ pixels is a different matter: it's a documented choice, "Skærmen forbliver
 
 ### Recommended cleanup order
 
-1. **Engine:** deferred scene transitions (A2), tested with `LoggingScene`.
-   Plus B5 while in `Game.js`.
-2. **Flow:** the map pushes and pops its sub-scenes (A1). Do this *after* A2,
-   since both touch every scene.
+1. **Engine:** B5, the game loop's edges.
+2. **Flow:** the map pushes and pops its sub-scenes (A1). Scene changes are
+   deferred now (done: A2), so pushing and popping is safe from anywhere.
 3. **Rules:** one convention for results and events, `EVENTS` constants, drop
    unused events (A3). Then the map as a parameter (A4), B6.
 4. **C2** `@ts-check` + JSDoc typedefs for the shared object shapes.
