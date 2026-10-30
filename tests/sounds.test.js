@@ -91,6 +91,12 @@ test('the march plays after the broadside when she sinks or strikes her flag, no
 
 test('the end tune comes after the whine', () => {
   const { events, played } = setup();
-  events.emit('gameOver', {});
+  events.emit('gameOver', { ending: 'sunk' });
   assert.deepEqual(played, [['sweep', 5000, 200, 0.13], ['music', music.END, { delay: 0.13 }]]);
+});
+
+test('giving up goes straight to the end tune, without the whine', () => {
+  const { events, played } = setup();
+  events.emit('gameOver', { ending: 'quit' });
+  assert.deepEqual(played, [['music', music.END, { delay: 0 }]]);
 });

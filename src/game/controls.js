@@ -34,8 +34,8 @@ export const CONTROLS = {
   fire: ['KeyF'],
   breakOff: ['Digit0', 'Numpad0'],
 
-  // On the map it ends the game; in the harbor it turns back to sea; in a
-  // port it goes back a step.
+  // On the map it ends the game, as in the original; in the harbor it turns
+  // back to sea; in a port it goes back a step.
   leave: ['Escape'],
 
   // Typing a number, e.g. how many to buy.

@@ -19,6 +19,7 @@ const HEADLINES = {
     'Af sorg herover, hopper du i havet!',
   ],
   won: ['Komtesse Julie er din!'],
+  quit: [], // as in the original, giving up says nothing about it
 };
 
 // When it was the weight of the cargo that sank her.

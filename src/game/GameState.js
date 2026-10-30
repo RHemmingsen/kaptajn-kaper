@@ -46,7 +46,7 @@ export class GameState {
     this.sunkBy = null;
 
     // How the game ended, once it has: 'sunk', 'jilted' (out of moves, and
-    // Julie marries another) or 'won'. See rules/ending.js.
+    // Julie marries another), 'won' or 'quit'. See rules/ending.js.
     this.ending = null;
 
     this.ship = { col: 10, row: 10 }; // as in the original

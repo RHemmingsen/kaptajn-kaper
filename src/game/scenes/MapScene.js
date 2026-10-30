@@ -1,6 +1,7 @@
 import { Scene } from '../../engine/Scene.js';
 import { KATTEGAT, cityAt } from '../map.js';
 import { goalReached } from '../rules/career.js';
+import { endGame } from '../rules/ending.js';
 import { sail } from '../rules/sailing.js';
 import { checkCargo } from '../rules/ship.js';
 import { clearScreen } from '../ui/draw.js';
@@ -11,7 +12,6 @@ import { drawStatusPanel } from '../ui/statusPanel.js';
 import { HarborScene } from './HarborScene.js';
 import { PromotionScene } from './PromotionScene.js';
 import { SeaEventScene } from './SeaEventScene.js';
-import { TitleScene } from './TitleScene.js';
 
 // Which action sails which way. The keys for each action are in controls.js.
 const SAIL_ACTIONS = {
@@ -61,8 +61,10 @@ export class MapScene extends Scene {
       return;
     }
 
+    // Esc ends the game, as in the original: the end scene, with the points
+    // and the record (via the gameOver listener in main.js).
     if (input.wasActionPressed('leave')) {
-      this.game.setScene(new TitleScene(this.game));
+      endGame(this.state, 'quit', this.game.events);
       return;
     }
 

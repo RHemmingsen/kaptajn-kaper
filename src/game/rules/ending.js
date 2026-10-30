@@ -1,7 +1,8 @@
-// How the game ends. There are three ways, as in the original:
+// How the game ends. There are four ways, as in the original:
 //   'sunk'    the ship is lost (see ship.js)
 //   'jilted'  out of moves: Julie marries another (see career.js)
 //   'won'     every goal reached (see career.js)
+//   'quit'    you gave up: Esc on the map (the original's line 1060)
 //
 // Whatever the reason, the game ends here, once, with one event:
 //   gameOver  { ending, sunkBy, name, points, money, men, repair }

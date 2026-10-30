@@ -65,9 +65,10 @@ export function connectSounds(events, sound) {
   });
 
   // 1755, 1760, 1780: the game is over, however it ended: a quick falling
-  // whine, then the end tune.
-  events.on('gameOver', () => {
-    const whine = sound.sweep(5000, 200, 0.13);
+  // whine, then the end tune. Giving up skips the whine, as the original's
+  // Esc jumped straight to the tune.
+  events.on('gameOver', ({ ending }) => {
+    const whine = ending === 'quit' ? 0 : sound.sweep(5000, 200, 0.13);
     sound.music(END, { delay: whine });
   });
 }

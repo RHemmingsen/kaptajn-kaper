@@ -129,12 +129,6 @@ is read in, or let only `map.js` know. (The harbor working in 640×480 screen
 pixels is a different matter: it's a documented choice, "Skærmen forbliver
 640×480", and fine for a fixed-size game.)
 
-**B7. Esc on the map quietly abandons the game.** No question, no `gameOver`,
-so no end scene and the points never reach the record. In the original, Esc
-on the map ends the game properly: line 1060 jumps to 1760, which plays the
-end tune and goes on to the record (1800). So this is a missing rule from the
-original, not just a nicety.
-
 ### C. Small things
 
 - **C2. No types.** The game passes many plain objects (`battle`, `harbor`,
@@ -155,14 +149,13 @@ original, not just a nicety.
 
 ### Recommended cleanup order
 
-1. **Small user-visible fixes:** B7.
-2. **Engine:** deferred scene transitions (A2), tested with `LoggingScene`.
+1. **Engine:** deferred scene transitions (A2), tested with `LoggingScene`.
    Plus B5 while in `Game.js`.
-3. **Flow:** the map pushes and pops its sub-scenes (A1). Do this *after* A2,
+2. **Flow:** the map pushes and pops its sub-scenes (A1). Do this *after* A2,
    since both touch every scene.
-4. **Rules:** one convention for results and events, `EVENTS` constants, drop
+3. **Rules:** one convention for results and events, `EVENTS` constants, drop
    unused events (A3). Then the map as a parameter (A4), B6.
-5. **C2** `@ts-check` + JSDoc typedefs for the shared object shapes.
+4. **C2** `@ts-check` + JSDoc typedefs for the shared object shapes.
 
 Avoid ECS, plugin systems and general renderer abstractions. The game doesn't
 need them, and they would hide what's worth learning.
