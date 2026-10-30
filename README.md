@@ -113,8 +113,8 @@ times in a frame while drawing always happens once.
 **Scenes.** Each part of the game (title, map, harbor, port, battle, boarding)
 is a `Scene`: the place where that part comes together. It decides which rules
 apply, turns input into calls to them, hands the state to the drawing code in
-`ui/`, and says which scene comes next. The Game holds exactly one, and
-`game.setScene(...)` switches between them, calling `exit()` on the old one and
+`ui/`, and says which scene comes next. Normally one scene runs at a time,
+and `game.setScene(...)` switches between them, calling `exit()` on the old one and
 `enter()` on the new one. (The name is the one Phaser, Godot and Unity use.)
 Scenes can also be stacked: `game.pushScene(...)` puts one on top, like the
 help over a battle, and the one below is paused (`pause()`), not ended, until

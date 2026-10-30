@@ -120,17 +120,7 @@ each have their own `text()` helper, `draw.js` has `label()`, and
 `` `bold 20px ${FONT}` `` is spelled out all over `ui/`. One helper in `draw.js`
 taking `{ x, y, color, size, align }` would do.
 
-**B3. A global action costs the scene a step.** In `Game.step`, if F1/F2 was
-pressed, the scene's `update` is skipped for that step. In a turn-based scene
-that's invisible; in the harbor, pressing F2 freezes the ship for 1/60 s and
-the time is lost, not caught up. Run the action, hide its key from the scene,
-and still update.
-
 **B4. Input details.**
-- Modifier keys are ignored. Ctrl+F is `fire`, so the browser's find is
-  blocked by `preventDefault`, and in `SeaEventScene` it *types* `f` and
-  flees. Alt+← (browser back) counts as a left arrow. Skip events with
-  `ctrlKey`, `altKey` or `metaKey`.
 - `erase` uses `wasActionPressed`, so holding Backspace deletes one character.
   `wasActionRepeated` exists for exactly this.
 - No `destroy()`: the listeners on `window` are never removed. Harmless in one
@@ -159,13 +149,6 @@ original, not just a nicety.
 
 ### C. Small things
 
-- **C1. Stale and broken comments.** `rules/ship.js` still says "(later)
-  cannon fire" and "(later) battle"; both exist. Its header says that because
-  damage and men are checked centrally "no other rule has to remember to",
-  yet `sailing`, `battle`, `boarding` and `victory` all need `isSunk` guards
-  to stop. `ending.js` has a sentence broken across lines 8-9.
-  `victory.js` line 14 is one overlong line. README still says "The Game holds
-  exactly one" scene.
 - **C2. No types.** The game passes many plain objects (`battle`, `harbor`,
   `enemy`, fire results, sea events) whose shape is only described in
   comments. That's exactly where JSDoc `@typedef` pays off. Without a build
@@ -187,9 +170,9 @@ original, not just a nicety.
 
 ### Recommended cleanup order
 
-1. **No behaviour change, quick:** C1, C3, C6, B1, B2. Good warm-up, and the
+1. **No behaviour change, quick:** C3, C6, B1, B2. Good warm-up, and the
    tests prove nothing broke.
-2. **Small user-visible fixes:** B4 (modifiers, Backspace), B3, B7.
+2. **Small user-visible fixes:** B4 (Backspace), B7.
 3. **Engine:** deferred scene transitions (A2), tested with `LoggingScene`.
    Plus B5 while in `Game.js`.
 4. **Flow:** the map pushes and pops its sub-scenes (A1). Do this *after* A2,

@@ -11,8 +11,9 @@ const MIN_GRAIN = 2; // there's always a little grain aboard
 const PRIZE_CREW_BASE = 5; // a prize crew is 5 men, plus half her survivors
 
 // Take her rigsdaler (and points for them) and her grain, and count her
-// survivors. These waters are quiet from now on (see quietenWaters). Returns the spoils, which say what was taken and what the
-// choice between sinking her and taking her as a prize involves:
+// survivors. These waters are quiet from now on (see quietenWaters).
+// Returns the spoils, which say what was taken and what the choice between
+// sinking her and taking her as a prize involves:
 //   { money, points, grain, survivors, prizeCrew }
 export function plunder(enemy, state) {
   const money = enemy.money;
