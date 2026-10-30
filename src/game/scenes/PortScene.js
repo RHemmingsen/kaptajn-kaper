@@ -112,7 +112,7 @@ export class PortScene extends Scene {
     }
 
     this.amount.type(input.typedText());
-    if (input.wasActionPressed('erase')) this.amount.erase();
+    if (input.wasActionRepeated('erase')) this.amount.erase(); // held down, it keeps erasing
     if (!input.wasActionPressed('confirm')) return;
 
     this.step = 'menu';

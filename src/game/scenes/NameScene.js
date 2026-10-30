@@ -40,7 +40,7 @@ export class NameScene extends Scene {
       return;
     }
     this.field.type(input.typedText());
-    if (input.wasActionPressed('erase')) this.field.erase();
+    if (input.wasActionRepeated('erase')) this.field.erase(); // held down, it keeps erasing
 
     const name = this.field.text.trim();
     if (input.wasActionPressed('confirm') && name !== '') {

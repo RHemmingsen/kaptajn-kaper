@@ -111,8 +111,6 @@ test map; have `loadAssets()` return the images.
 ### B. Medium
 
 **B4. Input details.**
-- `erase` uses `wasActionPressed`, so holding Backspace deletes one character.
-  `wasActionRepeated` exists for exactly this.
 - No `destroy()`: the listeners on `window` are never removed. Harmless in one
   page, but a hot reload or a second `Game` doubles them.
 
@@ -157,7 +155,7 @@ original, not just a nicety.
 
 ### Recommended cleanup order
 
-1. **Small user-visible fixes:** B4 (Backspace), B7.
+1. **Small user-visible fixes:** B7.
 2. **Engine:** deferred scene transitions (A2), tested with `LoggingScene`.
    Plus B5 while in `Game.js`.
 3. **Flow:** the map pushes and pops its sub-scenes (A1). Do this *after* A2,
