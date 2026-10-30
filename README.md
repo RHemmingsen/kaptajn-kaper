@@ -61,7 +61,7 @@ src/
       boarding.js        boarding: fight on her deck, one round at a time
       victory.js         plunder, sink or take as a prize, prize money
       career.js          goals, promotions, rank and title, running out of moves
-      ending.js          the game ends once: sunk, jilted or won
+      ending.js          the game ends once: sunk, jilted, won or quit
     ui/                drawing code, shared between scenes
       draw.js            small helpers: clearScreen, polygon, text, label
       mapView.js         the sea map, its frame, ports and ship
@@ -198,7 +198,7 @@ fill those boxes, so what you see is what collides.
 **Game-wide events.** Some reactions apply whatever scene is running. Those
 are set up once in `main.js` with `game.events.on(...)`. The game can end in
 many places (the ship lost in the harbor or in battle, out of moves, every
-goal reached), but always through `endGame` in `rules/ending.js`, which emits
+goal reached, Esc on the map), but always through `endGame` in `rules/ending.js`, which emits
 one `gameOver` event; `main.js` answers it with the end scene.
 
 ## License
