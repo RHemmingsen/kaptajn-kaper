@@ -10,9 +10,13 @@ body {
   justify-content: center;
 }
 
-/* Scale the 640x480 canvas to the largest size that fits, keeping 4:3. */
+/* Scale the 640x480 canvas to the largest size that fits, keeping 4:3.
+   dvh is the height actually visible: on phones, 100vh also counts the part
+   behind the browser's address bar. The vh lines are for browsers without dvh. */
 #game {
   width: min(100vw, calc(100vh * 4 / 3));
   height: min(100vh, calc(100vw * 3 / 4));
+  width: min(100vw, calc(100dvh * 4 / 3));
+  height: min(100dvh, calc(100vw * 3 / 4));
   image-rendering: pixelated; /* keep pixels crisp when scaled up */
 }

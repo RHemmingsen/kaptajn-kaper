@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16">
+  <!-- The ship from the map (see drawShip in src/game/ui/mapView.js), on the sea. -->
+  <rect width="16" height="16" fill="#2a32e8"/>
+  <polygon points="1,10 15,10 12,14 4,14" fill="#e02828"/>
+  <polygon points="8,2 8,9 3,9" fill="#e8e8d0"/>
+  <rect x="8" y="2" width="1" height="8" fill="#e8e8d0"/>
+  <rect x="9" y="2" width="4" height="3" fill="#40f080"/>
+</svg>

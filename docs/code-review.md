@@ -161,14 +161,13 @@ original, not just a nicety.
   grid in `map.js` is our own, not the original's land list (e.g. cell 7,5 is
   land in the original, water here). Help topic 0 says so; the reference doc
   should too.
-- **C6. Odds and ends.** `title-screenshot.png` in the root (move to `docs/`),
-  no favicon (404 in the console), `100vh` is wrong on mobile (`100dvh`).
-  `image-rendering: pixelated` makes canvas text blocky when scaled; fine for
-  the retro look, but it should be a stated choice.
+- **C6. Pixelated text.** `image-rendering: pixelated` makes canvas text
+  blocky when scaled; fine for the retro look, but it should be a stated
+  choice.
 
 ### Recommended cleanup order
 
-1. **No behaviour change, quick:** C6, B1, B2. Good warm-up, and the
+1. **No behaviour change, quick:** B1, B2. Good warm-up, and the
    tests prove nothing broke.
 2. **Small user-visible fixes:** B4 (Backspace), B7.
 3. **Engine:** deferred scene transitions (A2), tested with `LoggingScene`.

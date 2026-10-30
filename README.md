@@ -100,6 +100,8 @@ tests/                 Node tests for engine and rules: npm test
   helpers.js           dice() and recordEvents(), shared by the tests
 docs/
   original-regler.md   the original game's rules, in Danish
+  code-review.md       a review of the code, and the cleanup still to do
+  title-screenshot.png the title scene
 KaptajnKaper_original/ the original 1985 source code, for reference only
 ```
 
