@@ -71,6 +71,7 @@ src/
       battleView.js      the "Sigte" screen: panels, sights, table
       boardingView.js    the fight on the enemy's deck
       victoryView.js     what you took, and what you do with her
+      errorView.js       what the player sees if the game crashes
       promotionView.js   the news of a promotion
       endingView.js      how the game ended, and the record
       nameView.js        "Hvad er dit navn?", and the greeting

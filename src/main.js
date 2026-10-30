@@ -6,13 +6,14 @@ import { CONTROLS } from './game/controls.js';
 import { EndScene } from './game/scenes/EndScene.js';
 import { HelpScene } from './game/scenes/HelpScene.js';
 import { SoundScene } from './game/scenes/SoundScene.js';
+import { drawError } from './game/ui/errorView.js';
 import { connectSounds } from './game/sounds.js';
 import { rememberSound, soundOn } from './game/records.js';
 
 await loadAssets();
 
 const canvas = document.getElementById('game');
-const game = new Game(canvas, { controls: CONTROLS });
+const game = new Game(canvas, { controls: CONTROLS, drawError });
 game.sound.setEnabled(soundOn());
 connectSounds(game.events, game.sound);
 

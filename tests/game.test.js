@@ -5,10 +5,10 @@ import assert from 'node:assert/strict';
 import { Game } from '../src/engine/Game.js';
 import { Scene } from '../src/engine/Scene.js';
 
-function setup() {
+function setup(options = {}) {
   const canvas = { width: 640, height: 480, getContext: () => ({}) };
   const keys = new EventTarget();
-  const game = new Game(canvas, { controls: { help: ['F1'], fire: ['KeyF'] }, inputTarget: keys });
+  const game = new Game(canvas, { controls: { help: ['F1'], fire: ['KeyF'] }, inputTarget: keys, ...options });
   const press = (code) => keys.dispatchEvent(Object.assign(new Event('keydown'), { code, key: code, repeat: false }));
   return { game, press };
 }
@@ -101,14 +101,54 @@ test('scenes that keep sending each other on are stopped, with an error', () => 
   assert.throws(() => game.step(DT), /More than 10 scene changes in one step/);
 });
 
+// The browser's frame scheduling, faked: frames asked for are only counted,
+// and tests call game.frame(now) themselves.
+let framesAsked = 0;
+globalThis.requestAnimationFrame = () => { framesAsked += 1; };
+
 test('start() makes the scene change asked for before it', () => {
   const { game } = setup();
   const log = [];
   game.setScene(new LoggingScene(game, 'title', log));
-  globalThis.requestAnimationFrame = () => {};
-  globalThis.performance ??= { now: () => 0 };
   game.start();
   assert.deepEqual(log, ['title enter']);
+});
+
+test('start() twice, or with no scene, is a mistake', () => {
+  const { game } = setup();
+  assert.throws(() => game.start(), /No scene to start with/);
+  game.setScene(new LoggingScene(game, 'title', []));
+  game.start();
+  assert.throws(() => game.start(), /already running/);
+});
+
+test('a frame whose time is before the last one runs no steps, and time never goes backwards', () => {
+  const { game } = setup();
+  const log = [];
+  game.setScene(new LoggingScene(game, 'map', log));
+  game.start();
+  game.lastTime = 1000;
+  game.frame(990);
+  assert.equal(game.accumulator, 0);
+  assert.deepEqual(log, ['map enter']);
+});
+
+test('an error in a scene stops the loop and shows the error, instead of freezing', () => {
+  const shown = [];
+  const { game } = setup({ drawError: (ctx, error) => shown.push(error.message) });
+  game.setScene(new LoggingScene(game, 'battle', [], { onUpdate: () => { throw new Error('oops'); } }));
+  game.start();
+  const asked = framesAsked;
+  const consoleError = console.error;
+  console.error = () => {}; // the game logs it there; keep the test output clean
+  try {
+    game.frame(game.lastTime + 100); // 0.1 s: a few steps' worth
+  } finally {
+    console.error = consoleError;
+  }
+  assert.deepEqual(shown, ['oops']);
+  assert.equal(framesAsked, asked, 'no next frame');
+  assert.equal(game.running, false);
 });
 
 test('a pushed scene pauses the one below, and popping it resumes it, without re-entering', () => {

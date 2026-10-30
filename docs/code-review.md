@@ -65,7 +65,8 @@ each sub-flow knows only its own next step. (Search: "pushdown automaton",
 - `sail()` returns only a boolean; the scene learns about a port or a sea
   event through events *it listens to itself* (`arrivedAtPort`, `seaEvent`,
   `shipMoved`, each with exactly one listener: `MapScene`). That's a function
-  call with a detour, and it's what makes A2 happen on the map.
+  call with a detour, and it's why the map changed scene from inside
+  `sail()` (safe now that scene changes are deferred, but still a detour).
 - `fire()`, `fightRound()` and `investigateFog()` return a result *and* emit
   the same result as an event (for sound). Good.
 - `buy()`/`sell()` return a result and emit nothing; the *scene* emits
@@ -98,14 +99,6 @@ test map; have `loadAssets()` return the images.
 - No `destroy()`: the listeners on `window` are never removed. Harmless in one
   page, but a hot reload or a second `Game` doubles them.
 
-**B5. Game loop edges.**
-- An exception in `update`/`render` stops the loop (no new
-  `requestAnimationFrame`), and the game freezes with nothing on screen.
-- `start()` twice gives two loops; `start()` before `setScene()` crashes in
-  `frame`.
-- The first frame can get a negative `elapsed`, because rAF's timestamp can be
-  earlier than the `performance.now()` read in `start()`. `Math.max(0, …)`.
-
 **B6. Two coordinate systems on the map.** The game uses the original's
 1-based cells, `TileMap` is 0-based, and the `- 1` happens in two files
 (`map.js` `tileAt`, `mapView.js` `cellCorner`). Either convert once when data
@@ -133,12 +126,11 @@ pixels is a different matter: it's a documented choice, "Skærmen forbliver
 
 ### Recommended cleanup order
 
-1. **Engine:** B5, the game loop's edges.
-2. **Flow:** the map pushes and pops its sub-scenes (A1). Scene changes are
+1. **Flow:** the map pushes and pops its sub-scenes (A1). Scene changes are
    deferred now (done: A2), so pushing and popping is safe from anywhere.
-3. **Rules:** one convention for results and events, `EVENTS` constants, drop
+2. **Rules:** one convention for results and events, `EVENTS` constants, drop
    unused events (A3). Then the map as a parameter (A4), B6.
-4. **C2** `@ts-check` + JSDoc typedefs for the shared object shapes.
+3. **C2** `@ts-check` + JSDoc typedefs for the shared object shapes.
 
 Avoid ECS, plugin systems and general renderer abstractions. The game doesn't
 need them, and they would hide what's worth learning.

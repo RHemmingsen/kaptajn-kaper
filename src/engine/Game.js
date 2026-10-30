@@ -21,6 +21,8 @@ const MAX_SCENE_CHANGES_PER_STEP = 10;
 // handed on to the Input. See Input.js. `inputTarget` is what the Input
 // listens on: the browser window normally, something else in tests. Sound
 // listens there too, for the first key press that lets it play.
+// `drawError(ctx, error)` draws what the player sees if the game crashes
+// (see crash()); the engine has a plain one, the game can bring its own.
 //
 // Scenes are kept in a stack. Normally there's one, and setScene() swaps it.
 // pushScene() puts another on top, like help over a battle: the one below is
@@ -37,7 +39,7 @@ const MAX_SCENE_CHANGES_PER_STEP = 10;
 //
 // One change can be asked for per step; a second is a mistake, and throws.
 export class Game {
-  constructor(canvas, { controls, inputTarget } = {}) {
+  constructor(canvas, { controls, inputTarget, drawError = drawPlainError } = {}) {
     this.canvas = canvas;
     this.ctx = canvas.getContext('2d');
     this.width = canvas.width;
@@ -59,6 +61,8 @@ export class Game {
     // Game rather than a scene, so they stay on when the scene changes.
     this.debug = {};
 
+    this.drawError = drawError;
+    this.running = false;
     this.lastTime = 0;
     this.accumulator = 0;
   }
@@ -135,9 +139,23 @@ export class Game {
 
   // Start the loop, with the scene asked for by setScene().
   start() {
+    if (this.running) throw new Error('The game is already running: start() was called twice.');
     this.changeScenes();
+    if (!this.scene) throw new Error('No scene to start with: call game.setScene(...) before game.start().');
+    this.running = true;
     this.lastTime = performance.now();
     requestAnimationFrame(this.frame);
+  }
+
+  // Something went wrong in a scene, a rule or the drawing. Carrying on would
+  // only repeat the error 60 times a second, from a game in a state nobody
+  // planned for, so the loop stops. The player sees what happened
+  // (drawError), and the developer gets the error, with where it came from,
+  // in the console.
+  crash(error) {
+    this.running = false;
+    console.error(error);
+    this.drawError(this.ctx, error);
   }
 
   // One step of game logic: a global action if one was pressed, otherwise
@@ -158,19 +176,38 @@ export class Game {
   // running at the same speed on every machine, and makes the logic
   // predictable (gusts push the ship the same amount each step, etc.).
   frame = (now) => {
-    const elapsed = Math.min((now - this.lastTime) / 1000, MAX_FRAME_TIME);
+    // Never negative: the browser's timestamp for the first frame can be a
+    // little earlier than the performance.now() read in start().
+    const elapsed = Math.max(0, Math.min((now - this.lastTime) / 1000, MAX_FRAME_TIME));
     this.lastTime = now;
     this.accumulator += elapsed;
 
-    while (this.accumulator >= STEP) {
-      this.step(STEP);
-      this.accumulator -= STEP;
+    try {
+      while (this.accumulator >= STEP) {
+        this.step(STEP);
+        this.accumulator -= STEP;
+      }
+      this.scene.render(this.ctx);
+    } catch (error) {
+      this.crash(error);
+      return; // no next frame: the loop stops here
     }
-
-    this.scene.render(this.ctx);
 
     requestAnimationFrame(this.frame);
   };
+}
+
+// What the player sees after a crash, unless the game brings its own: the
+// error's message, in white on black.
+function drawPlainError(ctx, error) {
+  ctx.fillStyle = '#000';
+  ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+  ctx.fillStyle = '#fff';
+  ctx.font = '16px monospace';
+  ctx.textAlign = 'left';
+  ctx.textBaseline = 'top';
+  ctx.fillText('The game stopped because of an error:', 16, 16);
+  ctx.fillText(String(error?.message ?? error), 16, 40);
 }
 
 // "set TitleScene", for error messages.
