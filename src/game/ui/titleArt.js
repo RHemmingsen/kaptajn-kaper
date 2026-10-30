@@ -1,9 +1,26 @@
-// The title scene's picture: ship, title, cannon, skull and treasure chest.
+// The title scene's picture: ship, title, cannon, skull and treasure chest,
+// and the prompt below it.
 //
 // All drawn with plain canvas shapes (rectangles, polygons, circles). Later we
 // might swap these for image files.
 import { COLORS, FONT } from '../palette.js';
 import { polygon } from './draw.js';
+
+// "Tryk på en tast for at fortsætte!" at the bottom, with a cursor after it
+// when `cursorOn`.
+export function drawTitlePrompt(ctx, cursorOn) {
+  ctx.fillStyle = COLORS.white;
+  ctx.font = `bold 20px ${FONT}`;
+  ctx.textAlign = 'left';
+  ctx.textBaseline = 'alphabetic';
+  const prompt = 'Tryk på en tast for at fortsætte!';
+  ctx.fillText(prompt, 14, 470);
+
+  if (cursorOn) {
+    const x = 14 + ctx.measureText(prompt).width + 6;
+    ctx.fillRect(x, 462, 12, 8);
+  }
+}
 
 export function drawTitleArt(ctx) {
   drawShipPanel(ctx);

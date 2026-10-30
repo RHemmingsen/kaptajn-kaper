@@ -2,6 +2,7 @@
 // where the gusts come from. Also the original's instructions, shown first.
 import { COLORS, FONT } from '../palette.js';
 import { LAYOUT, gustDirection } from '../rules/harbor.js';
+import { centeredLabel } from './draw.js';
 
 // Where the gust indicator sits: below the left dock.
 const WIND_X = 40;
@@ -12,7 +13,9 @@ const INTRO_LEFT = 24;
 const INTRO_TOP = 36;
 const INTRO_LINE = 24;
 
-export function drawHarbor(ctx, harbor) {
+// The harbor while you sail in, with the message after a crash and the
+// welcome once you're in. `state` is for the Rep left after a crash.
+export function drawHarbor(ctx, harbor, state) {
   drawGustIndicator(ctx, harbor);
   drawWall(ctx, LAYOUT.wallLeft - 14);
   drawWall(ctx, LAYOUT.wallRight + 2);
@@ -23,6 +26,15 @@ export function drawHarbor(ctx, harbor) {
   for (const obstacle of harbor.obstacles) drawAnchoredShip(ctx, obstacle);
   drawOurShip(ctx, harbor.ship);
   if (harbor.gustTimer > 0) drawGust(ctx, harbor);
+
+  if (harbor.crashTimer > 0) {
+    const text = `Du ramte et skib! -${harbor.lastCrash} Rep, ${state.repair} tilbage`;
+    centeredLabel(ctx, text, 240, COLORS.white);
+  }
+  if (harbor.status === 'docked') {
+    centeredLabel(ctx, `Velkommen til ${harbor.city.name}!`, 440, COLORS.white);
+    centeredLabel(ctx, 'Tryk på en tast', 464, COLORS.white);
+  }
 }
 
 // The original's instructions, before you sail in.

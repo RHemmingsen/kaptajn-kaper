@@ -1,4 +1,4 @@
-// Drawing the sea map: tiles, ports and the ship.
+// Drawing the sea map: its frame, tiles, ports and the ship.
 import { COLORS } from '../palette.js';
 import { CITIES, KATTEGAT } from '../map.js';
 import { canSailTo } from '../rules/sailing.js';
@@ -13,6 +13,20 @@ const TILE_H = 22;
 // Where the top-left corner of the map is drawn on the canvas.
 const MAP_X = 35;
 const MAP_Y = 32;
+
+// The green border around the map, with the score, the goal and the keys on
+// it, and whether the sound is on.
+export function drawMapFrame(ctx, state, soundOn) {
+  ctx.strokeStyle = COLORS.green;
+  ctx.lineWidth = 12;
+  ctx.strokeRect(23, 19, 574, 335);
+
+  label(ctx, `Point: ${state.points}`, 44, 19);
+  label(ctx, `Mål: ${state.goal} på ${state.maxMoves} træk`, 262, 19);
+  label(ctx, 'F1:Hjælp', 44, 354);
+  label(ctx, `F2:lyd ${soundOn ? 'til' : 'fra'}`, 262, 354);
+  label(ctx, 'Esc:Slut', 466, 354);
+}
 
 export function drawMap(ctx, map) {
   const w = map.width * TILE_W;

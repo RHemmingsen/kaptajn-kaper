@@ -1,12 +1,11 @@
 import { Scene } from '../../engine/Scene.js';
-import { COLORS } from '../palette.js';
 import { KATTEGAT, cityAt } from '../map.js';
 import { goalReached } from '../rules/career.js';
 import { sail } from '../rules/sailing.js';
 import { checkCargo } from '../rules/ship.js';
-import { clearScreen, label } from '../ui/draw.js';
+import { clearScreen } from '../ui/draw.js';
 import {
-  drawMap, drawCollisionOverlay, drawCities, drawCityName, drawShip,
+  drawMap, drawMapFrame, drawCollisionOverlay, drawCities, drawCityName, drawShip,
 } from '../ui/mapView.js';
 import { drawStatusPanel } from '../ui/statusPanel.js';
 import { HarborScene } from './HarborScene.js';
@@ -83,7 +82,7 @@ export class MapScene extends Scene {
 
   render(ctx) {
     clearScreen(ctx);
-    this.drawFrame(ctx);
+    drawMapFrame(ctx, this.state, this.game.sound.enabled);
     drawMap(ctx, KATTEGAT);
     if (this.game.debug.showCollision) drawCollisionOverlay(ctx);
     drawCities(ctx);
@@ -92,18 +91,4 @@ export class MapScene extends Scene {
     drawStatusPanel(ctx, this.state);
   }
 
-  // The green border with the score, goal and key help on it.
-  drawFrame(ctx) {
-    const s = this.state;
-
-    ctx.strokeStyle = COLORS.green;
-    ctx.lineWidth = 12;
-    ctx.strokeRect(23, 19, 574, 335);
-
-    label(ctx, `Point: ${s.points}`, 44, 19);
-    label(ctx, `Mål: ${s.goal} på ${s.maxMoves} træk`, 262, 19);
-    label(ctx, 'F1:Hjælp', 44, 354);
-    label(ctx, `F2:lyd ${this.game.sound.enabled ? 'til' : 'fra'}`, 262, 354);
-    label(ctx, 'Esc:Slut', 466, 354);
-  }
 }

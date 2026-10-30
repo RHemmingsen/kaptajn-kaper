@@ -1,7 +1,6 @@
 import { Scene } from '../../engine/Scene.js';
-import { COLORS } from '../palette.js';
 import { createHarbor, updateHarbor } from '../rules/harbor.js';
-import { clearScreen, centeredLabel } from '../ui/draw.js';
+import { clearScreen } from '../ui/draw.js';
 import { drawHarbor, drawHarborIntro } from '../ui/harborView.js';
 import { MapScene } from './MapScene.js';
 import { PortScene } from './PortScene.js';
@@ -57,15 +56,6 @@ export class HarborScene extends Scene {
       drawHarborIntro(ctx, this.harbor);
       return;
     }
-    drawHarbor(ctx, this.harbor);
-
-    if (this.harbor.crashTimer > 0) {
-      const text = `Du ramte et skib! -${this.harbor.lastCrash} Rep, ${this.state.repair} tilbage`;
-      centeredLabel(ctx, text, 240, COLORS.white);
-    }
-    if (this.harbor.status === 'docked') {
-      centeredLabel(ctx, `Velkommen til ${this.harbor.city.name}!`, 440, COLORS.white);
-      centeredLabel(ctx, 'Tryk på en tast', 464, COLORS.white);
-    }
+    drawHarbor(ctx, this.harbor, this.state);
   }
 }

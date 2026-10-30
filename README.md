@@ -64,8 +64,8 @@ src/
       ending.js          the game ends once: sunk, jilted or won
     ui/                drawing code, shared between scenes
       draw.js            small helpers: clearScreen, polygon, label
-      mapView.js         the sea map, ports and ship
-      harborView.js      the harbor minigame
+      mapView.js         the sea map, its frame, ports and ship
+      harborView.js      the harbor minigame and its messages
       portView.js        the trading menu in a port
       seaView.js         what the lookout reports, and what was in the fog
       battleView.js      the "Sigte" screen: panels, sights, table
@@ -79,7 +79,7 @@ src/
       helpView.js        the help's menu and pages
       shipArt.js         a three-master from the side, at any place and size
       statusPanel.js     the Træk/Rgsdl/Korn... table
-      titleArt.js        the title scene's picture
+      titleArt.js        the title scene's picture and prompt
     scenes/            each part of the game: input -> rules -> drawing
       SoundScene.js
       TitleScene.js
