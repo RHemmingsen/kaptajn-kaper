@@ -1,6 +1,7 @@
 // Drawing a boarding fight, in the original's words, with the enemy ship in
 // the top right corner.
-import { COLORS, FONT } from '../palette.js';
+import { COLORS } from '../palette.js';
+import { text } from './draw.js';
 import { drawSideViewShip } from './shipArt.js';
 
 const LEFT = 16;
@@ -12,11 +13,7 @@ export function drawBoarding(ctx, { enemy, round }) {
   drawSideViewShip(ctx, 470, 16, 0.85);
 
   linesFor(enemy, round).forEach((line, i) => {
-    ctx.font = `bold 20px ${FONT}`;
-    ctx.fillStyle = COLORS.white;
-    ctx.textAlign = 'left';
-    ctx.textBaseline = 'middle';
-    ctx.fillText(line, LEFT, TOP + i * LINE);
+    text(ctx, line, LEFT, TOP + i * LINE, { color: COLORS.white });
   });
 }
 

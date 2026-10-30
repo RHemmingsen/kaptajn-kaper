@@ -1,5 +1,6 @@
 // The 3x2 table of ship stats at the bottom of the screen.
-import { COLORS, FONT } from '../palette.js';
+import { COLORS } from '../palette.js';
+import { text } from './draw.js';
 
 const LEFT = 16;
 const RIGHT = 612;
@@ -38,13 +39,9 @@ export function drawStatusPanel(ctx, state, layout = 'sailing') {
   ctx.stroke();
 
   const cells = LAYOUTS[layout](state);
-  ctx.fillStyle = COLORS.salmon;
-  ctx.font = `bold 20px ${FONT}`;
-  ctx.textAlign = 'left';
-  ctx.textBaseline = 'middle';
   cells.forEach((rowCells, r) => {
-    rowCells.forEach((text, c) => {
-      ctx.fillText(text, COLUMNS[c] + 14, TOP + (r + 0.5) * (mid - TOP));
+    rowCells.forEach((cell, c) => {
+      text(ctx, cell, COLUMNS[c] + 14, TOP + (r + 0.5) * (mid - TOP));
     });
   });
 }

@@ -1,5 +1,6 @@
 // Drawing the end of the game, in the original's words.
-import { COLORS, FONT } from '../palette.js';
+import { COLORS } from '../palette.js';
+import { text } from './draw.js';
 import { recordLine } from './recordText.js';
 
 const LEFT = 40;
@@ -45,10 +46,6 @@ export function drawEnding(ctx, view) {
   ];
 
   lines.forEach((line, i) => {
-    ctx.font = `bold 20px ${FONT}`;
-    ctx.fillStyle = i === 0 ? COLORS.white : COLORS.salmon;
-    ctx.textAlign = 'left';
-    ctx.textBaseline = 'middle';
-    ctx.fillText(line, LEFT, TOP + i * LINE);
+    text(ctx, line, LEFT, TOP + i * LINE, { color: i === 0 ? COLORS.white : COLORS.salmon });
   });
 }

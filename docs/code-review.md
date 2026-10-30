@@ -110,11 +110,6 @@ test map; have `loadAssets()` return the images.
 
 ### B. Medium
 
-**B2. Text drawing is duplicated.** `battleView`, `helpView` and `portView`
-each have their own `text()` helper, `draw.js` has `label()`, and
-`` `bold 20px ${FONT}` `` is spelled out all over `ui/`. One helper in `draw.js`
-taking `{ x, y, color, size, align }` would do.
-
 **B4. Input details.**
 - `erase` uses `wasActionPressed`, so holding Backspace deletes one character.
   `wasActionRepeated` exists for exactly this.
@@ -162,16 +157,14 @@ original, not just a nicety.
 
 ### Recommended cleanup order
 
-1. **No behaviour change, quick:** B2. Good warm-up, and the
-   tests prove nothing broke.
-2. **Small user-visible fixes:** B4 (Backspace), B7.
-3. **Engine:** deferred scene transitions (A2), tested with `LoggingScene`.
+1. **Small user-visible fixes:** B4 (Backspace), B7.
+2. **Engine:** deferred scene transitions (A2), tested with `LoggingScene`.
    Plus B5 while in `Game.js`.
-4. **Flow:** the map pushes and pops its sub-scenes (A1). Do this *after* A2,
+3. **Flow:** the map pushes and pops its sub-scenes (A1). Do this *after* A2,
    since both touch every scene.
-5. **Rules:** one convention for results and events, `EVENTS` constants, drop
+4. **Rules:** one convention for results and events, `EVENTS` constants, drop
    unused events (A3). Then the map as a parameter (A4), B6.
-6. **C2** `@ts-check` + JSDoc typedefs for the shared object shapes.
+5. **C2** `@ts-check` + JSDoc typedefs for the shared object shapes.
 
 Avoid ECS, plugin systems and general renderer abstractions. The game doesn't
 need them, and they would hide what's worth learning.

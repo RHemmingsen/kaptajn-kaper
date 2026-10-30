@@ -1,5 +1,6 @@
 // Drawing the question about sound at the start, in the original's words.
-import { COLORS, FONT } from '../palette.js';
+import { COLORS } from '../palette.js';
+import { text } from './draw.js';
 
 const LEFT = 40;
 const TOP = 60;
@@ -20,10 +21,6 @@ export function drawSoundQuestion(ctx, soundOn) {
   ];
 
   lines.forEach((line, i) => {
-    ctx.font = `bold 20px ${FONT}`;
-    ctx.fillStyle = i === 4 || i === 5 ? COLORS.salmon : COLORS.white;
-    ctx.textAlign = 'left';
-    ctx.textBaseline = 'middle';
-    ctx.fillText(line, LEFT, TOP + i * LINE);
+    text(ctx, line, LEFT, TOP + i * LINE, { color: i === 4 || i === 5 ? COLORS.salmon : COLORS.white });
   });
 }

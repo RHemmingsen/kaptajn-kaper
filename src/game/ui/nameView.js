@@ -1,5 +1,6 @@
 // Drawing the name question before a new game, and the greeting after it.
-import { COLORS, FONT } from '../palette.js';
+import { COLORS } from '../palette.js';
+import { text } from './draw.js';
 import { recordLine } from './recordText.js';
 
 const LEFT = 40;
@@ -7,8 +8,9 @@ const TOP = 60;
 const LINE = 28; // pixels between lines
 
 // `view` is what the scene wants shown:
-//   { step, text, cursorOn, name, record }, where record is { points, name } or null
-export function drawName(ctx, { step, text, cursorOn, name, record }) {
+//   { step, text, cursorOn, name, record }, where text is what's typed so far
+//   and record is { points, name } or null
+export function drawName(ctx, { step, text: typed, cursorOn, name, record }) {
   const lines = step === 'greeting'
     ? [
       `OK, ${name}.`,
@@ -21,7 +23,7 @@ export function drawName(ctx, { step, text, cursorOn, name, record }) {
     : [
       'Hvad er dit navn?',
       '',
-      `${text}${cursorOn ? '_' : ' '}`,
+      `${typed}${cursorOn ? '_' : ' '}`,
       '',
       'Enter: ok   Esc: tilbage',
       '',
@@ -30,10 +32,7 @@ export function drawName(ctx, { step, text, cursorOn, name, record }) {
     ];
 
   lines.forEach((line, i) => {
-    ctx.font = `bold 20px ${FONT}`;
-    ctx.fillStyle = i === 0 || (step === 'name' && i === 2) ? COLORS.white : COLORS.salmon;
-    ctx.textAlign = 'left';
-    ctx.textBaseline = 'middle';
-    ctx.fillText(line, LEFT, TOP + i * LINE);
+    const color = i === 0 || (step === 'name' && i === 2) ? COLORS.white : COLORS.salmon;
+    text(ctx, line, LEFT, TOP + i * LINE, { color });
   });
 }

@@ -1,7 +1,8 @@
 // Drawing a gun battle, laid out like the original's "Sigte" screen: the
 // enemy ("Fjende") and your ship ("Egen") from above with the splashes, the
 // sights on the enemy ship, and a table of both ships.
-import { COLORS, FONT } from '../palette.js';
+import { COLORS } from '../palette.js';
+import { text } from './draw.js';
 import { drawSideViewShip } from './shipArt.js';
 
 // The three panels.
@@ -41,8 +42,8 @@ export function drawBattle(ctx, { battle, state, step, result }) {
   drawPanel(ctx, SIGHTS_PANEL, null);
   drawSideViewShip(ctx, 392, 44); // the target
   drawSights(ctx, battle.aim);
-  if (step === 'aim') text(ctx, 'Sigte', 440, 236, COLORS.white);
-  else text(ctx, 'Tryk på en tast.', 372, 236, COLORS.white);
+  if (step === 'aim') text(ctx, 'Sigte', 440, 236, { color: COLORS.white });
+  else text(ctx, 'Tryk på en tast.', 372, 236, { color: COLORS.white });
 
   drawMessages(ctx, step, result);
   drawTable(ctx, battle, state);
@@ -53,7 +54,9 @@ function drawMessages(ctx, step, result) {
   const lines = step === 'aim'
     ? ['Sigt med pilene eller 1-9.', 'F = fyr.  0 = afbryd kampen.']
     : resultLines(result);
-  lines.forEach((line, i) => text(ctx, line, 24, 268 + i * 24, i === 0 ? COLORS.white : COLORS.salmon));
+  lines.forEach((line, i) => {
+    text(ctx, line, 24, 268 + i * 24, { color: i === 0 ? COLORS.white : COLORS.salmon });
+  });
 }
 
 // Your shot (none if you were sunk first), the enemy's fire, and how it ended.
@@ -114,9 +117,9 @@ function drawTable(ctx, { enemy, wind }, state) {
   ctx.stroke();
 
   const headerY = (top + header) / 2;
-  text(ctx, `Afst: ${enemy.distance}`, TABLE_LEFT + 12, headerY, COLORS.white);
-  text(ctx, 'Egen', OWN_X + 12, headerY, COLORS.white);
-  text(ctx, 'Fjende', ENEMY_X + 12, headerY, COLORS.white);
+  text(ctx, `Afst: ${enemy.distance}`, TABLE_LEFT + 12, headerY, { color: COLORS.white });
+  text(ctx, 'Egen', OWN_X + 12, headerY, { color: COLORS.white });
+  text(ctx, 'Fjende', ENEMY_X + 12, headerY, { color: COLORS.white });
 
   const rows = [
     ['Skyts', state.guns, enemy.guns],
@@ -125,7 +128,7 @@ function drawTable(ctx, { enemy, wind }, state) {
   ];
   rows.forEach(([label, ours, theirs], i) => {
     const y = (ROWS[i + 1] + ROWS[i + 2]) / 2;
-    text(ctx, label, LABELS_X + 12, y, COLORS.white);
+    text(ctx, label, LABELS_X + 12, y, { color: COLORS.white });
     text(ctx, String(ours), OWN_X + 12, y);
     text(ctx, String(theirs), ENEMY_X + 12, y);
   });
@@ -136,7 +139,7 @@ function drawTable(ctx, { enemy, wind }, state) {
 // "Vind" and its strength, over a compass whose dot shows where the wind
 // comes from: up is from the enemy, down is from behind you.
 function drawWind(ctx, wind) {
-  text(ctx, `Vind ${wind.strength}`, 30, 378, COLORS.white);
+  text(ctx, `Vind ${wind.strength}`, 30, 378, { color: COLORS.white });
   const cx = 83;
   const cy = 430;
   const r = 28;
@@ -161,7 +164,7 @@ function drawPanel(ctx, { x, y, w, h }, title) {
   ctx.strokeStyle = COLORS.white;
   ctx.lineWidth = 2;
   ctx.strokeRect(x, y, w, h);
-  if (title) text(ctx, title, x + 12, y + 18, COLORS.white);
+  if (title) text(ctx, title, x + 12, y + 18, { color: COLORS.white });
 }
 
 // A ship's hull seen from above.
@@ -203,10 +206,3 @@ function drawSights(ctx, aim) {
   ctx.stroke();
 }
 
-function text(ctx, string, x, y, color = COLORS.salmon) {
-  ctx.font = `bold 20px ${FONT}`;
-  ctx.fillStyle = color;
-  ctx.textAlign = 'left';
-  ctx.textBaseline = 'middle';
-  ctx.fillText(string, x, y);
-}

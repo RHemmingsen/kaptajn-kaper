@@ -1,8 +1,8 @@
 // Drawing the harbor minigame: walls, docks, ships at anchor, our ship, and
 // where the gusts come from. Also the original's instructions, shown first.
-import { COLORS, FONT } from '../palette.js';
+import { COLORS } from '../palette.js';
 import { LAYOUT, gustDirection } from '../rules/harbor.js';
-import { centeredLabel } from './draw.js';
+import { centeredLabel, text, textWidth } from './draw.js';
 
 // Where the gust indicator sits: below the left dock.
 const WIND_X = 40;
@@ -28,8 +28,8 @@ export function drawHarbor(ctx, harbor, state) {
   if (harbor.gustTimer > 0) drawGust(ctx, harbor);
 
   if (harbor.crashTimer > 0) {
-    const text = `Du ramte et skib! -${harbor.lastCrash} Rep, ${state.repair} tilbage`;
-    centeredLabel(ctx, text, 240, COLORS.white);
+    const message = `Du ramte et skib! -${harbor.lastCrash} Rep, ${state.repair} tilbage`;
+    centeredLabel(ctx, message, 240, COLORS.white);
   }
   if (harbor.status === 'docked') {
     centeredLabel(ctx, `Velkommen til ${harbor.city.name}!`, 440, COLORS.white);
@@ -57,11 +57,8 @@ export function drawHarborIntro(ctx, harbor) {
     'Tryk på en tast for at fortsætte!',
   ];
   lines.forEach((line, i) => {
-    ctx.font = `bold 20px ${FONT}`;
-    ctx.fillStyle = i === 11 ? COLORS.white : COLORS.salmon;
-    ctx.textAlign = 'left';
-    ctx.textBaseline = 'middle';
-    ctx.fillText(line, INTRO_LEFT, INTRO_TOP + i * INTRO_LINE);
+    const color = i === 11 ? COLORS.white : COLORS.salmon;
+    text(ctx, line, INTRO_LEFT, INTRO_TOP + i * INTRO_LINE, { color });
   });
   drawArrow(ctx, INTRO_LEFT + 560, INTRO_TOP + 11 * INTRO_LINE, gustDirection(harbor), 20);
 }
@@ -69,14 +66,10 @@ export function drawHarborIntro(ctx, harbor) {
 // "Vindstød fra højre" and an arrow the way the gusts push.
 function drawGustIndicator(ctx, harbor) {
   const from = harbor.gustsFrom === 'right' ? 'højre' : 'venstre';
-  ctx.fillStyle = COLORS.white;
-  ctx.font = `bold 20px ${FONT}`;
-  ctx.textAlign = 'left';
-  ctx.textBaseline = 'middle';
-  const text = `Vindstød fra ${from}`;
-  ctx.fillText(text, WIND_X, WIND_Y);
+  const message = `Vindstød fra ${from}`;
+  text(ctx, message, WIND_X, WIND_Y, { color: COLORS.white });
   // The arrow goes just after the text, which is longer for "venstre".
-  const arrowX = WIND_X + ctx.measureText(text).width + 20 + WIND_ARROW_HALF;
+  const arrowX = WIND_X + textWidth(ctx, message) + 20 + WIND_ARROW_HALF;
   drawArrow(ctx, arrowX, WIND_Y, gustDirection(harbor), WIND_ARROW_HALF);
 }
 

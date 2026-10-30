@@ -3,21 +3,18 @@
 //
 // All drawn with plain canvas shapes (rectangles, polygons, circles). Later we
 // might swap these for image files.
-import { COLORS, FONT } from '../palette.js';
-import { polygon } from './draw.js';
+import { COLORS } from '../palette.js';
+import { polygon, text, textWidth } from './draw.js';
 
 // "Tryk på en tast for at fortsætte!" at the bottom, with a cursor after it
 // when `cursorOn`.
 export function drawTitlePrompt(ctx, cursorOn) {
-  ctx.fillStyle = COLORS.white;
-  ctx.font = `bold 20px ${FONT}`;
-  ctx.textAlign = 'left';
-  ctx.textBaseline = 'alphabetic';
   const prompt = 'Tryk på en tast for at fortsætte!';
-  ctx.fillText(prompt, 14, 470);
+  text(ctx, prompt, 14, 470, { color: COLORS.white, baseline: 'alphabetic' });
 
   if (cursorOn) {
-    const x = 14 + ctx.measureText(prompt).width + 6;
+    const x = 14 + textWidth(ctx, prompt) + 6;
+    ctx.fillStyle = COLORS.white;
     ctx.fillRect(x, 462, 12, 8);
   }
 }
@@ -96,12 +93,9 @@ function drawTitlePanel(ctx) {
   ctx.lineWidth = 2;
   ctx.strokeRect(240, 18, 348, 198);
 
-  ctx.fillStyle = COLORS.white;
-  ctx.font = `bold 64px ${FONT}`;
-  ctx.textAlign = 'center';
-  ctx.textBaseline = 'middle';
-  ctx.fillText('Kaptajn', 414, 75);
-  ctx.fillText('Kaper', 414, 155);
+  const title = { color: COLORS.white, size: 64, align: 'center' };
+  text(ctx, 'Kaptajn', 414, 75, title);
+  text(ctx, 'Kaper', 414, 155, title);
 }
 
 function drawCannon(ctx) {
@@ -190,10 +184,7 @@ function drawChest(ctx) {
   ctx.lineTo(198, 404);
   ctx.stroke();
 
-  ctx.fillStyle = COLORS.white;
-  ctx.font = `bold 20px ${FONT}`;
-  ctx.textAlign = 'center';
-  ctx.textBaseline = 'alphabetic';
-  ctx.fillText('Rigs-', 140, 432);
-  ctx.fillText('dalere', 140, 452);
+  const sign = { color: COLORS.white, align: 'center', baseline: 'alphabetic' };
+  text(ctx, 'Rigs-', 140, 432, sign);
+  text(ctx, 'dalere', 140, 452, sign);
 }

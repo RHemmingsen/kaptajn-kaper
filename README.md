@@ -63,7 +63,7 @@ src/
       career.js          goals, promotions, rank and title, running out of moves
       ending.js          the game ends once: sunk, jilted or won
     ui/                drawing code, shared between scenes
-      draw.js            small helpers: clearScreen, polygon, label
+      draw.js            small helpers: clearScreen, polygon, text, label
       mapView.js         the sea map, its frame, ports and ship
       harborView.js      the harbor minigame and its messages
       portView.js        the trading menu in a port

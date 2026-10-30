@@ -2,7 +2,8 @@
 // like the original's 40-column text screens, a little smaller than the
 // rest of the game's text so 23 lines fit.
 import { BATTLE_PICTURE } from '../helpText.js';
-import { COLORS, FONT } from '../palette.js';
+import { COLORS } from '../palette.js';
+import { text } from './draw.js';
 import { drawBattle } from './battleView.js';
 
 const LEFT = 90;
@@ -24,27 +25,21 @@ const EXAMPLE_BATTLE = {
 };
 
 export function drawHelpMenu(ctx, topics) {
-  text(ctx, 'Hvilket emne ønsker du at høre om:', LEFT - 50, 50, COLORS.white, 20);
+  text(ctx, 'Hvilket emne ønsker du at høre om:', LEFT - 50, 50, { color: COLORS.white });
   topics.forEach((topic, i) => {
-    text(ctx, `${topic.key}: ${topic.title}`, LEFT - 30, 100 + i * 28, COLORS.salmon, 20);
+    text(ctx, `${topic.key}: ${topic.title}`, LEFT - 30, 100 + i * 28, );
   });
-  text(ctx, 'Vælg 0-9, eller Esc for at lukke hjælpen.', LEFT - 50, 100 + topics.length * 28 + 30, COLORS.white, 20);
+  const bottom = 100 + topics.length * 28 + 30;
+  text(ctx, 'Vælg 0-9, eller Esc for at lukke hjælpen.', LEFT - 50, bottom, { color: COLORS.white });
 }
 
 export function drawHelpPage(ctx, page) {
   if (page === BATTLE_PICTURE) {
     drawBattle(ctx, EXAMPLE_BATTLE);
-    text(ctx, 'Tryk på en tast.', 24, 316, COLORS.white, 20);
+    text(ctx, 'Tryk på en tast.', 24, 316, { color: COLORS.white });
     return;
   }
-  page.forEach((line, i) => text(ctx, line, LEFT, TOP + i * LINE, COLORS.salmon, 18));
-  text(ctx, 'Tryk på en tast for at fortsætte!', LEFT, PRESS_ANY_KEY_Y, COLORS.white, 18);
+  page.forEach((line, i) => text(ctx, line, LEFT, TOP + i * LINE, { size: 18 }));
+  text(ctx, 'Tryk på en tast for at fortsætte!', LEFT, PRESS_ANY_KEY_Y, { color: COLORS.white, size: 18 });
 }
 
-function text(ctx, string, x, y, color, size) {
-  ctx.font = `bold ${size}px ${FONT}`;
-  ctx.fillStyle = color;
-  ctx.textAlign = 'left';
-  ctx.textBaseline = 'middle';
-  ctx.fillText(string, x, y);
-}

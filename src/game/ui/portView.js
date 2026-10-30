@@ -1,5 +1,6 @@
 // Drawing a port: the trading menu, in the original's words.
-import { COLORS, FONT } from '../palette.js';
+import { COLORS } from '../palette.js';
+import { text } from './draw.js';
 
 const LEFT = 40;
 const LINE = 28; // pixels between lines
@@ -28,16 +29,14 @@ const REFUSALS = {
 //   { city, prices, step, trade, amountText, cursorOn, message, jewels, prizes }
 export function drawPort(ctx, view) {
   const { prices } = view;
-  ctx.textAlign = 'left';
-  ctx.textBaseline = 'middle';
 
   if (view.step === 'prizes') {
     drawPrizes(ctx, view.city, view.prizes);
     return;
   }
 
-  text(ctx, `Velkommen til ${view.city.name}`, 50, COLORS.white, 26);
-  text(ctx, 'Hvad vil du?', 100);
+  text(ctx, `Velkommen til ${view.city.name}`, LEFT, 50, { color: COLORS.white, size: 26 });
+  text(ctx, 'Hvad vil du?', LEFT, 100);
 
   const menu = [
     `1: Hyre flere mænd (${prices.men} rgsd pr. mand)`,
@@ -47,36 +46,36 @@ export function drawPort(ctx, view) {
     '5: Sælge noget',
     '6: Stå til søs igen',
   ];
-  menu.forEach((line, i) => text(ctx, line, 140 + i * LINE));
+  menu.forEach((line, i) => text(ctx, line, LEFT, 140 + i * LINE));
 
   const y = 140 + menu.length * LINE + 20;
   if (view.step === 'sellWhat') {
-    text(ctx, 'Korn (k), skyts (s) eller juveler (j)?', y, COLORS.white);
-    text(ctx, `Du har ${view.jewels} juveler.  Esc: tilbage`, y + LINE);
+    text(ctx, 'Korn (k), skyts (s) eller juveler (j)?', LEFT, y, { color: COLORS.white });
+    text(ctx, `Du har ${view.jewels} juveler.  Esc: tilbage`, LEFT, y + LINE);
   } else if (view.step === 'amount') {
     const question = QUESTIONS[view.trade.action][view.trade.good];
     const cursor = view.cursorOn ? '_' : ' ';
-    text(ctx, `${question} ${view.amountText}${cursor}`, y, COLORS.white);
-    text(ctx, 'Enter: handl  Esc: fortryd', y + LINE);
+    text(ctx, `${question} ${view.amountText}${cursor}`, LEFT, y, { color: COLORS.white });
+    text(ctx, 'Enter: handl  Esc: fortryd', LEFT, y + LINE);
   } else if (view.message) {
-    text(ctx, messageText(view.message), y, COLORS.white);
+    text(ctx, messageText(view.message), LEFT, y, { color: COLORS.white });
   }
 }
 
 // The prize crews and prize money waiting in the prize port.
 function drawPrizes(ctx, city, { men, money, leftBehind }) {
-  text(ctx, 'Hurra!', 50, COLORS.white, 26);
-  text(ctx, `Her i ${city.name} venter dine ${men}`, 100);
-  text(ctx, 'tapre mænd på dig.', 100 + LINE);
-  text(ctx, `De har ${money} rigsdaler`, 100 + 2 * LINE);
-  text(ctx, 'i prisepenge til dig!', 100 + 3 * LINE);
+  text(ctx, 'Hurra!', LEFT, 50, { color: COLORS.white, size: 26 });
+  text(ctx, `Her i ${city.name} venter dine ${men}`, LEFT, 100);
+  text(ctx, 'tapre mænd på dig.', LEFT, 100 + LINE);
+  text(ctx, `De har ${money} rigsdaler`, LEFT, 100 + 2 * LINE);
+  text(ctx, 'i prisepenge til dig!', LEFT, 100 + 3 * LINE);
   let y = 100 + 5 * LINE;
   if (leftBehind > 0) {
-    text(ctx, 'Dit skib kan ikke bære mere end 30000', y);
-    text(ctx, `rigsdaler, så ${leftBehind} må blive tilbage.`, y + LINE);
+    text(ctx, 'Dit skib kan ikke bære mere end 30000', LEFT, y);
+    text(ctx, `rigsdaler, så ${leftBehind} må blive tilbage.`, LEFT, y + LINE);
     y += 3 * LINE;
   }
-  text(ctx, 'Tryk på en tast.', y, COLORS.white);
+  text(ctx, 'Tryk på en tast.', LEFT, y, { color: COLORS.white });
 }
 
 function messageText({ action, result }) {
@@ -86,8 +85,3 @@ function messageText({ action, result }) {
     : `Du fik ${result.total} rigsdaler.`;
 }
 
-function text(ctx, string, y, color = COLORS.salmon, size = 20) {
-  ctx.font = `bold ${size}px ${FONT}`;
-  ctx.fillStyle = color;
-  ctx.fillText(string, LEFT, y);
-}
