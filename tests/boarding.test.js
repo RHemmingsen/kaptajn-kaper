@@ -1,17 +1,12 @@
 // Tests for boarding. Each round rolls one die: how many of your men fall.
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
+import { dice } from './helpers.js';
 import { EventBus } from '../src/engine/EventBus.js';
 import { GameState } from '../src/game/GameState.js';
 import { SHIP_TYPES } from '../src/game/rules/sea.js';
 import { fightRound } from '../src/game/rules/boarding.js';
 
-function dice(...values) {
-  return () => {
-    if (values.length === 0) throw new Error('the rules rolled more dice than the test gave');
-    return values.shift();
-  };
-}
 
 // A galease with 140 men, against your 200 at the start of the game.
 function setup(enemyMen = 140) {

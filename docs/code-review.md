@@ -154,8 +154,6 @@ original, not just a nicety.
   comments. That's exactly where JSDoc `@typedef` pays off. Without a build
   step: `// @ts-check` in each file and a `jsconfig.json` with
   `"checkJs": true`, and VS Code checks it.
-- **C3. Test helpers copied.** `recordEvents` exists in three test files.
-  Move it to `tests/helpers.js`.
 - **C4. Loading failure is a black screen.** If `loadAssets()` fails, the
   top-level `await` in `main.js` rejects and nothing is drawn. Catch it and
   write the error on the canvas.
@@ -170,7 +168,7 @@ original, not just a nicety.
 
 ### Recommended cleanup order
 
-1. **No behaviour change, quick:** C3, C6, B1, B2. Good warm-up, and the
+1. **No behaviour change, quick:** C6, B1, B2. Good warm-up, and the
    tests prove nothing broke.
 2. **Small user-visible fixes:** B4 (Backspace), B7.
 3. **Engine:** deferred scene transitions (A2), tested with `LoggingScene`.

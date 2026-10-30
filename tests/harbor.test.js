@@ -2,7 +2,7 @@
 // tests "play" it by calling updateHarbor many times with a fixed dt.
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { EventBus } from '../src/engine/EventBus.js';
+import { recordEvents as record } from './helpers.js';
 import { GameState } from '../src/game/GameState.js';
 import { rectsOverlap } from '../src/engine/collision.js';
 import { createHarbor, updateHarbor, LAYOUT } from '../src/game/rules/harbor.js';
@@ -35,14 +35,8 @@ function play(harbor, controls, seconds, state, events, random = noGusts) {
   for (let t = 0; t < seconds; t += DT) updateHarbor(harbor, controls, DT, state, events, random);
 }
 
-function recordEvents() {
-  const events = new EventBus();
-  const log = [];
-  for (const name of ['harborCrash', 'shipDamaged', 'shipSunk', 'enteredHarbor', 'harborGust']) {
-    events.on(name, (data) => log.push({ name, data }));
-  }
-  return { events, log };
-}
+// The events these tests look at.
+const recordEvents = () => record(['harborCrash', 'shipDamaged', 'shipSunk', 'enteredHarbor', 'harborGust']);
 
 test('there are difficulty x 5 + 1 ships at anchor, all of them, however crowded', () => {
   for (const difficulty of [2, 4, 6, 8]) {

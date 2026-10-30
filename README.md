@@ -97,6 +97,7 @@ src/
 assets/
   kattegat.svg         the map's land, drawn as SVG (10 units per cell)
 tests/                 Node tests for engine and rules: npm test
+  helpers.js           dice() and recordEvents(), shared by the tests
 docs/
   original-regler.md   the original game's rules, in Danish
 KaptajnKaper_original/ the original 1985 source code, for reference only

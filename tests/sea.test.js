@@ -1,18 +1,13 @@
 // Tests for what can happen at sea.
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
+import { dice } from './helpers.js';
 import { EventBus } from '../src/engine/EventBus.js';
 import { GameState } from '../src/game/GameState.js';
 import { flee, investigateFog, isQuiet, quietenWaters, rollSeaEvent } from '../src/game/rules/sea.js';
 
 // A stand-in for Math.random that returns these numbers in order, so a test
 // decides exactly what happens. Runs out loudly if the rules ask for more.
-function dice(...values) {
-  return () => {
-    if (values.length === 0) throw new Error('the rules rolled more dice than the test gave');
-    return values.shift();
-  };
-}
 
 test('three times in four, nothing is spotted', () => {
   const state = new GameState();

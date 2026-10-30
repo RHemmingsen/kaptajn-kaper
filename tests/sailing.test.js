@@ -2,7 +2,7 @@
 // because the rules don't touch either. Run them with: npm test
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { EventBus } from '../src/engine/EventBus.js';
+import { recordEvents as record } from './helpers.js';
 import { GameState } from '../src/game/GameState.js';
 import { sail } from '../src/game/rules/sailing.js';
 
@@ -10,17 +10,10 @@ import { sail } from '../src/game/rules/sailing.js';
 // only about sailing. Sea events are tested in sea.test.js.
 const nothingSpotted = () => 0.99;
 
-// Records every event emitted, so a test can check what happened.
-function recordEvents() {
-  const events = new EventBus();
-  const log = [];
-  for (const name of [
-    'shipMoved', 'arrivedAtPort', 'shipRanAground', 'shipDamaged', 'shipSunk', 'seaEvent', 'gameOver',
-  ]) {
-    events.on(name, (data) => log.push({ name, data }));
-  }
-  return { events, log };
-}
+// The events these tests look at.
+const recordEvents = () => record([
+  'shipMoved', 'arrivedAtPort', 'shipRanAground', 'shipDamaged', 'shipSunk', 'seaEvent', 'gameOver',
+]);
 
 test('sailing onto water moves the ship and costs one move', () => {
   const state = new GameState(); // ship starts at col 10, row 10

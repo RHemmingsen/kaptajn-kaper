@@ -5,18 +5,13 @@
 //   on a hit:    guns knocked out, men killed
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
+import { dice } from './helpers.js';
 import { EventBus } from '../src/engine/EventBus.js';
 import { GameState } from '../src/game/GameState.js';
 import { SHIP_TYPES } from '../src/game/rules/sea.js';
 import { startBattle, moveAim, breakOff, fire } from '../src/game/rules/battle.js';
 import { moraleFactor } from '../src/game/rules/ship.js';
 
-function dice(...values) {
-  return () => {
-    if (values.length === 0) throw new Error('the rules rolled more dice than the test gave');
-    return values.shift();
-  };
-}
 
 const ENEMY_MISSES = [0.3, 0.3, 0.99]; // no Rep lost, no men lost, no gun lost
 const DEAD_ON = [0.5, 0.5, 0.5]; // no sideways luck; range luck 25 - 25 = 0
