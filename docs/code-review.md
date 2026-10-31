@@ -49,24 +49,28 @@ All done.
 
 ### B. Medium
 
-**B4. Input details.**
-- No `destroy()`: the listeners on `window` are never removed. Harmless in one
-  page, but a hot reload or a second `Game` doubles them.
+All done.
 
 ### C. Small things
 
-- **C6. Pixelated text.** `image-rendering: pixelated` makes canvas text
-  blocky when scaled; fine for the retro look, but it should be a stated
-  choice.
+All done.
 
 ### Recommended cleanup order
 
-The small things above, in any order.
+Everything is done or decided.
 
-Decided against: **types (was C2)**, JSDoc `@typedef`s and `// @ts-check`.
-The game is nearly finished, the tests and the screenshot comparison cover
-it, and the next project will be TypeScript from the start, where types
-come with the language instead of in comments.
+Decided against:
+- **Types (was C2)**, JSDoc `@typedef`s and `// @ts-check`. The game is
+  nearly finished, the tests and the screenshot comparison cover it, and the
+  next project will be TypeScript from the start, where types come with the
+  language instead of in comments.
+- **`Input.destroy()` (was B4)**, to remove its listeners on `window`. Only a
+  second `Game` on the same page, or a hot reload, would need it, and this
+  game has neither. Don't build more engine than the game needs.
+
+Decided: **pixelated scaling (was C6).** `image-rendering: pixelated` keeps
+the retro look; the price is blocky text, and grid lines of uneven width
+when the scale isn't a whole number. See the comment in `style.css`.
 
 Avoid ECS, plugin systems and general renderer abstractions. The game doesn't
 need them, and they would hide what's worth learning.

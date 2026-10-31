@@ -18,5 +18,9 @@ body {
   height: min(100vh, calc(100vw * 3 / 4));
   width: min(100vw, calc(100dvh * 4 / 3));
   height: min(100dvh, calc(100vw * 3 / 4));
-  image-rendering: pixelated; /* keep pixels crisp when scaled up */
+  /* A deliberate choice: crisp, blocky pixels for the old DOS look. Smooth
+     scaling ('auto') blurs instead, text most. The price: text is blocky, and
+     at scales that aren't whole numbers (e.g. 2.5x) some 1px lines become
+     2px. */
+  image-rendering: pixelated;
 }
