@@ -22,7 +22,7 @@ test('a ship is made from its type, with some dice for Rep, grain and distance',
 
   assert.equal(event.kind, 'ship');
   const { ship } = event;
-  assert.equal(ship.type.name, 'handelsmand');
+  assert.equal(ship.type.id, 'merchantman');
   assert.equal(ship.guns, 5);
   assert.equal(ship.men, 80);
   assert.equal(ship.money, 150);
@@ -34,7 +34,7 @@ test('a ship is made from its type, with some dice for Rep, grain and distance',
 
 test('the eighth type is the pirate ship', () => {
   const event = rollSeaEvent(new GameState(), dice(0.1, 0.75, 0, 0, 0));
-  assert.equal(event.ship.type.name, 'sørøverskib');
+  assert.equal(event.ship.type.id, 'pirateShip');
   assert.equal(event.ship.type.pirate, true);
 });
 
@@ -53,7 +53,7 @@ test('the fog can hide a ship', () => {
   const state = new GameState();
   const outcome = fog(state, 0.05, 0.0, 0, 0, 0);
   assert.equal(outcome.kind, 'ship');
-  assert.equal(outcome.ship.type.name, 'handelsmand');
+  assert.equal(outcome.ship.type.id, 'merchantman');
   assert.equal(state.encounters, 3);
 });
 

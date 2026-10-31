@@ -1,6 +1,7 @@
 // Drawing what the lookout spotted, in the original's words.
 import { COLORS } from '../palette.js';
 import { text } from './draw.js';
+import { TEXTS } from '../texts.js';
 
 const LEFT = 40;
 const TOP = 50;
@@ -14,80 +15,51 @@ export function drawSeaEvent(ctx, view) {
 }
 
 function linesFor({ step, ship, outcome, addressedAs }) {
-  const choose = `Nå ${addressedAs}, nu må du vælge:`;
-  const pressAnyKey = 'Tryk på en tast.';
+  const words = TEXTS.sea;
+  const choose = words.youMustChoose(addressedAs);
 
   switch (step) {
     case 'ship':
       return [
-        'Udkiggen melder:',
-        'Ship ohøj!',
-        `${shipName(ship)} i sigte!`,
+        words.lookoutReports,
+        words.shipAhoy,
+        words.inSight(shipName(ship)),
         '',
         choose,
         '',
-        'Vil du angribe (a) eller flygte (f)?',
+        words.attackOrFlee,
       ];
     case 'attackHow':
       return [
-        `${shipName(ship)} i sigte!`,
+        words.inSight(shipName(ship)),
         '',
-        'Vil du borde hende (b) eller',
-        'vil du skyde (s) på hende?',
+        ...words.boardOrShoot,
       ];
     case 'fog':
       return [
-        'Udkiggen melder:',
-        'Ohøj!',
-        'Der er en underlig tågebanke 2 sømil',
-        'til styrbord. Det ser ud til,',
-        'at der er noget inde i den.',
+        words.lookoutReports,
+        words.ahoy,
+        ...words.fogBank,
         '',
         choose,
         '',
-        'Vil du undersøge det (j/n)?',
+        words.investigate,
       ];
     case 'outcome':
-      return [...outcomeLines(outcome), '', pressAnyKey];
+      return [...outcomeLines(outcome), '', TEXTS.common.pressAnyKey];
     default:
       throw new Error(`Unknown sea event step '${step}'`);
   }
 }
 
+// What was in the fog bank. Anything else is nothing.
 function outcomeLines(outcome) {
-  switch (outcome.kind) {
-    case 'ship':
-      return ['Der dukker af disen', 'et væmmeligt skib!'];
-    case 'treasure':
-      return ['Du finder en ø', 'med en skattekiste,', `der indeholder ${outcome.money} rigsdaler!`];
-    case 'jewels':
-      return ['Du finder en ø', `med ${outcome.count} juveler!`];
-    case 'gun':
-      return ['Du finder en ø,', 'hvor der ligger en kanon,', 'som du tager ombord på dit skib!'];
-    case 'castaways':
-      return [
-        'Du finder en ø',
-        `med en flok på ${outcome.count} skibbrudne,`,
-        'som tager hyre på dit skib!',
-      ];
-    case 'grain':
-      return ['Du finder en ø', `med ${outcome.count} sække korn!`];
-    case 'plague':
-      return [
-        'Du finder en ø',
-        'med en pestsyg skibbruden!',
-        'Han smitter din besætning, og',
-        `en trediedel af dit mandskab dør (${outcome.count} mand)!`,
-        'Resten er ikke alt for begejstrede',
-        'for dit lederskab!',
-      ];
-    default:
-      return ['Næh!', 'Der var alligevel ikke noget.'];
-  }
+  const found = TEXTS.sea.found[outcome.kind] ?? TEXTS.sea.found.nothing;
+  return found(outcome);
 }
 
 // "Engelsk galease", or the pirate ship, which isn't English.
 function shipName(ship) {
-  if (ship.type.pirate) return 'Sørøverskib';
-  return `Engelsk ${ship.type.name}`;
+  if (ship.type.pirate) return TEXTS.sea.pirateShip;
+  return TEXTS.sea.english(TEXTS.ships[ship.type.id]);
 }

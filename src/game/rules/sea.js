@@ -9,16 +9,16 @@ import { EVENTS } from '../events.js';
 const SEA_EVENT_CHANCE = 0.25; // per move onto open water
 
 // The ships you can meet (the original's lines 840-910). `maxGrain` is the
-// most grain one can carry.
+// most grain one can carry. Their names, in Danish, are TEXTS.ships[id].
 export const SHIP_TYPES = [
-  { name: 'handelsmand', guns: 5, men: 80, money: 150, maxGrain: 30 },
-  { name: 'troppetransport', guns: 10, men: 480, money: 600, maxGrain: 15 },
-  { name: 'kanonbåd', guns: 2, men: 40, money: 150, maxGrain: 4 },
-  { name: 'galease', guns: 15, men: 140, money: 450, maxGrain: 5 },
-  { name: 'brig', guns: 6, men: 50, money: 200, maxGrain: 4 },
-  { name: 'skonnert', guns: 1, men: 10, money: 30, maxGrain: 1 },
-  { name: 'orlogsmand', guns: 50, men: 140, money: 900, maxGrain: 20 },
-  { name: 'sørøverskib', guns: 70, men: 200, money: 1500, maxGrain: 12, pirate: true },
+  { id: 'merchantman', guns: 5, men: 80, money: 150, maxGrain: 30 },
+  { id: 'troopship', guns: 10, men: 480, money: 600, maxGrain: 15 },
+  { id: 'gunboat', guns: 2, men: 40, money: 150, maxGrain: 4 },
+  { id: 'galleass', guns: 15, men: 140, money: 450, maxGrain: 5 },
+  { id: 'brig', guns: 6, men: 50, money: 200, maxGrain: 4 },
+  { id: 'schooner', guns: 1, men: 10, money: 30, maxGrain: 1 },
+  { id: 'manOfWar', guns: 50, men: 140, money: 900, maxGrain: 20 },
+  { id: 'pirateShip', guns: 70, men: 200, money: 1500, maxGrain: 12, pirate: true },
 ];
 
 // What's in a fog bank, one tenth chance each (the original's lines 2480-2590).

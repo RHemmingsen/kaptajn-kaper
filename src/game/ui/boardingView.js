@@ -3,6 +3,7 @@
 import { COLORS } from '../palette.js';
 import { text } from './draw.js';
 import { drawSideViewShip } from './shipArt.js';
+import { TEXTS } from '../texts.js';
 
 const LEFT = 16;
 const TOP = 170;
@@ -20,7 +21,7 @@ export function drawBoarding(ctx, { enemy, round }) {
 function linesFor(enemy, { enemyLosses, ownLosses, outcome }) {
   const fight = [
     'Kampen raser ombord på',
-    enemy.type.pirate ? 'sørøverskibet!' : `den engelske ${enemy.type.name}!`,
+    enemy.type.pirate ? 'sørøverskibet!' : `den engelske ${TEXTS.ships[enemy.type.id]}!`,
     `Fjenden har ${enemyLosses} faldne,`,
   ];
   if (outcome === 'surrender') {

@@ -150,6 +150,60 @@ export const TEXTS = deepFreeze({
       `rigsdaler, så ${money} må blive tilbage.`,
     ],
   },
+
+  // The ships you can meet, by their id in rules/sea.js.
+  ships: {
+    merchantman: 'handelsmand',
+    troopship: 'troppetransport',
+    gunboat: 'kanonbåd',
+    galleass: 'galease',
+    brig: 'brig',
+    schooner: 'skonnert',
+    manOfWar: 'orlogsmand',
+    pirateShip: 'sørøverskib',
+  },
+
+  // At sea: what the lookout spots (the original's lines 1810-1850 and
+  // 2420-2460), and what was in the fog bank (2480-2590).
+  sea: {
+    lookoutReports: 'Udkiggen melder:',
+    shipAhoy: 'Ship ohøj!',
+    ahoy: 'Ohøj!',
+    inSight: (ship) => `${ship} i sigte!`,
+    english: (ship) => `Engelsk ${ship}`, // an English galease, say
+    pirateShip: 'Sørøverskib', // which isn't English
+    youMustChoose: (addressedAs) => `Nå ${addressedAs}, nu må du vælge:`,
+    attackOrFlee: 'Vil du angribe (a) eller flygte (f)?',
+    boardOrShoot: ['Vil du borde hende (b) eller', 'vil du skyde (s) på hende?'],
+    fogBank: [
+      'Der er en underlig tågebanke 2 sømil',
+      'til styrbord. Det ser ud til,',
+      'at der er noget inde i den.',
+    ],
+    investigate: 'Vil du undersøge det (j/n)?',
+    // What was in the fog, by its kind (see investigateFog).
+    found: {
+      ship: () => ['Der dukker af disen', 'et væmmeligt skib!'],
+      treasure: ({ money }) => ['Du finder en ø', 'med en skattekiste,', `der indeholder ${money} rigsdaler!`],
+      jewels: ({ count }) => ['Du finder en ø', `med ${count} juveler!`],
+      gun: () => ['Du finder en ø,', 'hvor der ligger en kanon,', 'som du tager ombord på dit skib!'],
+      castaways: ({ count }) => [
+        'Du finder en ø',
+        `med en flok på ${count} skibbrudne,`,
+        'som tager hyre på dit skib!',
+      ],
+      grain: ({ count }) => ['Du finder en ø', `med ${count} sække korn!`],
+      plague: ({ count }) => [
+        'Du finder en ø',
+        'med en pestsyg skibbruden!',
+        'Han smitter din besætning, og',
+        `en trediedel af dit mandskab dør (${count} mand)!`,
+        'Resten er ikke alt for begejstrede',
+        'for dit lederskab!',
+      ],
+      nothing: () => ['Næh!', 'Der var alligevel ikke noget.'],
+    },
+  },
 });
 
 // Object.freeze, for the object and everything in it.
