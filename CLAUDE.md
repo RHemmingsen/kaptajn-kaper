@@ -7,6 +7,10 @@ HTML/CSS/JS, built on a small hand-made game engine. The game is complete:
 map, harbor, trading, sea events, gun battle, boarding, prizes, promotions,
 endings, help, sound and the record.
 
+The repo is an npm workspace: the engine is a package of its own
+(`packages/engine`), and each game is a folder under `games/`, so more games
+can be built on the same engine.
+
 **The main goal is to learn how to build a game engine.** The game is the
 learning project, not the end in itself. For Claude that means:
 
@@ -22,20 +26,25 @@ learning project, not the end in itself. For Claude that means:
 ## Commands
 
 ```sh
-npm test                      # Node's built-in test runner, no install
-python3 -m http.server 8000   # or: npx serve. ES modules don't load from file://
+npm install                   # once: links the workspace packages, downloads nothing
+npm test                      # every package's tests (Node's built-in test runner)
+python3 -m http.server 8000   # from the repo root; open /games/kaptajn-kaper/
 ```
 
 No dependencies, no build step. Needs a modern browser (top-level `await`,
-class fields) and Node 20+.
+class fields, import maps) and Node 20+.
 
 ## Architecture on one screen
 
 README.md has the long explanation. In short:
 
 ```
+packages/engine/          the engine, as a package named `engine`. Knows nothing
+                          about any game. Must NEVER import from a game.
+games/kaptajn-kaper/      the game. Imports the engine by name, 'engine/Game.js'
+                          (an import map in index.html; the workspace for Node),
+                          never by a path into packages/.
 src/main.js     builds the Game, wires game-wide reactions (gameOver, F1, F2), starts
-src/engine/     reusable, knows nothing about pirates. Must NEVER import from src/game/
 src/game/
   rules/        the game's rules: change GameState, return results, emit events.
                 No canvas, no keyboard, no scenes. Randomness is injected.
@@ -45,11 +54,13 @@ src/game/
   texts.js      every text the player reads, as a constant: TEXTS.x, or TEXTS.x(value)
   sounds.js     the only place that decides what anything sounds like (listens to events)
   records.js    what is kept between visits (record, last name, sound on/off)
-tests/          Node tests for engine and rules
+tests/          Node tests for the rules (the engine has its own, in packages/engine)
 docs/original-regler.md   the reference for the original's rules and numbers (in Danish),
                           with our deviations under "Vores beslutninger"
 KaptajnKaper_original/    the original GW-BASIC source (GPL-3), for reference only
 ```
+
+(Paths from `src/main.js` down are inside `games/kaptajn-kaper/`.)
 
 ## Conventions
 
@@ -65,7 +76,8 @@ KaptajnKaper_original/    the original GW-BASIC source (GPL-3), for reference on
   what happens.
 - Deviations from the original go under "Vores beslutninger" in
   `docs/original-regler.md`.
-- Update README when the architecture changes.
+- Update the READMEs when the architecture changes: the root one for how the
+  packages fit together, the engine's and the game's for their insides.
 - The original's `.BAS` files are in code page 865: read them with
   `iconv -f cp865 -t utf-8` (otherwise `¢` shows where `ø` should be).
 
@@ -84,11 +96,10 @@ KaptajnKaper_original/    the original GW-BASIC source (GPL-3), for reference on
   used verbatim, by agreement.
 - Commit and push to `main` after each finished step, with tests passing.
 - Check changes in the browser too (Playwright is available), not only in
-  tests. Temporary test pages go in the repo root as `__*.html` and are
-  deleted before committing.
+  tests. Temporary test pages go in the game's folder as `__*.html` (so the
+  import map's paths work) and are deleted before committing.
 
 ## Code review
 
-`docs/code-review.md` is a review of the whole codebase with a recommended
-cleanup order. Work from it when cleaning up, and delete items there as they
-are resolved.
+`games/kaptajn-kaper/docs/code-review.md` is a review of the whole codebase
+(from before the engine became a package), with what was done and decided.
