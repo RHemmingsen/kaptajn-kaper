@@ -12,6 +12,7 @@
 // Events emitted, for whoever else cares (the sound beeps, as the original
 // did):
 //   tradeRefused  { reason }   a trade that didn't happen
+import { EVENTS } from '../events.js';
 
 // What can be traded. `stat` is the GameState field it changes, `max` the
 // most the ship can hold (the original's limits).
@@ -66,6 +67,6 @@ function isWholeAmount(amount) {
 }
 
 function refuse(reason, events) {
-  events.emit('tradeRefused', { reason });
+  events.emit(EVENTS.tradeRefused, { reason });
   return { ok: false, reason };
 }

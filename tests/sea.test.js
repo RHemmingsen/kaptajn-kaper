@@ -5,6 +5,7 @@ import { dice } from './helpers.js';
 import { EventBus } from '../src/engine/EventBus.js';
 import { GameState } from '../src/game/GameState.js';
 import { flee, investigateFog, isQuiet, quietenWaters, rollSeaEvent } from '../src/game/rules/sea.js';
+import { EVENTS } from '../src/game/events.js';
 
 // A stand-in for Math.random that returns these numbers in order, so a test
 // decides exactly what happens. Runs out loudly if the rules ask for more.
@@ -97,7 +98,7 @@ test('fleeing is counted, and told', () => {
   const state = new GameState();
   const events = new EventBus();
   let told = 0;
-  events.on('fled', () => { told += 1; });
+  events.on(EVENTS.fled, () => { told += 1; });
   flee(state, events);
   assert.equal(state.flights, 2);
   assert.equal(told, 1);
@@ -107,7 +108,7 @@ test('what was found in the fog is told as a fogInvestigated event', () => {
   const state = new GameState();
   const events = new EventBus();
   const told = [];
-  events.on('fogInvestigated', (found) => told.push(found));
+  events.on(EVENTS.fogInvestigated, (found) => told.push(found));
   const found = investigateFog(state, events);
   assert.deepEqual(told, [found]);
 });

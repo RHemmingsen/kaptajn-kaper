@@ -4,9 +4,10 @@ import { recordEvents as record } from './helpers.js';
 import { EventBus } from '../src/engine/EventBus.js';
 import { GameState } from '../src/game/GameState.js';
 import { checkCargo, crewEats, damageShip, isSunk, overload, sinkShip } from '../src/game/rules/ship.js';
+import { EVENTS } from '../src/game/events.js';
 
 // The events these tests look at.
-const recordEvents = () => record(['gameOver']);
+const recordEvents = () => record([EVENTS.gameOver]);
 
 test('damage lowers Rep without sinking a healthy ship', () => {
   const state = new GameState();
@@ -29,7 +30,7 @@ test('the ship goes down at 20 Rep or less', () => {
 
   damageShip(state, 1, events); // 20: lost
   assert.equal(isSunk(state), true);
-  assert.deepEqual(log.map((e) => e.name), ['gameOver']);
+  assert.deepEqual(log.map((e) => e.name), [EVENTS.gameOver]);
 });
 
 test('Rep never goes below 0', () => {
@@ -55,7 +56,7 @@ test('the ship goes down with 10 men or fewer', () => {
   crewEats(state, events); // 90% of 11, rounded down: 9 left, lost
   assert.equal(state.men, 9);
   assert.equal(isSunk(state), true);
-  assert.deepEqual(log.map((e) => e.name), ['gameOver']);
+  assert.deepEqual(log.map((e) => e.name), [EVENTS.gameOver]);
 });
 
 test('a lost ship ends the game only once', () => {
@@ -78,7 +79,7 @@ test('a ship can be lost with Rep and crew to spare, e.g. wrecked on a pier', ()
 
   assert.equal(isSunk(state), true);
   assert.equal(state.repair, 200);
-  assert.deepEqual(log.map((e) => e.name), ['gameOver']);
+  assert.deepEqual(log.map((e) => e.name), [EVENTS.gameOver]);
 });
 
 test('a meal is men x difficulty / 800 sacks of grain', () => {
@@ -133,7 +134,7 @@ test('too much cargo sinks the ship, and says what was too heavy', () => {
   state.money = 31000;
   const events = new EventBus();
   const endings = [];
-  events.on('gameOver', (summary) => endings.push(summary));
+  events.on(EVENTS.gameOver, (summary) => endings.push(summary));
 
   assert.equal(checkCargo(state, events), true);
   assert.equal(state.sunk, true);

@@ -6,6 +6,7 @@ import { EventBus } from '../src/engine/EventBus.js';
 import { GameState } from '../src/game/GameState.js';
 import { SHIP_TYPES } from '../src/game/rules/sea.js';
 import { fightRound } from '../src/game/rules/boarding.js';
+import { EVENTS } from '../src/game/events.js';
 
 
 // A galease with 140 men, against your 200 at the start of the game.
@@ -32,7 +33,7 @@ test('both sides lose men; the weaker enemy loses more', () => {
 test('each round is told as a boardingRound event', () => {
   const { enemy, state, events } = setup();
   const told = [];
-  events.on('boardingRound', (round) => told.push(round));
+  events.on(EVENTS.boardingRound, (round) => told.push(round));
   const result = fightRound(enemy, state, events, dice(0.5));
   assert.deepEqual(told, [result]);
 });

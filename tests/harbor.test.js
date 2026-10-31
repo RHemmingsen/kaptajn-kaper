@@ -6,6 +6,7 @@ import { recordEvents as record } from './helpers.js';
 import { GameState } from '../src/game/GameState.js';
 import { rectsOverlap } from '../src/engine/collision.js';
 import { createHarbor, updateHarbor, LAYOUT } from '../src/game/rules/harbor.js';
+import { EVENTS } from '../src/game/events.js';
 
 const DT = 1 / 60;
 const NO_KEYS = {};
@@ -36,7 +37,7 @@ function play(harbor, controls, seconds, state, events, random = noGusts) {
 }
 
 // The events these tests look at.
-const recordEvents = () => record(['harborCrash', 'harborGust', 'gameOver']);
+const recordEvents = () => record([EVENTS.harborCrash, EVENTS.harborGust, EVENTS.gameOver]);
 
 test('there are difficulty x 5 + 1 ships at anchor, all of them, however crowded', () => {
   for (const difficulty of [2, 4, 6, 8]) {
@@ -116,7 +117,7 @@ test('a gust from the right pushes the ship 23 pixels left', () => {
   // The first gust can come after one step (0.3 s) and takes 0.2 s.
   play(harbor, NO_KEYS, 0.55, new GameState(), events, gustEveryStep);
 
-  assert.equal(log.filter((e) => e.name === 'harborGust').length, 1);
+  assert.equal(log.filter((e) => e.name === EVENTS.harborGust).length, 1);
   assert.ok(Math.abs(startX - harbor.ship.x - 23) < 0.5);
 });
 
@@ -140,7 +141,7 @@ test('gusts come with a chance of difficulty / 18 each step', () => {
 
   play(harbor, NO_KEYS, 2, new GameState(), events, () => 0.12); // just over 2 / 18
 
-  assert.equal(log.filter((e) => e.name === 'harborGust').length, 0);
+  assert.equal(log.filter((e) => e.name === EVENTS.harborGust).length, 0);
 });
 
 test('the harbor wall stops the ship', () => {
@@ -162,7 +163,7 @@ test('hitting a ship at anchor costs 15 x difficulty Rep, once, and you sail on'
   play(harbor, NO_KEYS, 1.5, state, events); // right across it
 
   assert.equal(state.repair, 170);
-  assert.deepEqual(log, [{ name: 'harborCrash', data: { damage: 30 } }]);
+  assert.deepEqual(log, [{ name: EVENTS.harborCrash, data: { damage: 30 } }]);
   assert.ok(harbor.ship.y > start.y + 50, 'the ship carries on, not back to the start');
 });
 
@@ -188,7 +189,7 @@ test('a crash that takes Rep down to 20 or less sinks the ship', () => {
 
   assert.equal(harbor.status, 'sunk');
   assert.equal(state.sunk, true);
-  assert.deepEqual(log.map((e) => e.name), ['harborCrash', 'gameOver']);
+  assert.deepEqual(log.map((e) => e.name), [EVENTS.harborCrash, EVENTS.gameOver]);
 });
 
 test('sailing through the gap docks the ship', () => {
@@ -215,5 +216,5 @@ test('missing the gap and hitting a dock sinks the ship', () => {
   assert.equal(harbor.status, 'sunk');
   assert.equal(state.sunk, true);
   assert.equal(state.repair, 200, 'a wreck on the pier sinks the ship whatever its Rep');
-  assert.deepEqual(log.map((e) => e.name), ['gameOver']);
+  assert.deepEqual(log.map((e) => e.name), [EVENTS.gameOver]);
 });

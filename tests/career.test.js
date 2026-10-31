@@ -4,11 +4,12 @@ import assert from 'node:assert/strict';
 import { EventBus } from '../src/engine/EventBus.js';
 import { GameState } from '../src/game/GameState.js';
 import { addressedAs, goalReached, nobleTitle, promote, rankTitle, useMove } from '../src/game/rules/career.js';
+import { EVENTS } from '../src/game/events.js';
 
 function recordGameOver() {
   const events = new EventBus();
   const log = [];
-  events.on('gameOver', (data) => log.push(data));
+  events.on(EVENTS.gameOver, (data) => log.push(data));
   return { events, log };
 }
 
@@ -73,7 +74,7 @@ test('a promotion is told as a promoted event', () => {
   const state = new GameState();
   const events = new EventBus();
   const told = [];
-  events.on('promoted', (news) => told.push(news));
+  events.on(EVENTS.promoted, (news) => told.push(news));
   promote(state, events);
   assert.deepEqual(told, [{ won: false }]);
 });

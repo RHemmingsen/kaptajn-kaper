@@ -3,6 +3,7 @@
 // are promoted, with a new goal. Reach four goals and you've won Komtesse
 // Julie. Run out of moves first, and she marries another.
 import { endGame } from './ending.js';
+import { EVENTS } from '../events.js';
 
 // Your rank and noble title, by difficulty (the original's tit(1, IDIF/2)
 // and tit(2, IDIF/2)). The difficulty starts at 2 and goes up by 2 with each
@@ -38,7 +39,7 @@ export function promote(state, events) {
   state.goal = state.points + 500 + 250 * state.difficulty;
   state.maxMoves = state.moves + 325 - 12.5 * state.difficulty;
   const won = state.difficulty >= WON_AT;
-  events.emit('promoted', { won });
+  events.emit(EVENTS.promoted, { won });
   return { won };
 }
 

@@ -11,6 +11,7 @@ import { GameState } from '../src/game/GameState.js';
 import { SHIP_TYPES } from '../src/game/rules/sea.js';
 import { startBattle, moveAim, breakOff, fire } from '../src/game/rules/battle.js';
 import { moraleFactor } from '../src/game/rules/ship.js';
+import { EVENTS } from '../src/game/events.js';
 
 
 const ENEMY_MISSES = [0.3, 0.3, 0.99]; // no Rep lost, no men lost, no gun lost
@@ -29,7 +30,7 @@ function setup(enemyChanges = {}) {
 test('firing tells what happened as a shotFired event', () => {
   const { battle, state, events } = setup();
   const told = [];
-  events.on('shotFired', (result) => told.push(result));
+  events.on(EVENTS.shotFired, (result) => told.push(result));
   const result = fire(battle, state, events, dice(...ENEMY_MISSES, ...DEAD_ON, 0, 0));
   assert.deepEqual(told, [result]);
 });

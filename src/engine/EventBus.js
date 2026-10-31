@@ -12,6 +12,11 @@
 // Use it for things several unrelated systems care about (running aground,
 // a shot fired, game over). For everything else, a direct function call is
 // easier to follow.
+//
+// Event names are strings. A game does well to keep them as constants in one
+// file (this one does: game/events.js), and then a misspelt constant gives
+// undefined; so a name that isn't a string is refused, loudly, rather than
+// listening for an event that never comes.
 export class EventBus {
   constructor() {
     this.listeners = new Map(); // event name -> Set of functions
@@ -19,6 +24,7 @@ export class EventBus {
 
   // Start listening. Returns a function that stops listening again.
   on(name, fn) {
+    checkName(name);
     if (!this.listeners.has(name)) this.listeners.set(name, new Set());
     this.listeners.get(name).add(fn);
     return () => this.off(name, fn);
@@ -29,10 +35,17 @@ export class EventBus {
   }
 
   emit(name, data) {
+    checkName(name);
     const fns = this.listeners.get(name);
     if (!fns) return;
     // Copy first, so a listener that unsubscribes (or switches scene) while
     // we're looping doesn't disturb the loop.
     for (const fn of [...fns]) fn(data);
+  }
+}
+
+function checkName(name) {
+  if (typeof name !== 'string') {
+    throw new TypeError(`An event name must be a string, not ${name} (a misspelt constant?)`);
   }
 }

@@ -4,11 +4,12 @@ import { EventBus } from '../src/engine/EventBus.js';
 import { GameState } from '../src/game/GameState.js';
 import { endGame, isGameOver } from '../src/game/rules/ending.js';
 import { sinkShip } from '../src/game/rules/ship.js';
+import { EVENTS } from '../src/game/events.js';
 
 function recordGameOver() {
   const events = new EventBus();
   const log = [];
-  events.on('gameOver', (data) => log.push(data));
+  events.on(EVENTS.gameOver, (data) => log.push(data));
   return { events, log };
 }
 

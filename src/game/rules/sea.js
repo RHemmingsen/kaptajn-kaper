@@ -4,6 +4,7 @@
 // Random numbers come from a `random` function returning 0..1, so tests can
 // decide what happens.
 import { loseMen } from './ship.js';
+import { EVENTS } from '../events.js';
 
 const SEA_EVENT_CHANCE = 0.25; // per move onto open water
 
@@ -53,7 +54,7 @@ export function rollSeaEvent(state, random = Math.random) {
 // and tells the same as a 'fogInvestigated' event.
 export function investigateFog(state, events, random = Math.random) {
   const found = findInFog(state, events, random);
-  events.emit('fogInvestigated', found);
+  events.emit(EVENTS.fogInvestigated, found);
   return found;
 }
 
@@ -112,7 +113,7 @@ export function isQuiet(state, { col, row }) {
 // Sail away from a ship. It always works, but it's remembered.
 export function flee(state, events) {
   state.flights += 1;
-  events.emit('fled', {});
+  events.emit(EVENTS.fled, {});
 }
 
 // A ship of the given type comes into view, ready for battle: its own Rep,

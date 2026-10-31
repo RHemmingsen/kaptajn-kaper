@@ -5,6 +5,7 @@
 // Random numbers come from a `random` function returning 0..1, so tests can
 // decide what happens.
 import { isSunk, loseMen, moraleFactor } from './ship.js';
+import { EVENTS } from '../events.js';
 
 const MIN_STRENGTH = 0.6;
 const MAX_STRENGTH = 1.2;
@@ -42,6 +43,6 @@ export function fightRound(enemy, state, events, random = Math.random) {
 }
 
 function told(round, events) {
-  events.emit('boardingRound', round);
+  events.emit(EVENTS.boardingRound, round);
   return round;
 }

@@ -5,6 +5,7 @@ import { recordEvents } from './helpers.js';
 import { EventBus } from '../src/engine/EventBus.js';
 import { GameState } from '../src/game/GameState.js';
 import { GOODS, rollPrices, buy, sell } from '../src/game/rules/trade.js';
+import { EVENTS } from '../src/game/events.js';
 
 // Nobody listens to these, except the test about refusals.
 const events = new EventBus();
@@ -107,8 +108,8 @@ test('men and repairs can only be bought, jewels only sold', () => {
 
 test('a refused trade is told as a tradeRefused event; a trade that happens is not', () => {
   const state = new GameState(); // 600 rigsdaler
-  const { events: recorded, log } = recordEvents(['tradeRefused']);
+  const { events: recorded, log } = recordEvents([EVENTS.tradeRefused]);
   buy(state, PRICES, 'guns', 7, recorded); // 700 > 600
   buy(state, PRICES, 'guns', 1, recorded);
-  assert.deepEqual(log, [{ name: 'tradeRefused', data: { reason: 'cantAfford' } }]);
+  assert.deepEqual(log, [{ name: EVENTS.tradeRefused, data: { reason: 'cantAfford' } }]);
 });

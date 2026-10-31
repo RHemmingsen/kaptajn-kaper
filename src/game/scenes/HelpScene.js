@@ -2,6 +2,7 @@ import { Scene } from '../../engine/Scene.js';
 import { HELP_TOPICS } from '../helpText.js';
 import { clearScreen } from '../ui/draw.js';
 import { drawHelpMenu, drawHelpPage } from '../ui/helpView.js';
+import { EVENTS } from '../events.js';
 
 // The help (F1). It opens on top of whatever you were doing, which waits,
 // paused, until you close it (see main.js and Game.pushScene).
@@ -18,7 +19,7 @@ export class HelpScene extends Scene {
   }
 
   enter() {
-    this.game.events.emit('helpOpened', {});
+    this.game.events.emit(EVENTS.helpOpened, {});
   }
 
   update(dt) {

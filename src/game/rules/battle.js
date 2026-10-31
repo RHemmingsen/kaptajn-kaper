@@ -14,6 +14,7 @@
 // decide what happens.
 import { quietenWaters } from './sea.js';
 import { damageShip, isSunk, loseGun, loseMen, moraleFactor } from './ship.js';
+import { EVENTS } from '../events.js';
 
 const MAX_ELEVATION = 30;
 const MAX_SIDE = 50;
@@ -82,7 +83,7 @@ export function fire(battle, state, events, random = Math.random) {
       quietenWaters(state);
     }
   }
-  events.emit('shotFired', result);
+  events.emit(EVENTS.shotFired, result);
   return result;
 }
 

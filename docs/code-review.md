@@ -45,13 +45,6 @@ ways. That is where cleanup pays off most.
 
 ### A. Structural (the cleanup that matters most)
 
-**A3. Event names are loose strings.** (The rest of A3 is done: rules return
-what happened to their caller and emit only for observers, and events
-nobody listened to are gone.) The 12 event names are strings: a typo does
-nothing, silently, while `Input` fails loudly on a mistyped action. Collect
-them in one `EVENTS` object, frozen, and have `EventBus` refuse a name that
-isn't a string (a misspelt constant gives `undefined`).
-
 **A4. Rules depend on module-level singletons.**
 `rules/sailing.js` imports the map directly (`tileAt` → `KATTEGAT`), so the
 rules only run on that one map, and `sailing.test.js` depends on the real
@@ -94,8 +87,7 @@ pixels is a different matter: it's a documented choice, "Skærmen forbliver
 
 ### Recommended cleanup order
 
-1. **Rules:** one convention for results and events, `EVENTS` constants, drop
-   unused events (A3). Then the map as a parameter (A4), B6.
+1. **Rules:** the map as a parameter (A4), B6.
 2. **C2** `@ts-check` + JSDoc typedefs for the shared object shapes.
 
 Avoid ECS, plugin systems and general renderer abstractions. The game doesn't

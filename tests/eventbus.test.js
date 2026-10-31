@@ -24,3 +24,10 @@ test('the function returned by on() stops listening', () => {
 test('emitting an event nobody listens to does nothing', () => {
   new EventBus().emit('nobody-home', 1);
 });
+
+test('an event name that is not a string, like a misspelt constant, is refused', () => {
+  const events = new EventBus();
+  const EVENTS = { ping: 'ping' };
+  assert.throws(() => events.on(EVENTS.pnig, () => {}), /An event name must be a string, not undefined/);
+  assert.throws(() => events.emit(EVENTS.pnig, 1), /must be a string/);
+});

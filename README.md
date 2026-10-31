@@ -44,6 +44,7 @@ src/
     palette.js         colours and font
     controls.js        every key the game uses, as named actions
     helpText.js        the help (F1): the original's topics, and about this version
+    events.js          every event's name, as constants, and what it carries
     sounds.js          which events make which sounds
     music.js           the original's tunes, in BASIC's PLAY language
     assets.js          loads the game's images before it starts
@@ -194,9 +195,12 @@ in Node.
 **Events.** A rule tells whoever called it what happened by returning it:
 `sail()` returns `{ moved, city, seaEvent }`, and the map decides what comes
 next. Events are for the others, who the rule doesn't know about: it
-announces with `events.emit('shipRanAground', { col, row })`, and the sound,
-say, listens with `events.on(...)`. A scene uses `this.listen(...)` instead,
-and its listeners are removed automatically when the scene ends.
+announces with `events.emit(EVENTS.shipRanAground, { col, row })`, and the
+sound, say, listens with `events.on(EVENTS.shipRanAground, ...)`. A scene uses
+`this.listen(...)` instead, and its listeners are removed automatically when
+the scene ends. Every event's name is a constant in `game/events.js`, which
+also says who sends it and what it carries; a misspelt constant is
+`undefined`, and `EventBus` refuses that loudly.
 
 **Real time vs turns.** The map is turn-based: one key press, one tile
 (arrow keys, or the number keys 1-9 like a compass for diagonals). As in the

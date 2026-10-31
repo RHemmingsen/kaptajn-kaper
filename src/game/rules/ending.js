@@ -8,11 +8,12 @@
 //   gameOver  { ending, sunkBy, name, points, money, men, repair }
 // where sunkBy says which cargo was too heavy, if that's what sank the ship.
 // So whoever shows the ending doesn't need to know every way to get there.
+import { EVENTS } from '../events.js';
 
 export function endGame(state, ending, events) {
   if (state.ending) return;
   state.ending = ending;
-  events.emit('gameOver', {
+  events.emit(EVENTS.gameOver, {
     ending,
     sunkBy: state.sunkBy,
     name: state.name,

@@ -41,6 +41,7 @@ src/game/
                 No canvas, no keyboard, no scenes. Randomness is injected.
   ui/           drawing code. May read rules' constants and queries, never change state
   scenes/       input -> rules -> drawing, and which scene comes next
+  events.js     every event's name, as a constant: use EVENTS.x, never the string
   sounds.js     the only place that decides what anything sounds like (listens to events)
   records.js    what is kept between visits (record, last name, sound on/off)
 tests/          Node tests for engine and rules

@@ -6,6 +6,7 @@ import { useMove } from './career.js';
 import { isGameOver } from './ending.js';
 import { rollSeaEvent } from './sea.js';
 import { crewEats, damageShip, isSunk } from './ship.js';
+import { EVENTS } from '../events.js';
 
 // How each direction changes the ship's position, as [columns, rows].
 export const DIRECTIONS = {
@@ -61,7 +62,7 @@ export function sail(state, direction, events, random = Math.random) {
   if (isSunk(state)) return stayed;
 
   if (!canSailTo(col, row)) {
-    events.emit('shipRanAground', { col, row });
+    events.emit(EVENTS.shipRanAground, { col, row });
     damageShip(state, AGROUND_DAMAGE, events);
     return stayed;
   }

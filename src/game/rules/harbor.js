@@ -17,6 +17,7 @@
 // decide what happens.
 import { rectsOverlap } from '../../engine/collision.js';
 import { damageShip, isSunk, sinkShip } from './ship.js';
+import { EVENTS } from '../events.js';
 
 // Where things are, in pixels on the 640x480 screen.
 export const LAYOUT = {
@@ -136,7 +137,7 @@ export function updateHarbor(harbor, controls, dt, state, events, random = Math.
     harbor.stepTimer -= TRIP_STEP;
     if (random() < state.difficulty / 18) {
       harbor.gustTimer = GUST_TIME;
-      events.emit('harborGust', {});
+      events.emit(EVENTS.harborGust, {});
     }
   }
 
@@ -171,7 +172,7 @@ export function updateHarbor(harbor, controls, dt, state, events, random = Math.
     hit.hit = true;
     harbor.lastCrash = 15 * state.difficulty;
     harbor.crashTimer = CRASH_MESSAGE_TIME;
-    events.emit('harborCrash', { damage: harbor.lastCrash });
+    events.emit(EVENTS.harborCrash, { damage: harbor.lastCrash });
     damageShip(state, harbor.lastCrash, events);
     if (isSunk(state)) {
       harbor.status = 'sunk';
