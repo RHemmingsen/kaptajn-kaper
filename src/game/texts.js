@@ -54,6 +54,27 @@ export const TEXTS = deepFreeze({
     isBy: (points, name) => `Rekorden er ${points} point, sat af ${name}.`,
     newOne: (points) => `Ny rekord: ${points} point!`,
   },
+
+  // The frame around the map.
+  map: {
+    points: (points) => `Point: ${points}`,
+    goal: (goal, maxMoves) => `Mål: ${goal} på ${maxMoves} træk`,
+    help: 'F1:Hjælp',
+    sound: (on) => `F2:lyd ${on ? 'til' : 'fra'}`,
+    quit: 'Esc:Slut',
+    debugCollision: 'DEBUG: kollision (G)',
+  },
+
+  // The table below the map, and below a fight on deck.
+  status: {
+    moves: (moves) => `Træk: ${moves}`,
+    money: (money) => `Rgsdl: ${money}`,
+    grain: (sacks) => `Korn: ${sacks}`,
+    men: (men) => `Mænd: ${men}`,
+    guns: (guns) => `Skyts: ${guns}`,
+    repair: (repair) => `Rep: ${repair}`,
+    points: (points) => `Point: ${points}`,
+  },
 });
 
 // Object.freeze, for the object and everything in it.

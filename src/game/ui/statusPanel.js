@@ -1,6 +1,7 @@
 // The 3x2 table of ship stats at the bottom of the screen.
 import { COLORS } from '../palette.js';
 import { text } from './draw.js';
+import { TEXTS } from '../texts.js';
 
 const LEFT = 16;
 const RIGHT = 612;
@@ -13,13 +14,13 @@ const COLUMNS = [LEFT, 208, 424, RIGHT];
 const LAYOUTS = {
   // Grain can be a fraction (the crew eats half sacks); show whole sacks, as
   // the original did.
-  sailing: (state) => [
-    [`Træk: ${state.moves}`, `Rgsdl: ${state.money}`, `Korn: ${Math.floor(state.grain)}`],
-    [`Mænd: ${state.men}`, `Skyts: ${state.guns}`, `Rep: ${state.repair}`],
+  sailing: (state, words) => [
+    [words.moves(state.moves), words.money(state.money), words.grain(Math.floor(state.grain))],
+    [words.men(state.men), words.guns(state.guns), words.repair(state.repair)],
   ],
-  boarding: (state) => [
-    [`Træk: ${state.moves}`, `Rgsdl: ${state.money}`, `Skyts: ${state.guns}`],
-    [`Mænd: ${state.men}`, `Point: ${state.points}`, `Rep: ${state.repair}`],
+  boarding: (state, words) => [
+    [words.moves(state.moves), words.money(state.money), words.guns(state.guns)],
+    [words.men(state.men), words.points(state.points), words.repair(state.repair)],
   ],
 };
 
@@ -38,7 +39,7 @@ export function drawStatusPanel(ctx, state, layout = 'sailing') {
   }
   ctx.stroke();
 
-  const cells = LAYOUTS[layout](state);
+  const cells = LAYOUTS[layout](state, TEXTS.status);
   cells.forEach((rowCells, r) => {
     rowCells.forEach((cell, c) => {
       text(ctx, cell, COLUMNS[c] + 14, TOP + (r + 0.5) * (mid - TOP));

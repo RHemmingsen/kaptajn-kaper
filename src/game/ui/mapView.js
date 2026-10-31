@@ -1,6 +1,7 @@
 // Drawing the sea map: its frame, tiles, ports and the ship.
 import { COLORS } from '../palette.js';
 import { label } from './draw.js';
+import { TEXTS } from '../texts.js';
 
 // Size of one tile in pixels. Not square: the original ran on screens whose
 // pixels were taller than wide, so its square cells looked about this shape.
@@ -18,11 +19,11 @@ export function drawMapFrame(ctx, state, soundOn) {
   ctx.lineWidth = 12;
   ctx.strokeRect(23, 19, 574, 335);
 
-  label(ctx, `Point: ${state.points}`, 44, 19);
-  label(ctx, `Mål: ${state.goal} på ${state.maxMoves} træk`, 262, 19);
-  label(ctx, 'F1:Hjælp', 44, 354);
-  label(ctx, `F2:lyd ${soundOn ? 'til' : 'fra'}`, 262, 354);
-  label(ctx, 'Esc:Slut', 466, 354);
+  label(ctx, TEXTS.map.points(state.points), 44, 19);
+  label(ctx, TEXTS.map.goal(state.goal, state.maxMoves), 262, 19);
+  label(ctx, TEXTS.map.help, 44, 354);
+  label(ctx, TEXTS.map.sound(soundOn), 262, 354);
+  label(ctx, TEXTS.map.quit, 466, 354);
 }
 
 // The sea, the grid and `land`, the picture of the coast (assets.kattegat).
@@ -72,7 +73,7 @@ export function drawCollisionOverlay(ctx, chart) {
   }
 
   const bottom = MAP_Y + chart.height * TILE_H;
-  label(ctx, 'DEBUG: kollision (G)', MAP_X + 8, bottom - 14, COLORS.white);
+  label(ctx, TEXTS.map.debugCollision, MAP_X + 8, bottom - 14, COLORS.white);
 }
 
 export function drawCities(ctx, chart) {
