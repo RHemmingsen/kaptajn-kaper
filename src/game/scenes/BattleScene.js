@@ -1,4 +1,4 @@
-import { Scene } from '../../engine/Scene.js';
+import { Scene } from 'engine/Scene.js';
 import { breakOff, fire, moveAim, startBattle } from '../rules/battle.js';
 import { clearScreen } from '../ui/draw.js';
 import { drawBattle } from '../ui/battleView.js';

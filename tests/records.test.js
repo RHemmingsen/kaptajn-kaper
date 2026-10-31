@@ -1,7 +1,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { currentRecord, lastName, recordScore, rememberName, rememberSound, soundOn } from '../src/game/records.js';
-import { browserStorage } from '../src/engine/storage.js';
+import { browserStorage } from 'engine/storage.js';
 
 // Storage that keeps things in a plain object, like localStorage would.
 function memoryStorage(start = {}) {

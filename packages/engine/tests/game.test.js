@@ -2,8 +2,8 @@
 // something to listen to for keys; these fakes are just enough of both.
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { Game } from '../src/engine/Game.js';
-import { Scene } from '../src/engine/Scene.js';
+import { Game } from '../src/Game.js';
+import { Scene } from '../src/Scene.js';
 
 function setup(options = {}) {
   const canvas = { width: 640, height: 480, getContext: () => ({}) };

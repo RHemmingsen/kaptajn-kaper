@@ -2,8 +2,8 @@
 // down what it's asked to play.
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { EventBus } from '../src/engine/EventBus.js';
-import { parseMml } from '../src/engine/mml.js';
+import { EventBus } from 'engine/EventBus.js';
+import { parseMml } from 'engine/mml.js';
 import * as music from '../src/game/music.js';
 import { connectSounds } from '../src/game/sounds.js';
 import { EVENTS } from '../src/game/events.js';

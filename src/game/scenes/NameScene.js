@@ -1,5 +1,5 @@
-import { Scene } from '../../engine/Scene.js';
-import { TextField } from '../../engine/TextField.js';
+import { Scene } from 'engine/Scene.js';
+import { TextField } from 'engine/TextField.js';
 import { GameState } from '../GameState.js';
 import { currentRecord, lastName, rememberName } from '../records.js';
 import { clearScreen } from '../ui/draw.js';

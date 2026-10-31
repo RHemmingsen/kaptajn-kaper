@@ -1,6 +1,6 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { NumberField } from '../src/engine/NumberField.js';
+import { NumberField } from '../src/NumberField.js';
 
 test('typing digits builds up a number', () => {
   const field = new NumberField();

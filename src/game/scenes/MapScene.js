@@ -1,4 +1,4 @@
-import { Scene } from '../../engine/Scene.js';
+import { Scene } from 'engine/Scene.js';
 import { KATTEGAT } from '../map.js';
 import { goalReached } from '../rules/career.js';
 import { endGame } from '../rules/ending.js';

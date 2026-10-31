@@ -1,6 +1,6 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { EventBus } from '../src/engine/EventBus.js';
+import { EventBus } from 'engine/EventBus.js';
 import { GameState } from '../src/game/GameState.js';
 import { endGame, isGameOver } from '../src/game/rules/ending.js';
 import { sinkShip } from '../src/game/rules/ship.js';

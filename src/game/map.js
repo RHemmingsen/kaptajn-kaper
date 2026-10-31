@@ -1,4 +1,4 @@
-import { TileMap } from '../engine/TileMap.js';
+import { TileMap } from 'engine/TileMap.js';
 
 // The southern Kattegat and Øresund, as a sea chart. North is up.
 //

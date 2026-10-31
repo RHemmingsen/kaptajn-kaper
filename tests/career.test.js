@@ -1,7 +1,7 @@
 // Tests for your career: goals, promotions, and running out of moves.
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { EventBus } from '../src/engine/EventBus.js';
+import { EventBus } from 'engine/EventBus.js';
 import { GameState } from '../src/game/GameState.js';
 import { careerLevel, goalReached, promote, useMove } from '../src/game/rules/career.js';
 import { EVENTS } from '../src/game/events.js';

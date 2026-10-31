@@ -15,7 +15,7 @@
 //
 // Random numbers come from a `random` function returning 0..1, so tests can
 // decide what happens.
-import { rectsOverlap } from '../../engine/collision.js';
+import { rectsOverlap } from 'engine/collision.js';
 import { damageShip, isSunk, sinkShip } from './ship.js';
 import { EVENTS } from '../events.js';
 

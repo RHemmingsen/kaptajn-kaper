@@ -1,6 +1,6 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { midiToFrequency, parseMml } from '../src/engine/mml.js';
+import { midiToFrequency, parseMml } from '../src/mml.js';
 
 const near = (actual, expected) => assert.ok(Math.abs(actual - expected) < 1e-6, `${actual} is not ${expected}`);
 const frequencies = (mml) => parseMml(mml).map((note) => Math.round(note.frequency * 100) / 100);

@@ -1,4 +1,4 @@
-import { Scene } from '../../engine/Scene.js';
+import { Scene } from 'engine/Scene.js';
 import { rememberSound } from '../records.js';
 import { clearScreen } from '../ui/draw.js';
 import { drawSoundQuestion } from '../ui/soundView.js';

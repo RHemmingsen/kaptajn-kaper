@@ -4,7 +4,7 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { recordEvents as record } from './helpers.js';
 import { GameState } from '../src/game/GameState.js';
-import { rectsOverlap } from '../src/engine/collision.js';
+import { rectsOverlap } from 'engine/collision.js';
 import { createHarbor, updateHarbor, LAYOUT } from '../src/game/rules/harbor.js';
 import { EVENTS } from '../src/game/events.js';
 

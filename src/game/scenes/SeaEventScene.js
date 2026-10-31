@@ -1,4 +1,4 @@
-import { Scene } from '../../engine/Scene.js';
+import { Scene } from 'engine/Scene.js';
 import { careerLevel } from '../rules/career.js';
 import { flee, investigateFog } from '../rules/sea.js';
 import { clearScreen } from '../ui/draw.js';

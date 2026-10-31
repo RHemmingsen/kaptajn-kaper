@@ -1,6 +1,6 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { TextField } from '../src/engine/TextField.js';
+import { TextField } from '../src/TextField.js';
 
 test('typing builds up the text, including spaces and Danish letters', () => {
   const field = new TextField();

@@ -2,7 +2,7 @@
 // given, so the tests hand it a plain EventTarget and send it fake key events.
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { Input } from '../src/engine/Input.js';
+import { Input } from '../src/Input.js';
 
 function setup() {
   const target = new EventTarget();

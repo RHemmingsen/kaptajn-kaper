@@ -1,7 +1,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { EventBus } from '../src/engine/EventBus.js';
-import { Scene } from '../src/engine/Scene.js';
+import { EventBus } from '../src/EventBus.js';
+import { Scene } from '../src/Scene.js';
 
 test('a scene stops hearing events once stopListening() is called', () => {
   const game = { events: new EventBus() }; // just enough of a Game for a Scene

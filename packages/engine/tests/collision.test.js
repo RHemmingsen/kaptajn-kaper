@@ -1,6 +1,6 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { rectsOverlap } from '../src/engine/collision.js';
+import { rectsOverlap } from '../src/collision.js';
 
 const box = { x: 10, y: 10, w: 10, h: 10 };
 

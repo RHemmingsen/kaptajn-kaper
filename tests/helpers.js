@@ -1,5 +1,5 @@
 // Helpers shared by the tests.
-import { EventBus } from '../src/engine/EventBus.js';
+import { EventBus } from 'engine/EventBus.js';
 
 // A stand-in for Math.random that returns the given values, one per call, so
 // a test decides exactly what the dice show. Rolling more than it was given

@@ -1,4 +1,4 @@
-import { Scene } from '../../engine/Scene.js';
+import { Scene } from 'engine/Scene.js';
 import { recordScore } from '../records.js';
 import { clearScreen } from '../ui/draw.js';
 import { drawEnding } from '../ui/endingView.js';

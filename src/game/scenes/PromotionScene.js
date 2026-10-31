@@ -1,4 +1,4 @@
-import { Scene } from '../../engine/Scene.js';
+import { Scene } from 'engine/Scene.js';
 import { careerLevel, promote } from '../rules/career.js';
 import { endGame } from '../rules/ending.js';
 import { clearScreen } from '../ui/draw.js';

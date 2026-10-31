@@ -2,7 +2,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { dice } from './helpers.js';
-import { EventBus } from '../src/engine/EventBus.js';
+import { EventBus } from 'engine/EventBus.js';
 import { GameState } from '../src/game/GameState.js';
 import { SHIP_TYPES } from '../src/game/rules/sea.js';
 import { fightRound } from '../src/game/rules/boarding.js';

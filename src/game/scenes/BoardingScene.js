@@ -1,4 +1,4 @@
-import { Scene } from '../../engine/Scene.js';
+import { Scene } from 'engine/Scene.js';
 import { fightRound } from '../rules/boarding.js';
 import { clearScreen } from '../ui/draw.js';
 import { drawBoarding } from '../ui/boardingView.js';

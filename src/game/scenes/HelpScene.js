@@ -1,4 +1,4 @@
-import { Scene } from '../../engine/Scene.js';
+import { Scene } from 'engine/Scene.js';
 import { HELP_TOPICS } from '../helpText.js';
 import { clearScreen } from '../ui/draw.js';
 import { drawHelpMenu, drawHelpPage } from '../ui/helpView.js';

@@ -1,5 +1,5 @@
-import { Scene } from '../../engine/Scene.js';
-import { NumberField } from '../../engine/NumberField.js';
+import { Scene } from 'engine/Scene.js';
+import { NumberField } from 'engine/NumberField.js';
 import { rollPrices, buy, sell } from '../rules/trade.js';
 import { checkCargo } from '../rules/ship.js';
 import { collectPrizes } from '../rules/victory.js';

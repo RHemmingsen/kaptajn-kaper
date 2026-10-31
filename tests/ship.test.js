@@ -1,7 +1,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { recordEvents as record } from './helpers.js';
-import { EventBus } from '../src/engine/EventBus.js';
+import { EventBus } from 'engine/EventBus.js';
 import { GameState } from '../src/game/GameState.js';
 import { checkCargo, crewEats, damageShip, isSunk, overload, sinkShip } from '../src/game/rules/ship.js';
 import { EVENTS } from '../src/game/events.js';

@@ -1,6 +1,6 @@
 // Entry point: load the images, create the game, pick the first scene, start
 // the loop.
-import { Game } from './engine/Game.js';
+import { Game } from 'engine/Game.js';
 import { loadAssets } from './game/assets.js';
 import { CONTROLS } from './game/controls.js';
 import { EndScene } from './game/scenes/EndScene.js';

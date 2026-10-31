@@ -6,7 +6,7 @@
 //
 // `storage` is anything with read(key) and write(key, value): the browser's
 // storage in the game, a plain object in tests.
-import { browserStorage } from '../engine/storage.js';
+import { browserStorage } from 'engine/storage.js';
 
 const RECORD_KEY = 'kaptajn-kaper.record';
 const NAME_KEY = 'kaptajn-kaper.name';

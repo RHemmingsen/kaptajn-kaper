@@ -1,4 +1,4 @@
-import { Scene } from '../../engine/Scene.js';
+import { Scene } from 'engine/Scene.js';
 import { clearScreen } from '../ui/draw.js';
 import { drawTitleArt, drawTitlePrompt } from '../ui/titleArt.js';
 import { NameScene } from './NameScene.js';

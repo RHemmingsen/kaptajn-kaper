@@ -1,4 +1,4 @@
-import { Scene } from '../../engine/Scene.js';
+import { Scene } from 'engine/Scene.js';
 import { plunder, sendPrize, sinkPrize } from '../rules/victory.js';
 import { clearScreen } from '../ui/draw.js';
 import { drawStatusPanel } from '../ui/statusPanel.js';

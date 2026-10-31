@@ -1,6 +1,6 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { EventBus } from '../src/engine/EventBus.js';
+import { EventBus } from '../src/EventBus.js';
 
 test('listeners receive emitted data', () => {
   const events = new EventBus();

@@ -2,7 +2,7 @@
 // to play instead of playing it.
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { Sound } from '../src/engine/Sound.js';
+import { Sound } from '../src/Sound.js';
 
 class FakeContext {
   constructor() {

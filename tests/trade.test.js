@@ -2,7 +2,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { recordEvents } from './helpers.js';
-import { EventBus } from '../src/engine/EventBus.js';
+import { EventBus } from 'engine/EventBus.js';
 import { GameState } from '../src/game/GameState.js';
 import { GOODS, rollPrices, buy, sell } from '../src/game/rules/trade.js';
 import { EVENTS } from '../src/game/events.js';
