@@ -19,27 +19,27 @@ export function drawBoarding(ctx, { enemy, round }) {
 }
 
 function linesFor(enemy, { enemyLosses, ownLosses, outcome }) {
+  const words = TEXTS.boarding;
   const fight = [
-    'Kampen raser ombord på',
-    enemy.type.pirate ? 'sørøverskibet!' : `den engelske ${TEXTS.ships[enemy.type.id]}!`,
-    `Fjenden har ${enemyLosses} faldne,`,
+    words.ragingAboard,
+    enemy.type.pirate ? words.thePirateShip : words.theEnglish(TEXTS.ships[enemy.type.id]),
+    words.enemyFallen(enemyLosses),
   ];
   if (outcome === 'surrender') {
     return [
       ...fight,
-      `og han har kun ${enemy.men} mand igen.`,
-      `Du har mistet ${ownLosses} af dine tapre mænd.`,
+      words.enemyOnlyLeft(enemy.men),
+      words.youLost(ownLosses),
       '',
-      'Hun stryger flaget!',
-      'Tryk på en tast.',
+      TEXTS.battle.strikesHerFlag,
+      TEXTS.common.pressAnyKey,
     ];
   }
   return [
     ...fight,
-    `men han har ${enemy.men} igen.`,
-    `Du har mistet ${ownLosses} af dine tapre mænd.`,
+    words.enemyLeft(enemy.men),
+    words.youLost(ownLosses),
     '',
-    'Vil du kæmpe videre (k)',
-    'eller vende tilbage til dit skib (t)?',
+    ...words.fightOrReturn,
   ];
 }

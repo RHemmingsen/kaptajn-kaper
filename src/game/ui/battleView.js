@@ -4,6 +4,7 @@
 import { COLORS } from '../palette.js';
 import { text } from './draw.js';
 import { drawSideViewShip } from './shipArt.js';
+import { TEXTS } from '../texts.js';
 
 // The three panels.
 const ENEMY_PANEL = { x: 16, y: 16, w: 284, h: 114 };
@@ -31,19 +32,19 @@ const ROWS = [330, 365, 401, 437, 472];
 
 // `view` is { battle, state, step, result }; nothing here changes them.
 export function drawBattle(ctx, { battle, state, step, result }) {
-  drawPanel(ctx, ENEMY_PANEL, 'Fjende');
+  drawPanel(ctx, ENEMY_PANEL, TEXTS.battle.enemy);
   drawHull(ctx, 158, 73, COLORS.magenta);
   if (result?.shot) drawSplash(ctx, ...SPLASH[result.shot.lands]);
 
-  drawPanel(ctx, OWN_PANEL, 'Egen');
+  drawPanel(ctx, OWN_PANEL, TEXTS.battle.own);
   drawHull(ctx, 158, 200, COLORS.cyan);
   if (result) drawEnemyHits(ctx, result.enemyFire);
 
   drawPanel(ctx, SIGHTS_PANEL, null);
   drawSideViewShip(ctx, 392, 44); // the target
   drawSights(ctx, battle.aim);
-  if (step === 'aim') text(ctx, 'Sigte', 440, 236, { color: COLORS.white });
-  else text(ctx, 'Tryk på en tast.', 372, 236, { color: COLORS.white });
+  if (step === 'aim') text(ctx, TEXTS.battle.aim, 440, 236, { color: COLORS.white });
+  else text(ctx, TEXTS.common.pressAnyKey, 372, 236, { color: COLORS.white });
 
   drawMessages(ctx, step, result);
   drawTable(ctx, battle, state);
@@ -51,9 +52,7 @@ export function drawBattle(ctx, { battle, state, step, result }) {
 
 // Up to three lines between the panels and the table.
 function drawMessages(ctx, step, result) {
-  const lines = step === 'aim'
-    ? ['Sigt med pilene eller 1-9.', 'F = fyr.  0 = afbryd kampen.']
-    : resultLines(result);
+  const lines = step === 'aim' ? TEXTS.battle.howToAim : resultLines(result);
   lines.forEach((line, i) => {
     text(ctx, line, 24, 268 + i * 24, { color: i === 0 ? COLORS.white : COLORS.salmon });
   });
@@ -64,31 +63,27 @@ function resultLines({ shot, enemyFire, outcome, points }) {
   const lines = [];
   if (shot) lines.push(shotText(shot));
   lines.push(enemyFireText(enemyFire));
-  if (outcome === 'sunk') lines.push(`Den sank!! Du får ${points} point.`);
-  if (outcome === 'surrender') lines.push('Hun stryger flaget!');
+  if (outcome === 'sunk') lines.push(TEXTS.battle.sank(points));
+  if (outcome === 'surrender') lines.push(TEXTS.battle.strikesHerFlag);
   return lines;
 }
 
 function shotText(shot) {
-  switch (shot.lands) {
-    case 'left': return 'Nedslag: til venstre for hende.';
-    case 'right': return 'Nedslag: til højre for hende.';
-    case 'short': return 'Nedslag: for kort.';
-    case 'long': return 'Nedslag: over hende.';
-    default:
-      // If she struck her flag or sank from the damage, her men weren't counted.
-      return shot.menKilled === undefined
-        ? `Træffer! Hun mister ${shot.damage} Rep.`
-        : `Træffer! Hun mister ${shot.damage} Rep og ${shot.menKilled} mand.`;
-  }
+  const words = TEXTS.battle;
+  if (shot.lands !== 'hit') return words.landed[shot.lands];
+  // If she struck her flag or sank from the damage, her men weren't counted.
+  return shot.menKilled === undefined
+    ? words.hit(shot.damage)
+    : words.hitAndKilled(shot.damage, shot.menKilled);
 }
 
 function enemyFireText({ repair, men, gun }) {
+  const words = TEXTS.battle;
   const losses = [];
-  if (repair > 0) losses.push(`-${repair} Rep`);
-  if (men > 0) losses.push(`-${men} mand`);
-  if (gun) losses.push('-1 kanon');
-  return losses.length ? `Fjenden rammer: ${losses.join(', ')}` : 'Fjenden skyder, men rammer ikke.';
+  if (repair > 0) losses.push(words.lostRepair(repair));
+  if (men > 0) losses.push(words.lostMen(men));
+  if (gun) losses.push(words.lostGun);
+  return losses.length ? words.enemyHits(losses) : words.enemyMisses;
 }
 
 function drawTable(ctx, { enemy, wind }, state) {
@@ -117,14 +112,15 @@ function drawTable(ctx, { enemy, wind }, state) {
   ctx.stroke();
 
   const headerY = (top + header) / 2;
-  text(ctx, `Afst: ${enemy.distance}`, TABLE_LEFT + 12, headerY, { color: COLORS.white });
-  text(ctx, 'Egen', OWN_X + 12, headerY, { color: COLORS.white });
-  text(ctx, 'Fjende', ENEMY_X + 12, headerY, { color: COLORS.white });
+  const words = TEXTS.battle;
+  text(ctx, words.distance(enemy.distance), TABLE_LEFT + 12, headerY, { color: COLORS.white });
+  text(ctx, words.own, OWN_X + 12, headerY, { color: COLORS.white });
+  text(ctx, words.enemy, ENEMY_X + 12, headerY, { color: COLORS.white });
 
   const rows = [
-    ['Skyts', state.guns, enemy.guns],
-    ['Mand', state.men, enemy.men],
-    ['Rep', state.repair, enemy.repair],
+    [words.guns, state.guns, enemy.guns],
+    [words.men, state.men, enemy.men],
+    [words.repair, state.repair, enemy.repair],
   ];
   rows.forEach(([label, ours, theirs], i) => {
     const y = (ROWS[i + 1] + ROWS[i + 2]) / 2;
@@ -139,7 +135,7 @@ function drawTable(ctx, { enemy, wind }, state) {
 // "Vind" and its strength, over a compass whose dot shows where the wind
 // comes from: up is from the enemy, down is from behind you.
 function drawWind(ctx, wind) {
-  text(ctx, `Vind ${wind.strength}`, 30, 378, { color: COLORS.white });
+  text(ctx, TEXTS.battle.wind(wind.strength), 30, 378, { color: COLORS.white });
   const cx = 83;
   const cy = 430;
   const r = 28;

@@ -204,6 +204,47 @@ export const TEXTS = deepFreeze({
       nothing: () => ['Næh!', 'Der var alligevel ikke noget.'],
     },
   },
+
+  // The gun battle, the original's "Sigte" screen (lines 2000-2950).
+  battle: {
+    enemy: 'Fjende',
+    own: 'Egen',
+    aim: 'Sigte',
+    howToAim: ['Sigt med pilene eller 1-9.', 'F = fyr.  0 = afbryd kampen.'],
+    // Where your shot landed, by shot.lands (see rules/battle.js).
+    landed: {
+      left: 'Nedslag: til venstre for hende.',
+      right: 'Nedslag: til højre for hende.',
+      short: 'Nedslag: for kort.',
+      long: 'Nedslag: over hende.',
+    },
+    hit: (damage) => `Træffer! Hun mister ${damage} Rep.`,
+    hitAndKilled: (damage, men) => `Træffer! Hun mister ${damage} Rep og ${men} mand.`,
+    lostRepair: (repair) => `-${repair} Rep`,
+    lostMen: (men) => `-${men} mand`,
+    lostGun: '-1 kanon',
+    enemyHits: (losses) => `Fjenden rammer: ${losses.join(', ')}`,
+    enemyMisses: 'Fjenden skyder, men rammer ikke.',
+    sank: (points) => `Den sank!! Du får ${points} point.`,
+    strikesHerFlag: 'Hun stryger flaget!',
+    distance: (distance) => `Afst: ${distance}`,
+    guns: 'Skyts',
+    men: 'Mand',
+    repair: 'Rep',
+    wind: (strength) => `Vind ${strength}`,
+  },
+
+  // Fighting on her deck (lines 3100-3240).
+  boarding: {
+    ragingAboard: 'Kampen raser ombord på',
+    thePirateShip: 'sørøverskibet!',
+    theEnglish: (ship) => `den engelske ${ship}!`,
+    enemyFallen: (men) => `Fjenden har ${men} faldne,`,
+    enemyOnlyLeft: (men) => `og han har kun ${men} mand igen.`,
+    enemyLeft: (men) => `men han har ${men} igen.`,
+    youLost: (men) => `Du har mistet ${men} af dine tapre mænd.`,
+    fightOrReturn: ['Vil du kæmpe videre (k)', 'eller vende tilbage til dit skib (t)?'],
+  },
 });
 
 // Object.freeze, for the object and everything in it.
