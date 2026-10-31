@@ -55,9 +55,6 @@ All done.
 
 ### C. Small things
 
-- **C4. Loading failure is a black screen.** If `loadAssets()` fails, the
-  top-level `await` in `main.js` rejects and nothing is drawn. Catch it and
-  write the error on the canvas.
 - **C6. Pixelated text.** `image-rendering: pixelated` makes canvas text
   blocky when scaled; fine for the retro look, but it should be a stated
   choice.

@@ -11,9 +11,19 @@ import { connectSounds } from './game/sounds.js';
 import { rememberSound, soundOn } from './game/records.js';
 import { EVENTS } from './game/events.js';
 
-const assets = await loadAssets();
-
 const canvas = document.getElementById('game');
+
+// Without its pictures the game can't run. If they don't load, show why, on
+// the same error screen as a crash, rather than leaving the canvas black;
+// rethrowing stops the rest of this file, and the browser logs the error.
+let assets;
+try {
+  assets = await loadAssets();
+} catch (error) {
+  drawError(canvas.getContext('2d'), error);
+  throw error;
+}
+
 const game = new Game(canvas, { controls: CONTROLS, assets, drawError });
 game.sound.setEnabled(soundOn());
 connectSounds(game.events, game.sound);
