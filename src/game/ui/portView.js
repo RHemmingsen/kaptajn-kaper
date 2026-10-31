@@ -1,29 +1,10 @@
 // Drawing a port: the trading menu, in the original's words.
 import { COLORS } from '../palette.js';
 import { text } from './draw.js';
+import { TEXTS } from '../texts.js';
 
 const LEFT = 40;
 const LINE = 28; // pixels between lines
-
-const QUESTIONS = {
-  buy: {
-    men: 'Hvor mange mænd vil du hyre?',
-    repair: 'Hvor mange point vil du reparere?',
-    guns: 'Hvor mange kanoner vil du købe?',
-    grain: 'Hvor mange sække korn vil du købe?',
-  },
-  sell: {
-    grain: 'Hvor mange sække korn vil du sælge?',
-    guns: 'Hvor mange kanoner vil du sælge?',
-    jewels: 'Hvor mange juveler vil du sælge?',
-  },
-};
-
-const REFUSALS = {
-  cantAfford: 'Det har du ikke råd til!',
-  tooMany: 'Det er for mange!',
-  notEnough: 'Så mange har du ikke!',
-};
 
 // `view` is what the scene wants shown:
 //   { city, prices, step, trade, amountText, cursorOn, message, jewels, prizes }
@@ -35,28 +16,22 @@ export function drawPort(ctx, view) {
     return;
   }
 
-  text(ctx, `Velkommen til ${view.city.name}`, LEFT, 50, { color: COLORS.white, size: 26 });
-  text(ctx, 'Hvad vil du?', LEFT, 100);
+  const words = TEXTS.port;
+  text(ctx, words.welcome(view.city.name), LEFT, 50, { color: COLORS.white, size: 26 });
+  text(ctx, words.whatNow, LEFT, 100);
 
-  const menu = [
-    `1: Hyre flere mænd (${prices.men} rgsd pr. mand)`,
-    `2: Reparere skibet (${prices.repair} rgsd pr. point)`,
-    `3: Købe kanoner (${prices.guns} rgsd pr. stk)`,
-    `4: Købe korn (${prices.grain} rgsd pr. sæk)`,
-    '5: Sælge noget',
-    '6: Stå til søs igen',
-  ];
+  const menu = words.menu(prices);
   menu.forEach((line, i) => text(ctx, line, LEFT, 140 + i * LINE));
 
   const y = 140 + menu.length * LINE + 20;
   if (view.step === 'sellWhat') {
-    text(ctx, 'Korn (k), skyts (s) eller juveler (j)?', LEFT, y, { color: COLORS.white });
-    text(ctx, `Du har ${view.jewels} juveler.  Esc: tilbage`, LEFT, y + LINE);
+    text(ctx, words.sellWhat, LEFT, y, { color: COLORS.white });
+    text(ctx, words.jewelsAndBack(view.jewels), LEFT, y + LINE);
   } else if (view.step === 'amount') {
-    const question = QUESTIONS[view.trade.action][view.trade.good];
+    const question = words.howMany[view.trade.action][view.trade.good];
     const cursor = view.cursorOn ? '_' : ' ';
     text(ctx, `${question} ${view.amountText}${cursor}`, LEFT, y, { color: COLORS.white });
-    text(ctx, 'Enter: handl  Esc: fortryd', LEFT, y + LINE);
+    text(ctx, words.tradeKeys, LEFT, y + LINE);
   } else if (view.message) {
     text(ctx, messageText(view.message), LEFT, y, { color: COLORS.white });
   }
@@ -64,24 +39,19 @@ export function drawPort(ctx, view) {
 
 // The prize crews and prize money waiting in the prize port.
 function drawPrizes(ctx, city, { men, money, leftBehind }) {
-  text(ctx, 'Hurra!', LEFT, 50, { color: COLORS.white, size: 26 });
-  text(ctx, `Her i ${city.name} venter dine ${men}`, LEFT, 100);
-  text(ctx, 'tapre mænd på dig.', LEFT, 100 + LINE);
-  text(ctx, `De har ${money} rigsdaler`, LEFT, 100 + 2 * LINE);
-  text(ctx, 'i prisepenge til dig!', LEFT, 100 + 3 * LINE);
+  text(ctx, TEXTS.port.hurray, LEFT, 50, { color: COLORS.white, size: 26 });
+  TEXTS.port.prizesWaiting(city.name, men, money).forEach((line, i) => text(ctx, line, LEFT, 100 + i * LINE));
   let y = 100 + 5 * LINE;
   if (leftBehind > 0) {
-    text(ctx, 'Dit skib kan ikke bære mere end 30000', LEFT, y);
-    text(ctx, `rigsdaler, så ${leftBehind} må blive tilbage.`, LEFT, y + LINE);
+    TEXTS.port.leftBehind(leftBehind).forEach((line, i) => text(ctx, line, LEFT, y + i * LINE));
     y += 3 * LINE;
   }
-  text(ctx, 'Tryk på en tast.', LEFT, y, { color: COLORS.white });
+  text(ctx, TEXTS.common.pressAnyKey, LEFT, y, { color: COLORS.white });
 }
 
 function messageText({ action, result }) {
-  if (!result.ok) return REFUSALS[result.reason] ?? 'Det kan du ikke!';
-  return action === 'buy'
-    ? `Det kostede ${result.total} rigsdaler.`
-    : `Du fik ${result.total} rigsdaler.`;
+  const words = TEXTS.port;
+  if (!result.ok) return words.refused[result.reason] ?? words.cantDoThat;
+  return action === 'buy' ? words.cost(result.total) : words.earned(result.total);
 }
 

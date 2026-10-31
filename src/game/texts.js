@@ -98,6 +98,58 @@ export const TEXTS = deepFreeze({
     welcome: (city) => `Velkommen til ${city}!`,
     pressAnyKey: 'Tryk på en tast', // without the full stop, under the welcome
   },
+
+  // Trading in a port (the original's lines 1500-1720), and the prize money
+  // waiting in the prize port.
+  port: {
+    welcome: (city) => `Velkommen til ${city}`,
+    whatNow: 'Hvad vil du?',
+    menu: (prices) => [
+      `1: Hyre flere mænd (${prices.men} rgsd pr. mand)`,
+      `2: Reparere skibet (${prices.repair} rgsd pr. point)`,
+      `3: Købe kanoner (${prices.guns} rgsd pr. stk)`,
+      `4: Købe korn (${prices.grain} rgsd pr. sæk)`,
+      '5: Sælge noget',
+      '6: Stå til søs igen',
+    ],
+    sellWhat: 'Korn (k), skyts (s) eller juveler (j)?',
+    jewelsAndBack: (jewels) => `Du har ${jewels} juveler.  Esc: tilbage`,
+    // How many? By buy or sell, and the good.
+    howMany: {
+      buy: {
+        men: 'Hvor mange mænd vil du hyre?',
+        repair: 'Hvor mange point vil du reparere?',
+        guns: 'Hvor mange kanoner vil du købe?',
+        grain: 'Hvor mange sække korn vil du købe?',
+      },
+      sell: {
+        grain: 'Hvor mange sække korn vil du sælge?',
+        guns: 'Hvor mange kanoner vil du sælge?',
+        jewels: 'Hvor mange juveler vil du sælge?',
+      },
+    },
+    tradeKeys: 'Enter: handl  Esc: fortryd',
+    // Why a trade didn't happen, by its reason (see rules/trade.js).
+    refused: {
+      cantAfford: 'Det har du ikke råd til!',
+      tooMany: 'Det er for mange!',
+      notEnough: 'Så mange har du ikke!',
+    },
+    cantDoThat: 'Det kan du ikke!', // any other reason
+    cost: (total) => `Det kostede ${total} rigsdaler.`,
+    earned: (total) => `Du fik ${total} rigsdaler.`,
+    hurray: 'Hurra!',
+    prizesWaiting: (city, men, money) => [
+      `Her i ${city} venter dine ${men}`,
+      'tapre mænd på dig.',
+      `De har ${money} rigsdaler`,
+      'i prisepenge til dig!',
+    ],
+    leftBehind: (money) => [
+      'Dit skib kan ikke bære mere end 30000',
+      `rigsdaler, så ${money} må blive tilbage.`,
+    ],
+  },
 });
 
 // Object.freeze, for the object and everything in it.
