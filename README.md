@@ -170,6 +170,14 @@ Nothing in the rules or scenes plays a sound. They announce what happened
 (`shipRanAground`, `shotFired`, `fled`...) and `game/sounds.js` listens and
 decides what that sounds like, so all of the game's sound is in one file.
 
+**Texts.** Every text the player reads is a constant in `game/texts.js`,
+except the original's help, which is in `helpText.js`. Code writes
+`TEXTS.port.whatNow`, or `TEXTS.port.welcome(city.name)` for a text with a
+value in it; `ui/` decides where the words go and in which colour. The rules
+hold no text: a ship type has an `id` (`TEXTS.ships[id]` is its name), and
+your career a level (`TEXTS.career.ranks[level - 1]`). A misspelt constant is
+`undefined`, and `text()` in `ui/draw.js` refuses that loudly.
+
 **Tile maps.** The map is an array of strings, one character per tile (`.` water,
 `#` land). `TileMap` answers "what's at (col, row)?"; the game decides what each
 character means and how to draw it. The game wraps it in a `SeaChart`

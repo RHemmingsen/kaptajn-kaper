@@ -5,6 +5,7 @@ import { BATTLE_PICTURE } from '../helpText.js';
 import { COLORS } from '../palette.js';
 import { text } from './draw.js';
 import { drawBattle } from './battleView.js';
+import { TEXTS } from '../texts.js';
 
 const LEFT = 90;
 const TOP = 24;
@@ -25,21 +26,21 @@ const EXAMPLE_BATTLE = {
 };
 
 export function drawHelpMenu(ctx, topics) {
-  text(ctx, 'Hvilket emne ønsker du at høre om:', LEFT - 50, 50, { color: COLORS.white });
+  text(ctx, TEXTS.help.whichTopic, LEFT - 50, 50, { color: COLORS.white });
   topics.forEach((topic, i) => {
-    text(ctx, `${topic.key}: ${topic.title}`, LEFT - 30, 100 + i * 28, );
+    text(ctx, TEXTS.help.topic(topic.key, topic.title), LEFT - 30, 100 + i * 28);
   });
   const bottom = 100 + topics.length * 28 + 30;
-  text(ctx, 'Vælg 0-9, eller Esc for at lukke hjælpen.', LEFT - 50, bottom, { color: COLORS.white });
+  text(ctx, TEXTS.help.chooseOrClose, LEFT - 50, bottom, { color: COLORS.white });
 }
 
 export function drawHelpPage(ctx, page) {
   if (page === BATTLE_PICTURE) {
     drawBattle(ctx, EXAMPLE_BATTLE);
-    text(ctx, 'Tryk på en tast.', 24, 316, { color: COLORS.white });
+    text(ctx, TEXTS.common.pressAnyKey, 24, 316, { color: COLORS.white });
     return;
   }
   page.forEach((line, i) => text(ctx, line, LEFT, TOP + i * LINE, { size: 18 }));
-  text(ctx, 'Tryk på en tast for at fortsætte!', LEFT, PRESS_ANY_KEY_Y, { color: COLORS.white, size: 18 });
+  text(ctx, TEXTS.common.pressAnyKeyToContinue, LEFT, PRESS_ANY_KEY_Y, { color: COLORS.white, size: 18 });
 }
 

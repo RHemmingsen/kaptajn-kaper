@@ -315,6 +315,18 @@ export const TEXTS = deepFreeze({
     result: (points, money) => `Du fik ${points} point og havde ${money} rigsdaler!`,
     endedWith: (men, repair) => `Du sluttede med ${men} mand og ${repair} Rep.`,
   },
+
+  // Around the help's pages (the pages themselves are in helpText.js).
+  help: {
+    whichTopic: 'Hvilket emne ønsker du at høre om:',
+    topic: (key, title) => `${key}: ${title}`,
+    chooseOrClose: 'Vælg 0-9, eller Esc for at lukke hjælpen.',
+  },
+
+  // If the game crashes, or its pictures don't load (ui/errorView.js).
+  error: {
+    happened: 'Der skete en fejl:',
+  },
 });
 
 // Object.freeze, for the object and everything in it.

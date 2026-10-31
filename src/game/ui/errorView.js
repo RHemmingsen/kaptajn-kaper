@@ -2,6 +2,7 @@
 // went wrong, and the error's own message, which is in English.
 import { COLORS } from '../palette.js';
 import { clearScreen, text } from './draw.js';
+import { TEXTS } from '../texts.js';
 
 const LEFT = 40;
 const TOP = 60;
@@ -10,7 +11,7 @@ const MAX_LINE_LENGTH = 48; // characters; the font is monospaced
 
 export function drawError(ctx, error) {
   clearScreen(ctx);
-  text(ctx, 'Der skete en fejl:', LEFT, TOP, { color: COLORS.white });
+  text(ctx, TEXTS.error.happened, LEFT, TOP, { color: COLORS.white });
   wrap(String(error?.message ?? error)).forEach((line, i) => {
     text(ctx, line, LEFT, TOP + (i + 2) * LINE);
   });
