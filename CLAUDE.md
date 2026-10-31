@@ -8,8 +8,9 @@ map, harbor, trading, sea events, gun battle, boarding, prizes, promotions,
 endings, help, sound and the record.
 
 The repo is an npm workspace: the engine is a package of its own
-(`packages/engine`), and each game is a folder under `games/`, so more games
-can be built on the same engine.
+(`packages/engine`), and each version of the game is a folder under
+`version/` (the original is `version/original`), so more versions can be
+built on the same engine.
 
 **The main goal is to learn how to build a game engine.** The game is the
 learning project, not the end in itself. For Claude that means:
@@ -28,7 +29,7 @@ learning project, not the end in itself. For Claude that means:
 ```sh
 npm install                   # once: links the workspace packages, downloads nothing
 npm test                      # every package's tests (Node's built-in test runner)
-python3 -m http.server 8000   # from the repo root; open /games/kaptajn-kaper/
+python3 -m http.server 8000   # from the repo root; open /version/original/
 ```
 
 No dependencies, no build step. Needs a modern browser (top-level `await`,
@@ -41,7 +42,7 @@ README.md has the long explanation. In short:
 ```
 packages/engine/          the engine, as a package named `engine`. Knows nothing
                           about any game. Must NEVER import from a game.
-games/kaptajn-kaper/      the game. Imports the engine by name, 'engine/Game.js'
+version/original/         the game. Imports the engine by name, 'engine/Game.js'
                           (an import map in index.html; the workspace for Node),
                           never by a path into packages/.
 src/main.js     builds the Game, wires game-wide reactions (gameOver, F1, F2), starts
@@ -60,7 +61,7 @@ docs/original-regler.md   the reference for the original's rules and numbers (in
 KaptajnKaper_original/    the original GW-BASIC source (GPL-3), for reference only
 ```
 
-(Paths from `src/main.js` down are inside `games/kaptajn-kaper/`.)
+(Paths from `src/main.js` down are inside `version/original/`.)
 
 ## Conventions
 
@@ -101,5 +102,5 @@ KaptajnKaper_original/    the original GW-BASIC source (GPL-3), for reference on
 
 ## Code review
 
-`games/kaptajn-kaper/docs/code-review.md` is a review of the whole codebase
+`version/original/docs/code-review.md` is a review of the whole codebase
 (from before the engine became a package), with what was done and decided.

@@ -2,17 +2,18 @@
 
 A remake of the Danish DOS game *Kaptajn Kaper i Kattegat* (P.O. Frederiksen,
 1985) for the browser, and the small hand-made game engine it's built on. The
-engine is a package of its own, so more games can be built on it.
+engine is a package of its own, so more versions of the game, or other games,
+can be built on it.
 
 ```
 packages/
   engine/               the engine: game loop, scenes, input, events, sound
-games/
-  kaptajn-kaper/        the game
+version/
+  original/             the game, as the original
 ```
 
 Each has its own README: [the engine](packages/engine/README.md),
-[Kaptajn Kaper](games/kaptajn-kaper/README.md).
+[Kaptajn Kaper](version/original/README.md).
 
 ## Running it
 
@@ -31,7 +32,7 @@ python3 -m http.server 8000
 # or: npx serve
 ```
 
-and open http://localhost:8000/games/kaptajn-kaper/.
+and open http://localhost:8000/version/original/.
 
 ## Tests
 
@@ -48,8 +49,8 @@ engine by its name, `import { Game } from 'engine/Game.js'`, never by a path
 into its folder. Node finds it through the workspace; the browser through an
 import map in the game's `index.html`. The engine never imports from a game.
 
-A new game is a folder under `games/` with a `package.json` that depends on
-`engine`, and an `index.html` with the same import map.
+A new version is a folder under `version/` with a `package.json` that depends
+on `engine`, and an `index.html` with the same import map.
 
 ## License
 
@@ -58,5 +59,5 @@ GNU General Public License version 3; see [LICENSE](LICENSE).
 Kaptajn Kaper i Kattegat was written by P.O. Frederiksen in 1985. His source
 code was released under GPL v3 together with his sons, Jan Thorhauge
 Frederiksen and Morten Frederiksen (see
-`games/kaptajn-kaper/KaptajnKaper_original/`). The game here builds on it, so
+`version/original/KaptajnKaper_original/`). The game here builds on it, so
 it is under the same license; so, for now, is the engine.

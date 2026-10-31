@@ -11,7 +11,7 @@ From the top of the repo (the engine has to be served too):
 python3 -m http.server 8000
 ```
 
-Then open http://localhost:8000/games/kaptajn-kaper/. Tests: `npm test` here,
+Then open http://localhost:8000/version/original/. Tests: `npm test` here,
 or at the top of the repo for everything.
 
 ## How it's built
