@@ -4,7 +4,6 @@ import { endGame } from '../rules/ending.js';
 import { clearScreen } from '../ui/draw.js';
 import { drawPromotion } from '../ui/promotionView.js';
 import { drawStatusPanel } from '../ui/statusPanel.js';
-import { MapScene } from './MapScene.js';
 
 // You reached the goal: news of your promotion arrives by message in a
 // bottle. You're promoted as soon as you get here. Any key goes back to sea,
@@ -24,7 +23,7 @@ export class PromotionScene extends Scene {
   update(dt) {
     if (!this.game.input.anyKeyPressed()) return;
     if (this.won) endGame(this.state, 'won', this.game.events);
-    else this.game.setScene(new MapScene(this.game, this.state));
+    else this.game.popScene(); // back to the map
   }
 
   render(ctx) {

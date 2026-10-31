@@ -6,7 +6,6 @@ import { drawSeaEvent } from '../ui/seaView.js';
 import { drawStatusPanel } from '../ui/statusPanel.js';
 import { BattleScene } from './BattleScene.js';
 import { BoardingScene } from './BoardingScene.js';
-import { MapScene } from './MapScene.js';
 
 // The lookout has spotted something. As in the original, you answer by
 // typing a letter.
@@ -38,9 +37,9 @@ export class SeaEventScene extends Scene {
     } else if (this.step === 'attackHow') {
       // As in the original, with no guns left boarding is the only way.
       if (typed.includes('s') && this.state.guns > 0) {
-        this.game.setScene(new BattleScene(this.game, this.state, this.ship));
+        this.game.replaceScene(new BattleScene(this.game, this.state, this.ship));
       } else if (typed.includes('b') || typed.includes('s')) {
-        this.game.setScene(new BoardingScene(this.game, this.state, this.ship));
+        this.game.replaceScene(new BoardingScene(this.game, this.state, this.ship));
       }
     } else if (this.step === 'fog') {
       if (typed.includes('j')) this.searchFog();
@@ -57,8 +56,9 @@ export class SeaEventScene extends Scene {
     this.step = 'outcome';
   }
 
+  // Back to the map, which waited below.
   backToSea() {
-    this.game.setScene(new MapScene(this.game, this.state));
+    this.game.popScene();
   }
 
   render(ctx) {

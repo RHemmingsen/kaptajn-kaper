@@ -31,7 +31,7 @@ export class BoardingScene extends Scene {
     const input = this.game.input;
 
     if (this.round.outcome === 'surrender') {
-      if (input.anyKeyPressed()) this.game.setScene(new VictoryScene(this.game, this.state, this.enemy));
+      if (input.anyKeyPressed()) this.game.replaceScene(new VictoryScene(this.game, this.state, this.enemy));
       return;
     }
 
@@ -40,7 +40,7 @@ export class BoardingScene extends Scene {
       this.fight();
     } else if (typed.includes('t')) {
       const seaEvent = { kind: 'ship', ship: this.enemy };
-      this.game.setScene(new SeaEventScene(this.game, this.state, seaEvent));
+      this.game.replaceScene(new SeaEventScene(this.game, this.state, seaEvent));
     }
   }
 

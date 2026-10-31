@@ -1,6 +1,6 @@
 // The rules for sailing on the map, as in the original game. Nothing here
 // knows about the keyboard or the canvas: it takes the game state, changes
-// it, and announces what happened.
+// it, and returns what happened.
 import { tileAt, cityAt } from '../map.js';
 import { useMove } from './career.js';
 import { isGameOver } from './ending.js';
@@ -26,7 +26,7 @@ export function canSailTo(col, row) {
   return tileAt(col, row) === '.' || cityAt(col, row) !== null;
 }
 
-// Try to sail one cell in a direction. Returns true if the ship moved.
+// Try to sail one cell in a direction.
 //
 //   - Off the edge of the map: nothing happens.
 //   - Every other attempt is a move (Træk). If it was the last one, the game
@@ -38,41 +38,39 @@ export function canSailTo(col, row) {
 //
 // `random` returns 0..1 and decides what's spotted; tests pass their own.
 //
-// Events emitted (plus the ones from ship.js and sea.js):
-//   shipMoved       { col, row }
-//   arrivedAtPort   { city }
+// Returns what happened, for the caller to act on:
+//   { moved, city, seaEvent }
+// where moved says whether the ship moved, city is the port it sailed into
+// (or null), and seaEvent is what the lookout spotted, { kind: 'ship', ship }
+// or { kind: 'fog' } (or null).
+//
+// Events emitted (plus the ones from ship.js and career.js):
 //   shipRanAground  { col, row }   the land cell it hit
-//   seaEvent        { kind: 'ship', ship } or { kind: 'fog' }
 export function sail(state, direction, events, random = Math.random) {
   const [dCol, dRow] = DIRECTIONS[direction];
   const col = state.ship.col + dCol;
   const row = state.ship.row + dRow;
+  const stayed = { moved: false, city: null, seaEvent: null };
 
-  if (tileAt(col, row) === null) return false;
+  if (tileAt(col, row) === null) return stayed;
 
   useMove(state, events);
-  if (isGameOver(state)) return false;
+  if (isGameOver(state)) return stayed;
 
   crewEats(state, events);
-  if (isSunk(state)) return false;
+  if (isSunk(state)) return stayed;
 
   if (!canSailTo(col, row)) {
     events.emit('shipRanAground', { col, row });
     damageShip(state, AGROUND_DAMAGE, events);
-    return false;
+    return stayed;
   }
 
   state.ship.col = col;
   state.ship.row = row;
-  events.emit('shipMoved', { col, row });
 
   const city = cityAt(col, row);
-  if (city) {
-    events.emit('arrivedAtPort', { city });
-    return true;
-  }
+  if (city) return { moved: true, city, seaEvent: null };
 
-  const seaEvent = rollSeaEvent(state, random);
-  if (seaEvent) events.emit('seaEvent', seaEvent);
-  return true;
+  return { moved: true, city: null, seaEvent: rollSeaEvent(state, random) };
 }

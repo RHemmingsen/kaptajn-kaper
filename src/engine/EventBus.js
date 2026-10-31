@@ -2,15 +2,15 @@
 //
 // One part of the game announces that something happened:
 //
-//   events.emit('arrivedAtPort', { city });
+//   events.emit('shipRanAground', { col, row });
 //
 // and any number of other parts react to it, without the announcer knowing
 // who they are:
 //
-//   events.on('arrivedAtPort', ({ city }) => { ... });
+//   events.on('shipRanAground', ({ col, row }) => { ... });
 //
-// Use it for things several unrelated systems care about (a port reached,
-// men lost, game over). For everything else, a direct function call is
+// Use it for things several unrelated systems care about (running aground,
+// a shot fired, game over). For everything else, a direct function call is
 // easier to follow.
 export class EventBus {
   constructor() {

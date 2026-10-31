@@ -6,7 +6,6 @@ import { collectPrizes } from '../rules/victory.js';
 import { clearScreen } from '../ui/draw.js';
 import { drawPort } from '../ui/portView.js';
 import { drawStatusPanel } from '../ui/statusPanel.js';
-import { MapScene } from './MapScene.js';
 
 // The menu, as in the original: type a number to choose.
 const BUY_CHOICES = { 1: 'men', 2: 'repair', 3: 'guns', 4: 'grain' };
@@ -127,8 +126,9 @@ export class PortScene extends Scene {
     this.showMenu();
   }
 
+  // Back to the map, which waited below the harbor and the port.
   setSail() {
-    this.game.setScene(new MapScene(this.game, this.state));
+    this.game.popScene();
   }
 
   render(ctx) {

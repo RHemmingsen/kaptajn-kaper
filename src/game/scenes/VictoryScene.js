@@ -3,7 +3,6 @@ import { plunder, sendPrize, sinkPrize } from '../rules/victory.js';
 import { clearScreen } from '../ui/draw.js';
 import { drawStatusPanel } from '../ui/statusPanel.js';
 import { drawVictory } from '../ui/victoryView.js';
-import { MapScene } from './MapScene.js';
 
 // An enemy ship has struck her flag, after a gun battle or boarding. You
 // plunder her as soon as you get here, then, as in the original, answer by
@@ -42,7 +41,7 @@ export class VictoryScene extends Scene {
         this.step = 'prize';
       }
     } else if (input.anyKeyPressed()) {
-      this.game.setScene(new MapScene(this.game, this.state));
+      this.game.popScene(); // back to the map
     }
   }
 

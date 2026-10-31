@@ -45,28 +45,9 @@ ways. That is where cleanup pays off most.
 
 ### A. Structural (the cleanup that matters most)
 
-**A1. The game's flow is spread across every scene.**
-There are 22 scene-to-scene imports; `MapScene` alone is constructed from seven
-places (Harbor, Port, SeaEvent, Battle, Victory, Promotion, Name). Most of
-them import each other in a circle (`MapScene` → `SeaEventScene` →
-`BattleScene` → `MapScene`). ES modules tolerate the cycles only because the
-classes are used at run time, not at import time; one top-level use and it
-breaks with a confusing `ReferenceError`.
-Every "back to sea" builds a *new* `MapScene`, which then has to work out from
-the state whether it's in a port (`portCity` in its constructor). The scene
-stack exists, but only help uses it.
-**Better:** the map *pushes* what happens on top of it (harbor → port, sea
-event → battle/boarding → victory, promotion) and those *pop* back. The map
-keeps its own state, the "back to sea" code and most imports disappear, and
-each sub-flow knows only its own next step. (Search: "pushdown automaton",
-"scene stack".)
-
-**A3. Rules report what happened in three different ways.**
-- `sail()` returns only a boolean; the scene learns about a port or a sea
-  event through events *it listens to itself* (`arrivedAtPort`, `seaEvent`,
-  `shipMoved`, each with exactly one listener: `MapScene`). That's a function
-  call with a detour, and it's why the map changed scene from inside
-  `sail()` (safe now that scene changes are deferred, but still a detour).
+**A3. Rules report what happened in two different ways.** (`sail()` already
+returns `{ moved, city, seaEvent }` instead of emitting events only the map
+listened to; done with A1.)
 - `fire()`, `fightRound()` and `investigateFog()` return a result *and* emit
   the same result as an event (for sound). Good.
 - `buy()`/`sell()` return a result and emit nothing; the *scene* emits
@@ -74,13 +55,12 @@ each sub-flow knows only its own next step. (Search: "pushdown automaton",
 The project's own rule (README, `EventBus.js`) is: events for things several
 unrelated parts care about, direct calls for the rest.
 **Better:** one convention. Rules *return* what happened to their caller, and
-*emit* only for observers (sound, game over). So `sail()` returns
-`{ moved, city, seaEvent }` and `MapScene` decides; `buy`/`sell` emit
+*emit* only for observers (sound, game over). So `buy`/`sell` emit
 `tradeRefused` themselves, like `fire()` does.
 Also: four events are emitted that nothing in the game listens to
 (`shipDamaged`, `shipSunk`, `crewStarving`, `enteredHarbor`); only tests do.
 Tests should assert on returned results and state, not on events kept alive
-for them. And event names are 19 loose strings: a typo does nothing, silently,
+for them. And event names are 16 loose strings: a typo does nothing, silently,
 while `Input` fails loudly on a mistyped action. Collect them in one
 `EVENTS` object.
 
@@ -126,11 +106,9 @@ pixels is a different matter: it's a documented choice, "Skærmen forbliver
 
 ### Recommended cleanup order
 
-1. **Flow:** the map pushes and pops its sub-scenes (A1). Scene changes are
-   deferred now (done: A2), so pushing and popping is safe from anywhere.
-2. **Rules:** one convention for results and events, `EVENTS` constants, drop
+1. **Rules:** one convention for results and events, `EVENTS` constants, drop
    unused events (A3). Then the map as a parameter (A4), B6.
-3. **C2** `@ts-check` + JSDoc typedefs for the shared object shapes.
+2. **C2** `@ts-check` + JSDoc typedefs for the shared object shapes.
 
 Avoid ECS, plugin systems and general renderer abstractions. The game doesn't
 need them, and they would hide what's worth learning.

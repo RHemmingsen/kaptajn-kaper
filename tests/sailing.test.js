@@ -11,25 +11,23 @@ import { sail } from '../src/game/rules/sailing.js';
 const nothingSpotted = () => 0.99;
 
 // The events these tests look at.
-const recordEvents = () => record([
-  'shipMoved', 'arrivedAtPort', 'shipRanAground', 'shipDamaged', 'shipSunk', 'seaEvent', 'gameOver',
-]);
+const recordEvents = () => record(['shipRanAground', 'shipDamaged', 'shipSunk', 'gameOver']);
 
 test('sailing onto water moves the ship and costs one move', () => {
   const state = new GameState(); // ship starts at col 10, row 10
   const { events, log } = recordEvents();
 
-  assert.equal(sail(state, 'left', events, nothingSpotted), true);
+  assert.deepEqual(sail(state, 'left', events, nothingSpotted), { moved: true, city: null, seaEvent: null });
   assert.deepEqual(state.ship, { col: 9, row: 10 });
   assert.equal(state.moves, 1);
-  assert.deepEqual(log, [{ name: 'shipMoved', data: { col: 9, row: 10 } }]);
+  assert.deepEqual(log, []);
 });
 
 test('the ship can sail diagonally', () => {
   const state = new GameState();
   const { events } = recordEvents();
 
-  assert.equal(sail(state, 'upLeft', events, nothingSpotted), true);
+  assert.equal(sail(state, 'upLeft', events, nothingSpotted).moved, true);
   assert.deepEqual(state.ship, { col: 9, row: 9 });
 });
 
@@ -49,7 +47,7 @@ test('sailing into land: the ship stays, but it costs a move, grain and 3 Rep', 
   state.ship = { col: 8, row: 10 }; // Samsø is just to the left
   const { events, log } = recordEvents();
 
-  assert.equal(sail(state, 'left', events, nothingSpotted), false);
+  assert.equal(sail(state, 'left', events, nothingSpotted).moved, false);
   assert.deepEqual(state.ship, { col: 8, row: 10 });
   assert.equal(state.moves, 1);
   assert.equal(state.grain, 29.5);
@@ -57,15 +55,15 @@ test('sailing into land: the ship stays, but it costs a move, grain and 3 Rep', 
   assert.deepEqual(log.map((e) => e.name), ['shipRanAground', 'shipDamaged']);
 });
 
-test('sailing into a port announces the arrival', () => {
+test('sailing into a port says which', () => {
   const state = new GameState();
   state.ship = { col: 8, row: 4 }; // right next to Ebeltoft
-  const { events, log } = recordEvents();
+  const { events } = recordEvents();
 
-  sail(state, 'left', events, nothingSpotted);
+  const result = sail(state, 'left', events, nothingSpotted);
 
-  assert.deepEqual(log.map((e) => e.name), ['shipMoved', 'arrivedAtPort']);
-  assert.equal(log[1].data.city.name, 'Ebeltoft');
+  assert.equal(result.moved, true);
+  assert.equal(result.city.name, 'Ebeltoft');
 });
 
 test('the edge of the map stops the ship and costs nothing', () => {
@@ -73,7 +71,7 @@ test('the edge of the map stops the ship and costs nothing', () => {
   state.ship = { col: 1, row: 13 }; // open water at the left edge
   const { events, log } = recordEvents();
 
-  assert.equal(sail(state, 'left', events, nothingSpotted), false);
+  assert.equal(sail(state, 'left', events, nothingSpotted).moved, false);
   assert.deepEqual(state.ship, { col: 1, row: 13 });
   assert.equal(state.moves, 0);
   assert.equal(state.grain, 30);
@@ -87,7 +85,7 @@ test('if the crew starves to death, the ship is lost and goes nowhere', () => {
   state.ship = { col: 8, row: 10 }; // Samsø is just to the left
   const { events, log } = recordEvents();
 
-  assert.equal(sail(state, 'left', events, nothingSpotted), false);
+  assert.equal(sail(state, 'left', events, nothingSpotted).moved, false);
   assert.equal(state.sunk, true);
   assert.equal(state.repair, 200, 'the lost ship does not also run aground');
   assert.deepEqual(log.map((e) => e.name), ['shipSunk', 'gameOver']);
@@ -95,22 +93,22 @@ test('if the crew starves to death, the ship is lost and goes nowhere', () => {
 
 test('sailing onto open water can make the lookout spot something', () => {
   const state = new GameState();
-  const { events, log } = recordEvents();
+  const { events } = recordEvents();
 
-  sail(state, 'left', events, () => 0); // the dice come up as low as possible
+  const result = sail(state, 'left', events, () => 0); // the dice come up as low as possible
 
-  assert.deepEqual(log.map((e) => e.name), ['shipMoved', 'seaEvent']);
-  assert.equal(log[1].data.kind, 'ship');
+  assert.equal(result.seaEvent.kind, 'ship');
 });
 
 test('nothing is spotted when sailing into a port', () => {
   const state = new GameState();
   state.ship = { col: 8, row: 4 }; // right next to Ebeltoft
-  const { events, log } = recordEvents();
+  const { events } = recordEvents();
 
-  sail(state, 'left', events, () => 0);
+  const result = sail(state, 'left', events, () => 0);
 
-  assert.deepEqual(log.map((e) => e.name), ['shipMoved', 'arrivedAtPort']);
+  assert.equal(result.city.name, 'Ebeltoft');
+  assert.equal(result.seaEvent, null);
 });
 
 test('the last move ends the game before the ship moves or the crew eats', () => {
@@ -118,7 +116,7 @@ test('the last move ends the game before the ship moves or the crew eats', () =>
   state.moves = 299; // the limit is 300
   const { events, log } = recordEvents();
 
-  assert.equal(sail(state, 'left', events, nothingSpotted), false);
+  assert.equal(sail(state, 'left', events, nothingSpotted).moved, false);
   assert.equal(state.ending, 'jilted');
   assert.deepEqual(state.ship, { col: 10, row: 10 });
   assert.equal(state.grain, 30);

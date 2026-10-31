@@ -126,6 +126,13 @@ help over a battle, and the one below is paused (`pause()`), not ended, until
 only the top one, like the harbor making way for the port while the map waits
 below.
 
+**The map stays for the whole voyage.** What happens on the way is pushed on
+top of it: a harbor (replaced by its port once you're in), a ship or a fog
+bank (replaced by a battle or boarding, then by the victory), a promotion.
+When that's over, it pops itself, and the map carries on where it was. So
+only `NameScene`, which starts a voyage, ever makes a `MapScene`, and the
+scenes on top only know their own next step.
+
 **Scene changes wait for the end of the step.** `setScene`, `pushScene` and
 `popScene` only ask; the Game makes the change when the scene's `update()`
 has finished. So the rest of a scene's code always runs, on that scene, even
@@ -184,11 +191,12 @@ two: they turn key presses into rule calls and hand the state to the drawing
 code. Because the rules never touch the canvas or keyboard, they can be tested
 in Node.
 
-**Events.** Rules announce what happened with `events.emit('arrivedAtPort', {
-city })`, and anything interested listens with `events.on(...)`. A scene uses
-`this.listen(...)` instead, and its listeners are removed automatically when
-the game switches to another scene. Events are for things several unrelated
-parts of the game care about; everything else is a direct function call.
+**Events.** A rule tells whoever called it what happened by returning it:
+`sail()` returns `{ moved, city, seaEvent }`, and the map decides what comes
+next. Events are for the others, who the rule doesn't know about: it
+announces with `events.emit('shipRanAground', { col, row })`, and the sound,
+say, listens with `events.on(...)`. A scene uses `this.listen(...)` instead,
+and its listeners are removed automatically when the scene ends.
 
 **Real time vs turns.** The map is turn-based: one key press, one tile
 (arrow keys, or the number keys 1-9 like a compass for diagonals). As in the

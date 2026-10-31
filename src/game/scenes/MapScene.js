@@ -1,5 +1,5 @@
 import { Scene } from '../../engine/Scene.js';
-import { KATTEGAT, cityAt } from '../map.js';
+import { KATTEGAT } from '../map.js';
 import { goalReached } from '../rules/career.js';
 import { endGame } from '../rules/ending.js';
 import { sail } from '../rules/sailing.js';
@@ -28,23 +28,18 @@ const SAIL_ACTIONS = {
 // The main scene: sail the ship around the Kattegat, one tile per key press.
 // The scene only connects things: keys go to the sailing rules, and the
 // state is handed to the drawing code.
+//
+// The map stays for the whole voyage. What happens on the way (a harbor and
+// its port, a ship or a fog bank, a promotion) is pushed on top of it, and
+// when that's over it's popped, and the map carries on where it was. So
+// those scenes never need to know about the map. (See Game.js.)
 export class MapScene extends Scene {
   constructor(game, state) {
     super(game);
     this.state = state;
-    // The city we're in, if any. We can be in one already when coming back
-    // from the harbor.
-    this.portCity = cityAt(state.ship.col, state.ship.row);
-  }
-
-  enter() {
-    this.listen('shipMoved', () => { this.portCity = null; });
-    this.listen('arrivedAtPort', ({ city }) => {
-      this.game.setScene(new HarborScene(this.game, this.state, city));
-    });
-    this.listen('seaEvent', (seaEvent) => {
-      this.game.setScene(new SeaEventScene(this.game, this.state, seaEvent));
-    });
+    // The port we're in, if any: set when we sail into one, so its name
+    // still shows when we come back from the harbor.
+    this.portCity = null;
   }
 
   update(dt) {
@@ -57,7 +52,7 @@ export class MapScene extends Scene {
     // With enough points, e.g. after a victory or a payout in København,
     // the news of your promotion comes next.
     if (goalReached(this.state)) {
-      this.game.setScene(new PromotionScene(this.game, this.state));
+      this.game.pushScene(new PromotionScene(this.game, this.state));
       return;
     }
 
@@ -72,14 +67,17 @@ export class MapScene extends Scene {
       this.game.debug.showCollision = !this.game.debug.showCollision;
     }
 
-    // One step per update at most. Sailing can switch to the harbor scene,
-    // and this scene must not keep moving the ship after that.
-    for (const [action, direction] of Object.entries(SAIL_ACTIONS)) {
-      if (input.wasActionPressed(action)) {
-        sail(this.state, direction, this.game.events);
-        break;
-      }
-    }
+    // One step per update at most: after a step into a port or onto
+    // something the lookout spotted, that comes next.
+    const action = Object.keys(SAIL_ACTIONS).find((name) => input.wasActionPressed(name));
+    if (action) this.sail(SAIL_ACTIONS[action]);
+  }
+
+  sail(direction) {
+    const { moved, city, seaEvent } = sail(this.state, direction, this.game.events);
+    if (moved) this.portCity = city;
+    if (city) this.game.pushScene(new HarborScene(this.game, this.state, city));
+    else if (seaEvent) this.game.pushScene(new SeaEventScene(this.game, this.state, seaEvent));
   }
 
   render(ctx) {

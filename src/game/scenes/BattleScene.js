@@ -2,7 +2,6 @@ import { Scene } from '../../engine/Scene.js';
 import { breakOff, fire, moveAim, startBattle } from '../rules/battle.js';
 import { clearScreen } from '../ui/draw.js';
 import { drawBattle } from '../ui/battleView.js';
-import { MapScene } from './MapScene.js';
 import { SeaEventScene } from './SeaEventScene.js';
 import { VictoryScene } from './VictoryScene.js';
 
@@ -50,14 +49,15 @@ export class BattleScene extends Scene {
     } else if (input.wasActionPressed('breakOff')) {
       breakOff(this.battle);
       const seaEvent = { kind: 'ship', ship: this.battle.enemy };
-      this.game.setScene(new SeaEventScene(this.game, this.state, seaEvent));
+      this.game.replaceScene(new SeaEventScene(this.game, this.state, seaEvent));
     }
   }
 
   afterShot() {
     const { outcome } = this.result;
-    if (outcome === 'surrender') this.game.setScene(new VictoryScene(this.game, this.state, this.battle.enemy));
-    else if (outcome === 'sunk') this.game.setScene(new MapScene(this.game, this.state));
+    const enemy = this.battle.enemy;
+    if (outcome === 'surrender') this.game.replaceScene(new VictoryScene(this.game, this.state, enemy));
+    else if (outcome === 'sunk') this.game.popScene(); // back to the map
     else this.step = 'aim';
   }
 

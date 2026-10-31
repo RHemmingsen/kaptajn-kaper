@@ -2,7 +2,6 @@ import { Scene } from '../../engine/Scene.js';
 import { createHarbor, updateHarbor } from '../rules/harbor.js';
 import { clearScreen } from '../ui/draw.js';
 import { drawHarbor, drawHarborIntro } from '../ui/harborView.js';
-import { MapScene } from './MapScene.js';
 import { PortScene } from './PortScene.js';
 
 // The harbor minigame, played when the ship sails into a port on the map.
@@ -29,7 +28,7 @@ export class HarborScene extends Scene {
 
     if (this.harbor.status === 'docked') {
       if (input.anyKeyPressed()) {
-        this.game.setScene(new PortScene(this.game, this.state, this.harbor.city));
+        this.game.replaceScene(new PortScene(this.game, this.state, this.harbor.city));
       }
       return;
     }
@@ -46,8 +45,9 @@ export class HarborScene extends Scene {
     updateHarbor(this.harbor, controls, dt, this.state, this.game.events);
   }
 
+  // Back to the map, which waited below.
   backToMap() {
-    this.game.setScene(new MapScene(this.game, this.state));
+    this.game.popScene();
   }
 
   render(ctx) {
