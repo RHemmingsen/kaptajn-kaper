@@ -51,7 +51,7 @@ src/
     records.js         kept between visits: the record and who set it,
                        the last name played with, and sound on or off
     GameState.js       the ship's stats for the current playthrough
-    map.js             the Kattegat tile map; grid and ports as in the original
+    map.js             SeaChart, and Kattegat as one: grid and ports as in the original
     rules/             the game's rules: change GameState, emit events.
       sailing.js         No drawing, no keyboard.
       ship.js            damage, sinking and what she can carry, shared by all
@@ -171,7 +171,10 @@ decides what that sounds like, so all of the game's sound is in one file.
 
 **Tile maps.** The map is an array of strings, one character per tile (`.` water,
 `#` land). `TileMap` answers "what's at (col, row)?"; the game decides what each
-character means and how to draw it.
+character means and how to draw it. The game wraps it in a `SeaChart`
+(`map.js`): the grid and the ports, numbered from 1 as in the original, so
+the ship, the ports and the docs all use the original's numbers. Only the
+chart knows that `TileMap` counts from 0.
 
 **Graphics layer and collision layer.** The map has two layers that are kept
 apart: `assets/kattegat.svg` is what you *see* (smooth coastlines), and the
@@ -213,7 +216,11 @@ about 18 of the original's steps, and a gust can come once per step.
 
 **Controlling chance.** Rules that roll dice take a `random` function
 (returning 0..1, `Math.random` by default). The game uses the real thing; tests
-pass their own, so they decide exactly what happens.
+pass their own, so they decide exactly what happens. The same goes for the
+map: `sail()` is handed the chart it sails on (`KATTEGAT` in the game, a
+five-by-three one in the tests), so redrawing the coast can't break the
+sailing tests. Giving a function what it uses, instead of letting it fetch
+it, is called dependency injection.
 
 **Collision boxes.** Everything in the harbor is a rectangle `{ x, y, w, h }`,
 and `rectsOverlap` checks whether two of them overlap. The drawings are made to

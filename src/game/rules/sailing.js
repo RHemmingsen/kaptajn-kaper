@@ -1,7 +1,6 @@
 // The rules for sailing on the map, as in the original game. Nothing here
 // knows about the keyboard or the canvas: it takes the game state, changes
 // it, and returns what happened.
-import { tileAt, cityAt } from '../map.js';
 import { useMove } from './career.js';
 import { isGameOver } from './ending.js';
 import { rollSeaEvent } from './sea.js';
@@ -22,14 +21,9 @@ export const DIRECTIONS = {
 
 const AGROUND_DAMAGE = 3; // Rep lost when sailing into land
 
-// Water is always sailable. Ports are on land, but you can sail into them.
-export function canSailTo(col, row) {
-  return tileAt(col, row) === '.' || cityAt(col, row) !== null;
-}
-
-// Try to sail one cell in a direction.
+// Try to sail one cell in a direction, on `chart` (a SeaChart, see map.js).
 //
-//   - Off the edge of the map: nothing happens.
+//   - Off the edge of the chart: nothing happens.
 //   - Every other attempt is a move (Træk). If it was the last one, the game
 //     is over and the ship goes nowhere.
 //   - The crew eats. If that starves them to death, the ship is lost and
@@ -47,13 +41,13 @@ export function canSailTo(col, row) {
 //
 // Events emitted (plus the ones from ship.js and career.js):
 //   shipRanAground  { col, row }   the land cell it hit
-export function sail(state, direction, events, random = Math.random) {
+export function sail(state, chart, direction, events, random = Math.random) {
   const [dCol, dRow] = DIRECTIONS[direction];
   const col = state.ship.col + dCol;
   const row = state.ship.row + dRow;
   const stayed = { moved: false, city: null, seaEvent: null };
 
-  if (tileAt(col, row) === null) return stayed;
+  if (chart.tileAt(col, row) === null) return stayed;
 
   useMove(state, events);
   if (isGameOver(state)) return stayed;
@@ -61,7 +55,7 @@ export function sail(state, direction, events, random = Math.random) {
   crewEats(state, events);
   if (isSunk(state)) return stayed;
 
-  if (!canSailTo(col, row)) {
+  if (!chart.canSailTo(col, row)) {
     events.emit(EVENTS.shipRanAground, { col, row });
     damageShip(state, AGROUND_DAMAGE, events);
     return stayed;
@@ -70,7 +64,7 @@ export function sail(state, direction, events, random = Math.random) {
   state.ship.col = col;
   state.ship.row = row;
 
-  const city = cityAt(col, row);
+  const city = chart.cityAt(col, row);
   if (city) return { moved: true, city, seaEvent: null };
 
   return { moved: true, city: null, seaEvent: rollSeaEvent(state, random) };

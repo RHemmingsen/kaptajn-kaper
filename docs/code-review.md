@@ -45,27 +45,16 @@ ways. That is where cleanup pays off most.
 
 ### A. Structural (the cleanup that matters most)
 
-**A4. Rules depend on module-level singletons.**
-`rules/sailing.js` imports the map directly (`tileAt` → `KATTEGAT`), so the
-rules only run on that one map, and `sailing.test.js` depends on the real
-coastline ("Samsø is just to the left"). Redraw the coast and unrelated rule
-tests fail. `IMAGES` in `game/assets.js` is a mutable global filled as a side
-effect of `loadAssets()`.
-**Better:** pass the map in (or put it on `GameState`) so tests use a tiny
-test map; have `loadAssets()` return the images.
+**A4. A mutable global.** `IMAGES` in `game/assets.js` is filled as a side
+effect of `loadAssets()`, and `mapView` reads it. (The rest of A4 is done:
+the sailing rules are handed the chart they sail on.)
+**Better:** have `loadAssets()` return the images, and hand them on.
 
 ### B. Medium
 
 **B4. Input details.**
 - No `destroy()`: the listeners on `window` are never removed. Harmless in one
   page, but a hot reload or a second `Game` doubles them.
-
-**B6. Two coordinate systems on the map.** The game uses the original's
-1-based cells, `TileMap` is 0-based, and the `- 1` happens in two files
-(`map.js` `tileAt`, `mapView.js` `cellCorner`). Either convert once when data
-is read in, or let only `map.js` know. (The harbor working in 640×480 screen
-pixels is a different matter: it's a documented choice, "Skærmen forbliver
-640×480", and fine for a fixed-size game.)
 
 ### C. Small things
 
@@ -87,7 +76,7 @@ pixels is a different matter: it's a documented choice, "Skærmen forbliver
 
 ### Recommended cleanup order
 
-1. **Rules:** the map as a parameter (A4), B6.
+1. **Assets:** `loadAssets()` returns the images (A4).
 2. **C2** `@ts-check` + JSDoc typedefs for the shared object shapes.
 
 Avoid ECS, plugin systems and general renderer abstractions. The game doesn't

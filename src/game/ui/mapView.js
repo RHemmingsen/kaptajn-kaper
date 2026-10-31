@@ -1,7 +1,5 @@
 // Drawing the sea map: its frame, tiles, ports and the ship.
 import { COLORS } from '../palette.js';
-import { CITIES, KATTEGAT } from '../map.js';
-import { canSailTo } from '../rules/sailing.js';
 import { IMAGES } from '../assets.js';
 import { label } from './draw.js';
 
@@ -28,9 +26,9 @@ export function drawMapFrame(ctx, state, soundOn) {
   label(ctx, 'Esc:Slut', 466, 354);
 }
 
-export function drawMap(ctx, map) {
-  const w = map.width * TILE_W;
-  const h = map.height * TILE_H;
+export function drawMap(ctx, chart) {
+  const w = chart.width * TILE_W;
+  const h = chart.height * TILE_H;
 
   // 1. Fill the whole map area with water.
   ctx.fillStyle = COLORS.blue;
@@ -40,12 +38,12 @@ export function drawMap(ctx, map) {
   ctx.strokeStyle = COLORS.cyan;
   ctx.lineWidth = 1;
   ctx.beginPath();
-  for (let col = 0; col <= map.width; col++) {
+  for (let col = 0; col <= chart.width; col++) {
     const x = MAP_X + col * TILE_W + 0.5; // +0.5 keeps 1px lines sharp
     ctx.moveTo(x, MAP_Y);
     ctx.lineTo(x, MAP_Y + h);
   }
-  for (let row = 0; row <= map.height; row++) {
+  for (let row = 0; row <= chart.height; row++) {
     const y = MAP_Y + row * TILE_H + 0.5;
     ctx.moveTo(MAP_X, y);
     ctx.lineTo(MAP_X + w, y);
@@ -59,27 +57,27 @@ export function drawMap(ctx, map) {
 
 // Debug view: a see-through red box on every cell the ship can't sail into,
 // so you can check that the picture and the collision grid agree. It asks
-// the sailing rules, so it shows exactly what the ship will hit.
-export function drawCollisionOverlay(ctx) {
+// the chart the sailing rules use, so it shows exactly what the ship will hit.
+export function drawCollisionOverlay(ctx, chart) {
   ctx.fillStyle = 'rgba(255, 0, 0, 0.35)';
   ctx.strokeStyle = 'rgba(255, 0, 0, 0.8)';
   ctx.lineWidth = 1;
-  for (let row = 1; row <= KATTEGAT.height; row++) {
-    for (let col = 1; col <= KATTEGAT.width; col++) {
-      if (canSailTo(col, row)) continue;
+  for (let row = 1; row <= chart.height; row++) {
+    for (let col = 1; col <= chart.width; col++) {
+      if (chart.canSailTo(col, row)) continue;
       const [x, y] = cellCorner(col, row);
       ctx.fillRect(x, y, TILE_W, TILE_H);
       ctx.strokeRect(x + 0.5, y + 0.5, TILE_W - 1, TILE_H - 1);
     }
   }
 
-  const bottom = MAP_Y + KATTEGAT.height * TILE_H;
+  const bottom = MAP_Y + chart.height * TILE_H;
   label(ctx, 'DEBUG: kollision (G)', MAP_X + 8, bottom - 14, COLORS.white);
 }
 
-export function drawCities(ctx) {
+export function drawCities(ctx, chart) {
   ctx.fillStyle = COLORS.red;
-  for (const city of CITIES) {
+  for (const city of chart.cities) {
     const [x, y] = tileCenter(city.col, city.row);
     ctx.beginPath();
     ctx.arc(x, y, 6, 0, Math.PI * 2);
@@ -121,7 +119,9 @@ export function drawShip(ctx, ship) {
   ctx.fillRect(x + 9, y + 2, 4, 3);
 }
 
-// Pixel position of the top-left corner of a map cell (numbered from 1).
+// Pixel position of the top-left corner of a map cell. Cells are numbered
+// from 1 (see SeaChart), so cell 1 starts at the map's left edge: the - 1
+// is drawing arithmetic, not a second coordinate system.
 function cellCorner(col, row) {
   return [MAP_X + (col - 1) * TILE_W, MAP_Y + (row - 1) * TILE_H];
 }

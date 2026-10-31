@@ -74,7 +74,7 @@ export class MapScene extends Scene {
   }
 
   sail(direction) {
-    const { moved, city, seaEvent } = sail(this.state, direction, this.game.events);
+    const { moved, city, seaEvent } = sail(this.state, KATTEGAT, direction, this.game.events);
     if (moved) this.portCity = city;
     if (city) this.game.pushScene(new HarborScene(this.game, this.state, city));
     else if (seaEvent) this.game.pushScene(new SeaEventScene(this.game, this.state, seaEvent));
@@ -84,8 +84,8 @@ export class MapScene extends Scene {
     clearScreen(ctx);
     drawMapFrame(ctx, this.state, this.game.sound.enabled);
     drawMap(ctx, KATTEGAT);
-    if (this.game.debug.showCollision) drawCollisionOverlay(ctx);
-    drawCities(ctx);
+    if (this.game.debug.showCollision) drawCollisionOverlay(ctx, KATTEGAT);
+    drawCities(ctx, KATTEGAT);
     if (this.portCity) drawCityName(ctx, this.portCity);
     drawShip(ctx, this.state.ship);
     drawStatusPanel(ctx, this.state);
