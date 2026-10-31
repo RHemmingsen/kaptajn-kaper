@@ -28,23 +28,24 @@ export class SeaEventScene extends Scene {
   update(dt) {
     const input = this.game.input;
     const typed = input.typedText().toLowerCase();
+    const keys = TEXTS.sea.keys;
 
     if (this.step === 'ship') {
-      if (typed.includes('a')) this.step = 'attackHow';
-      else if (typed.includes('f')) {
+      if (typed.includes(keys.attack)) this.step = 'attackHow';
+      else if (typed.includes(keys.flee)) {
         flee(this.state, this.game.events);
         this.backToSea();
       }
     } else if (this.step === 'attackHow') {
       // As in the original, with no guns left boarding is the only way.
-      if (typed.includes('s') && this.state.guns > 0) {
+      if (typed.includes(keys.shoot) && this.state.guns > 0) {
         this.game.replaceScene(new BattleScene(this.game, this.state, this.ship));
-      } else if (typed.includes('b') || typed.includes('s')) {
+      } else if (typed.includes(keys.board) || typed.includes(keys.shoot)) {
         this.game.replaceScene(new BoardingScene(this.game, this.state, this.ship));
       }
     } else if (this.step === 'fog') {
-      if (typed.includes('j')) this.searchFog();
-      else if (typed.includes('n')) this.backToSea();
+      if (typed.includes(keys.yes)) this.searchFog();
+      else if (typed.includes(keys.no)) this.backToSea();
     } else if (input.anyKeyPressed()) {
       if (this.step === 'outcome' && this.outcome.kind === 'ship') this.step = 'ship';
       else this.backToSea();

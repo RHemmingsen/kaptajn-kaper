@@ -3,6 +3,7 @@ import { plunder, sendPrize, sinkPrize } from '../rules/victory.js';
 import { clearScreen } from '../ui/draw.js';
 import { drawStatusPanel } from '../ui/statusPanel.js';
 import { drawVictory } from '../ui/victoryView.js';
+import { TEXTS } from '../texts.js';
 
 // An enemy ship has struck her flag, after a gun battle or boarding. You
 // plunder her as soon as you get here, then, as in the original, answer by
@@ -33,10 +34,10 @@ export class VictoryScene extends Scene {
 
     if (this.step === 'plunder') {
       const typed = input.typedText().toLowerCase();
-      if (typed.includes('s')) {
+      if (typed.includes(TEXTS.victory.keys.sink)) {
         this.sinking = sinkPrize(this.state, this.spoils);
         this.step = 'sunk';
-      } else if (typed.includes('p')) {
+      } else if (typed.includes(TEXTS.victory.keys.prize)) {
         sendPrize(this.state, this.spoils, this.game.events);
         this.step = 'prize';
       }

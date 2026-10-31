@@ -5,6 +5,7 @@ import { drawBoarding } from '../ui/boardingView.js';
 import { drawStatusPanel } from '../ui/statusPanel.js';
 import { SeaEventScene } from './SeaEventScene.js';
 import { VictoryScene } from './VictoryScene.js';
+import { TEXTS } from '../texts.js';
 
 // Boarding an enemy ship. The first round is fought as soon as you board.
 // After each round, as in the original, you answer by typing a letter: fight
@@ -36,9 +37,9 @@ export class BoardingScene extends Scene {
     }
 
     const typed = input.typedText().toLowerCase();
-    if (typed.includes('k')) {
+    if (typed.includes(TEXTS.boarding.keys.fight)) {
       this.fight();
-    } else if (typed.includes('t')) {
+    } else if (typed.includes(TEXTS.boarding.keys.back)) {
       const seaEvent = { kind: 'ship', ship: this.enemy };
       this.game.replaceScene(new SeaEventScene(this.game, this.state, seaEvent));
     }

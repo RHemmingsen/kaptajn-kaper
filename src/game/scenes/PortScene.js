@@ -6,13 +6,12 @@ import { collectPrizes } from '../rules/victory.js';
 import { clearScreen } from '../ui/draw.js';
 import { drawPort } from '../ui/portView.js';
 import { drawStatusPanel } from '../ui/statusPanel.js';
+import { TEXTS } from '../texts.js';
 
 // The menu, as in the original: type a number to choose.
 const BUY_CHOICES = { 1: 'men', 2: 'repair', 3: 'guns', 4: 'grain' };
 const SELL_CHOICE = '5';
 const LEAVE_CHOICE = '6';
-// What to sell: Korn, Skyts or Juveler.
-const SELL_CHOICES = { k: 'grain', s: 'guns', j: 'jewels' };
 
 // A port, reached by docking in the harbor. Trade, then set sail again. In
 // the prize port (København), prizes you sent there are paid out first.
@@ -89,9 +88,11 @@ export class PortScene extends Scene {
       this.step = 'menu';
       return;
     }
+    // What to sell: the good whose key was typed (TEXTS.port.sellKeys).
     for (const ch of input.typedText().toLowerCase()) {
-      if (SELL_CHOICES[ch]) {
-        this.askAmount('sell', SELL_CHOICES[ch]);
+      const good = Object.keys(TEXTS.port.sellKeys).find((name) => TEXTS.port.sellKeys[name] === ch);
+      if (good) {
+        this.askAmount('sell', good);
         return;
       }
     }

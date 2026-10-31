@@ -41,3 +41,10 @@ test('every ending has its headline, and every heavy cargo its line', () => {
     assert.equal(typeof TEXTS.ending.tooHeavy[cargo], 'string', cargo);
   }
 });
+
+test('the answers to one question never share a key', () => {
+  for (const keys of [TEXTS.sea.keys, TEXTS.boarding.keys, TEXTS.victory.keys, TEXTS.port.sellKeys]) {
+    const letters = Object.values(keys);
+    assert.equal(new Set(letters).size, letters.length, letters.join(''));
+  }
+});

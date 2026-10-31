@@ -18,6 +18,15 @@
 //
 // The help (F1) is in helpText.js: the original's help, kept apart for its
 // size.
+// The letters you answer questions with. They're the first letters of the
+// Danish words (angribe, flygte, borde, skyde...), so they live here with the
+// texts; the questions below are built from them, so a question and the key
+// that answers it can't disagree. The scenes read them from TEXTS too.
+const SEA_KEYS = { attack: 'a', flee: 'f', board: 'b', shoot: 's', yes: 'j', no: 'n' };
+const BOARDING_KEYS = { fight: 'k', back: 't' };
+const VICTORY_KEYS = { sink: 's', prize: 'p' };
+const SELL_KEYS = { grain: 'k', guns: 's', jewels: 'j' }; // by the good to sell
+
 // Your rank, by career level. Also used to address you, below.
 const RANKS = ['skibsfører', 'kaptajn', 'kommandørkaptajn', 'kommandør', 'admiral'];
 
@@ -114,7 +123,8 @@ export const TEXTS = deepFreeze({
       '5: Sælge noget',
       '6: Stå til søs igen',
     ],
-    sellWhat: 'Korn (k), skyts (s) eller juveler (j)?',
+    sellKeys: SELL_KEYS,
+    sellWhat: `Korn (${SELL_KEYS.grain}), skyts (${SELL_KEYS.guns}) eller juveler (${SELL_KEYS.jewels})?`,
     jewelsAndBack: (jewels) => `Du har ${jewels} juveler.  Esc: tilbage`,
     // How many? By buy or sell, and the good.
     howMany: {
@@ -174,15 +184,16 @@ export const TEXTS = deepFreeze({
     inSight: (ship) => `${ship} i sigte!`,
     english: (ship) => `Engelsk ${ship}`, // an English galease, say
     pirateShip: 'Sørøverskib', // which isn't English
+    keys: SEA_KEYS,
     youMustChoose: (addressedAs) => `Nå ${addressedAs}, nu må du vælge:`,
-    attackOrFlee: 'Vil du angribe (a) eller flygte (f)?',
-    boardOrShoot: ['Vil du borde hende (b) eller', 'vil du skyde (s) på hende?'],
+    attackOrFlee: `Vil du angribe (${SEA_KEYS.attack}) eller flygte (${SEA_KEYS.flee})?`,
+    boardOrShoot: [`Vil du borde hende (${SEA_KEYS.board}) eller`, `vil du skyde (${SEA_KEYS.shoot}) på hende?`],
     fogBank: [
       'Der er en underlig tågebanke 2 sømil',
       'til styrbord. Det ser ud til,',
       'at der er noget inde i den.',
     ],
-    investigate: 'Vil du undersøge det (j/n)?',
+    investigate: `Vil du undersøge det (${SEA_KEYS.yes}/${SEA_KEYS.no})?`,
     // What was in the fog, by its kind (see investigateFog).
     found: {
       ship: () => ['Der dukker af disen', 'et væmmeligt skib!'],
@@ -245,7 +256,11 @@ export const TEXTS = deepFreeze({
     enemyOnlyLeft: (men) => `og han har kun ${men} mand igen.`,
     enemyLeft: (men) => `men han har ${men} igen.`,
     youLost: (men) => `Du har mistet ${men} af dine tapre mænd.`,
-    fightOrReturn: ['Vil du kæmpe videre (k)', 'eller vende tilbage til dit skib (t)?'],
+    keys: BOARDING_KEYS,
+    fightOrReturn: [
+      `Vil du kæmpe videre (${BOARDING_KEYS.fight})`,
+      `eller vende tilbage til dit skib (${BOARDING_KEYS.back})?`,
+    ],
   },
 
   // Your rank and noble title, by your career level, 1 to 5 (the original's
@@ -265,7 +280,8 @@ export const TEXTS = deepFreeze({
     noSurvivors: 'Det flyder med lig på dækket.',
     grainAboard: (sacks) => `Der er ${sacks} sække korn ombord. Dem tager du!`,
     prizeCrew: (crew, men) => ['Dette skib behøver et prisemandskab', `på ${crew} mand! Du har ${men} mand.`],
-    sinkOrTake: ['Vil du sænke det (s)', 'eller tage det som prise (p)?'],
+    keys: VICTORY_KEYS,
+    sinkOrTake: [`Vil du sænke det (${VICTORY_KEYS.sink})`, `eller tage det som prise (${VICTORY_KEYS.prize})?`],
     sank: 'Den sank!!',
     survivorsJoin: (men) => `Hendes ${men} overlevende går over til dig.`,
     toTheSharks: (men) => `Du smider ${men} mand ud til hajerne!`,

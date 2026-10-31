@@ -175,7 +175,9 @@ except the original's help, which is in `helpText.js`. Code writes
 `TEXTS.port.whatNow`, or `TEXTS.port.welcome(city.name)` for a text with a
 value in it; `ui/` decides where the words go and in which colour. The rules
 hold no text: a ship type has an `id` (`TEXTS.ships[id]` is its name), and
-your career a level (`TEXTS.career.ranks[level - 1]`). A misspelt constant is
+your career a level (`TEXTS.career.ranks[level - 1]`). The letters you answer
+with (`a` for angribe...) are there too, and the questions are built from
+them, so a question and its keys can't disagree. A misspelt constant is
 `undefined`, and `text()` in `ui/draw.js` refuses that loudly.
 
 **Tile maps.** The map is an array of strings, one character per tile (`.` water,
