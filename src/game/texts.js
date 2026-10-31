@@ -18,6 +18,9 @@
 //
 // The help (F1) is in helpText.js: the original's help, kept apart for its
 // size.
+// Your rank, by career level. Also used to address you, below.
+const RANKS = ['skibsfører', 'kaptajn', 'kommandørkaptajn', 'kommandør', 'admiral'];
+
 export const TEXTS = deepFreeze({
   common: {
     pressAnyKey: 'Tryk på en tast.',
@@ -244,6 +247,73 @@ export const TEXTS = deepFreeze({
     enemyLeft: (men) => `men han har ${men} igen.`,
     youLost: (men) => `Du har mistet ${men} af dine tapre mænd.`,
     fightOrReturn: ['Vil du kæmpe videre (k)', 'eller vende tilbage til dit skib (t)?'],
+  },
+
+  // Your rank and noble title, by your career level, 1 to 5 (the original's
+  // tit(1, IDIF/2) and tit(2, IDIF/2); see rules/career.js).
+  career: {
+    ranks: RANKS,
+    titles: ['Borger', 'Baron', 'Greve', 'Kammerherre', 'Kronprins'],
+    // How you're addressed: your rank and name, "skibsfører Ronnie".
+    addressedAs: (level, name) => [RANKS[level - 1], name].filter(Boolean).join(' '),
+  },
+
+  // A ship that struck her flag (lines 2950-3090).
+  victory: {
+    surrender: 'De overgiver sig!!',
+    moneyAboard: (money) => `Der er ${money} rigsdaler ombord.`,
+    survivors: (men) => `Der er ${men} overlevende.`,
+    noSurvivors: 'Det flyder med lig på dækket.',
+    grainAboard: (sacks) => `Der er ${sacks} sække korn ombord. Dem tager du!`,
+    prizeCrew: (crew, men) => ['Dette skib behøver et prisemandskab', `på ${crew} mand! Du har ${men} mand.`],
+    sinkOrTake: ['Vil du sænke det (s)', 'eller tage det som prise (p)?'],
+    sank: 'Den sank!!',
+    survivorsJoin: (men) => `Hendes ${men} overlevende går over til dig.`,
+    toTheSharks: (men) => `Du smider ${men} mand ud til hajerne!`,
+    onItsWay: 'OK, de er på vej til København.',
+  },
+
+  // A promotion, by message in a bottle (lines 6100-6119).
+  promotion: {
+    congratulations: 'Tillykke!!!!',
+    news: ['Du har netop modtaget', 'din udnævnelse med flaskepost.'],
+    youAreNow: (rank) => `Du er nu ${rank}.`,
+    julieAwaits: 'Komtesse Julie venter dig med længsel!',
+    allDone: (titled) => ['Du har klaret det hele.', 'Du får også det halve kongerige,', `${titled}!`],
+    nextGoal: (titled, goal, maxMoves) => [
+      'Lad os se, om du kan klare',
+      `det næste mål, ${titled}!`,
+      `${goal} point inden træk ${maxMoves}.`,
+    ],
+  },
+
+  // How the game ended (lines 1750-1802, 5010-5020, 6000-6002).
+  ending: {
+    // What happened, by the ending (see rules/ending.js). Giving up says
+    // nothing about it, as in the original.
+    headlines: {
+      sunk: ['Beklager, dit skib gik ned!'],
+      jilted: [
+        'Det er med sorg, vi meddeler, at',
+        'Komtesse Julie Knokkelfryd',
+        'i dag fejrer sit bryllup med',
+        'den velbårne Tulleman Gylleborg!',
+        '',
+        'Af sorg herover, hopper du i havet!',
+      ],
+      won: ['Komtesse Julie er din!'],
+      quit: [],
+    },
+    // When it was the weight of the cargo that sank her, by the cargo.
+    tooHeavy: {
+      money: 'Vægten af alle dine penge',
+      men: 'Vægten af alle dine folk',
+      guns: 'Vægten af alle dine kanoner',
+      grain: 'Vægten af alt dit korn',
+    },
+    sankTheShip: 'fik skibet til at synke!',
+    result: (points, money) => `Du fik ${points} point og havde ${money} rigsdaler!`,
+    endedWith: (men, repair) => `Du sluttede med ${men} mand og ${repair} Rep.`,
   },
 });
 

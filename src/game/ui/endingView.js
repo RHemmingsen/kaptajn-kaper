@@ -8,43 +8,21 @@ const LEFT = 40;
 const TOP = 60;
 const LINE = 28; // pixels between lines
 
-// What happened, for each way the game can end.
-const HEADLINES = {
-  sunk: ['Beklager, dit skib gik ned!'],
-  jilted: [
-    'Det er med sorg, vi meddeler, at',
-    'Komtesse Julie Knokkelfryd',
-    'i dag fejrer sit bryllup med',
-    'den velbårne Tulleman Gylleborg!',
-    '',
-    'Af sorg herover, hopper du i havet!',
-  ],
-  won: ['Komtesse Julie er din!'],
-  quit: [], // as in the original, giving up says nothing about it
-};
-
-// When it was the weight of the cargo that sank her.
-const TOO_HEAVY = {
-  money: 'Vægten af alle dine penge',
-  men: 'Vægten af alle dine folk',
-  guns: 'Vægten af alle dine kanoner',
-  grain: 'Vægten af alt dit korn',
-};
-
 // `view` is { ending, sunkBy, name, points, money, men, repair, record, isNew },
 // where record is { points, name }, or null if there's none yet.
 export function drawEnding(ctx, view) {
-  const why = view.sunkBy ? [TOO_HEAVY[view.sunkBy], 'fik skibet til at synke!'] : [];
+  const words = TEXTS.ending;
+  const why = view.sunkBy ? [words.tooHeavy[view.sunkBy], words.sankTheShip] : [];
   const lines = [
-    ...HEADLINES[view.ending],
+    ...words.headlines[view.ending],
     ...why,
     '',
-    `Du fik ${view.points} point og havde ${view.money} rigsdaler!`,
-    `Du sluttede med ${view.men} mand og ${view.repair} Rep.`,
+    words.result(view.points, view.money),
+    words.endedWith(view.men, view.repair),
     '',
     view.isNew ? TEXTS.record.newOne(view.record.points) : recordLine(view.record),
     '',
-    'Tryk på en tast.',
+    TEXTS.common.pressAnyKey,
   ];
 
   lines.forEach((line, i) => {

@@ -1,6 +1,7 @@
 // Drawing a victory, in the original's words.
 import { COLORS } from '../palette.js';
 import { text } from './draw.js';
+import { TEXTS } from '../texts.js';
 
 const LEFT = 40;
 const TOP = 50;
@@ -14,26 +15,25 @@ export function drawVictory(ctx, view) {
 }
 
 function linesFor({ step, spoils, sinking, men }) {
-  const pressAnyKey = 'Tryk på en tast.';
+  const words = TEXTS.victory;
+  const pressAnyKey = TEXTS.common.pressAnyKey;
 
   if (step === 'sunk') {
-    const lines = ['Den sank!!'];
-    if (sinking.joined > 0) lines.push(`Hendes ${sinking.joined} overlevende går over til dig.`);
-    if (sinking.toTheSharks > 0) lines.push(`Du smider ${sinking.toTheSharks} mand ud til hajerne!`);
+    const lines = [words.sank];
+    if (sinking.joined > 0) lines.push(words.survivorsJoin(sinking.joined));
+    if (sinking.toTheSharks > 0) lines.push(words.toTheSharks(sinking.toTheSharks));
     return [...lines, '', pressAnyKey];
   }
   if (step === 'prize') {
-    return ['OK, de er på vej til København.', '', pressAnyKey];
+    return [words.onItsWay, '', pressAnyKey];
   }
   return [
-    'De overgiver sig!!',
-    `Der er ${spoils.money} rigsdaler ombord.`,
-    spoils.survivors > 0 ? `Der er ${spoils.survivors} overlevende.` : 'Det flyder med lig på dækket.',
-    `Der er ${spoils.grain} sække korn ombord. Dem tager du!`,
+    words.surrender,
+    words.moneyAboard(spoils.money),
+    spoils.survivors > 0 ? words.survivors(spoils.survivors) : words.noSurvivors,
+    words.grainAboard(spoils.grain),
     '',
-    'Dette skib behøver et prisemandskab',
-    `på ${spoils.prizeCrew} mand! Du har ${men} mand.`,
-    'Vil du sænke det (s)',
-    'eller tage det som prise (p)?',
+    ...words.prizeCrew(spoils.prizeCrew, men),
+    ...words.sinkOrTake,
   ];
 }

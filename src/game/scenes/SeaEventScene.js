@@ -1,11 +1,12 @@
 import { Scene } from '../../engine/Scene.js';
-import { addressedAs } from '../rules/career.js';
+import { careerLevel } from '../rules/career.js';
 import { flee, investigateFog } from '../rules/sea.js';
 import { clearScreen } from '../ui/draw.js';
 import { drawSeaEvent } from '../ui/seaView.js';
 import { drawStatusPanel } from '../ui/statusPanel.js';
 import { BattleScene } from './BattleScene.js';
 import { BoardingScene } from './BoardingScene.js';
+import { TEXTS } from '../texts.js';
 
 // The lookout has spotted something. As in the original, you answer by
 // typing a letter.
@@ -67,7 +68,7 @@ export class SeaEventScene extends Scene {
       step: this.step,
       ship: this.ship,
       outcome: this.outcome,
-      addressedAs: addressedAs(this.state),
+      addressedAs: TEXTS.career.addressedAs(careerLevel(this.state), this.state.name),
     });
     drawStatusPanel(ctx, this.state);
   }

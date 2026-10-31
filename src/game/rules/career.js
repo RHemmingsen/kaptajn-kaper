@@ -5,25 +5,15 @@
 import { endGame } from './ending.js';
 import { EVENTS } from '../events.js';
 
-// Your rank and noble title, by difficulty (the original's tit(1, IDIF/2)
-// and tit(2, IDIF/2)). The difficulty starts at 2 and goes up by 2 with each
-// goal reached.
-const RANKS = ['skibsfører', 'kaptajn', 'kommandørkaptajn', 'kommandør', 'admiral'];
-const NOBLE_TITLES = ['Borger', 'Baron', 'Greve', 'Kammerherre', 'Kronprins'];
 const STEP = 2; // difficulty gained per goal
 const WON_AT = 10; // the difficulty after the fourth goal
 
-export function rankTitle(state) {
-  return RANKS[state.difficulty / STEP - 1];
-}
-
-export function nobleTitle(state) {
-  return NOBLE_TITLES[state.difficulty / STEP - 1];
-}
-
-// How you're addressed: your rank and name, "skibsfører Ronnie".
-export function addressedAs(state) {
-  return [rankTitle(state), state.name].filter(Boolean).join(' ');
+// How far you've come: 1 at the start, one more for each goal reached, 5
+// once you've won. The difficulty starts at 2 and goes up by 2 with each
+// goal (the original's IDIF / 2). Your rank and noble title follow it:
+// TEXTS.career.ranks and .titles.
+export function careerLevel(state) {
+  return state.difficulty / STEP;
 }
 
 export function goalReached(state) {

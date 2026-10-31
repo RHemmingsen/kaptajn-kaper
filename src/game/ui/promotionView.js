@@ -1,6 +1,7 @@
 // Drawing a promotion, in the original's words.
 import { COLORS } from '../palette.js';
 import { text } from './draw.js';
+import { TEXTS } from '../texts.js';
 
 const LEFT = 40;
 const TOP = 40;
@@ -14,39 +15,30 @@ export function drawPromotion(ctx, view) {
 }
 
 function linesFor({ won, rank, title, name, goal, maxMoves }) {
+  const words = TEXTS.promotion;
   // "BARON Ronnie", as the original wrote it.
   const titled = [title.toUpperCase(), name].filter(Boolean).join(' ');
-  const news = [
-    'Tillykke!!!!',
-    '',
-    'Du har netop modtaget',
-    'din udnævnelse med flaskepost.',
-  ];
-  const julie = 'Komtesse Julie venter dig med længsel!';
+  const news = [words.congratulations, '', ...words.news];
 
   if (won) {
     return [
       ...news,
       '',
-      julie,
+      words.julieAwaits,
       '',
-      'Du har klaret det hele.',
-      'Du får også det halve kongerige,',
-      `${titled}!`,
+      ...words.allDone(titled),
       '',
-      'Tryk på en tast.',
+      TEXTS.common.pressAnyKey,
     ];
   }
   return [
     ...news,
-    `Du er nu ${rank}.`,
+    words.youAreNow(rank),
     '',
-    julie,
+    words.julieAwaits,
     '',
-    'Lad os se, om du kan klare',
-    `det næste mål, ${titled}!`,
-    `${goal} point inden træk ${maxMoves}.`,
+    ...words.nextGoal(titled, goal, maxMoves),
     '',
-    'Tryk på en tast.',
+    TEXTS.common.pressAnyKey,
   ];
 }

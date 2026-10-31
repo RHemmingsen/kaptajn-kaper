@@ -1,9 +1,10 @@
 import { Scene } from '../../engine/Scene.js';
-import { nobleTitle, promote, rankTitle } from '../rules/career.js';
+import { careerLevel, promote } from '../rules/career.js';
 import { endGame } from '../rules/ending.js';
 import { clearScreen } from '../ui/draw.js';
 import { drawPromotion } from '../ui/promotionView.js';
 import { drawStatusPanel } from '../ui/statusPanel.js';
+import { TEXTS } from '../texts.js';
 
 // You reached the goal: news of your promotion arrives by message in a
 // bottle. You're promoted as soon as you get here. Any key goes back to sea,
@@ -30,8 +31,8 @@ export class PromotionScene extends Scene {
     clearScreen(ctx);
     drawPromotion(ctx, {
       won: this.won,
-      rank: rankTitle(this.state),
-      title: nobleTitle(this.state),
+      rank: TEXTS.career.ranks[careerLevel(this.state) - 1],
+      title: TEXTS.career.titles[careerLevel(this.state) - 1],
       name: this.state.name,
       goal: this.state.goal,
       maxMoves: this.state.maxMoves,

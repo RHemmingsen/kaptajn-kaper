@@ -20,3 +20,24 @@ test('drawing a text that is not a string, like a misspelt constant, is refused'
 test('every kind of ship has a name', () => {
   for (const type of SHIP_TYPES) assert.equal(typeof TEXTS.ships[type.id], 'string', type.id);
 });
+
+test('there is a rank and a noble title for each of the five career levels', () => {
+  assert.deepEqual([TEXTS.career.ranks.at(0), TEXTS.career.titles.at(0)], ['skibsfører', 'Borger']);
+  assert.deepEqual([TEXTS.career.ranks.at(4), TEXTS.career.titles.at(4)], ['admiral', 'Kronprins']);
+  assert.equal(TEXTS.career.ranks.length, 5);
+  assert.equal(TEXTS.career.titles.length, 5);
+});
+
+test('you are addressed by rank and name', () => {
+  assert.equal(TEXTS.career.addressedAs(1, 'Ronnie'), 'skibsfører Ronnie');
+  assert.equal(TEXTS.career.addressedAs(2, ''), 'kaptajn', 'no name, just the rank');
+});
+
+test('every ending has its headline, and every heavy cargo its line', () => {
+  for (const ending of ['sunk', 'jilted', 'won', 'quit']) {
+    assert.ok(Array.isArray(TEXTS.ending.headlines[ending]), ending);
+  }
+  for (const cargo of ['money', 'men', 'guns', 'grain']) {
+    assert.equal(typeof TEXTS.ending.tooHeavy[cargo], 'string', cargo);
+  }
+});
