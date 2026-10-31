@@ -45,10 +45,7 @@ ways. That is where cleanup pays off most.
 
 ### A. Structural (the cleanup that matters most)
 
-**A4. A mutable global.** `IMAGES` in `game/assets.js` is filled as a side
-effect of `loadAssets()`, and `mapView` reads it. (The rest of A4 is done:
-the sailing rules are handed the chart they sail on.)
-**Better:** have `loadAssets()` return the images, and hand them on.
+All done.
 
 ### B. Medium
 
@@ -76,8 +73,7 @@ the sailing rules are handed the chart they sail on.)
 
 ### Recommended cleanup order
 
-1. **Assets:** `loadAssets()` returns the images (A4).
-2. **C2** `@ts-check` + JSDoc typedefs for the shared object shapes.
+1. **C2** `@ts-check` + JSDoc typedefs for the shared object shapes.
 
 Avoid ECS, plugin systems and general renderer abstractions. The game doesn't
 need them, and they would hide what's worth learning.

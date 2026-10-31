@@ -23,6 +23,8 @@ const MAX_SCENE_CHANGES_PER_STEP = 10;
 // listens there too, for the first key press that lets it play.
 // `drawError(ctx, error)` draws what the player sees if the game crashes
 // (see crash()); the engine has a plain one, the game can bring its own.
+// `assets` is whatever the game loaded before it started (images...); the
+// Game only keeps it, as game.assets, for the scenes to use.
 //
 // Scenes are kept in a stack. Normally there's one, and setScene() swaps it.
 // pushScene() puts another on top, like help over a battle: the one below is
@@ -41,7 +43,7 @@ const MAX_SCENE_CHANGES_PER_STEP = 10;
 //
 // One change can be asked for per step; a second is a mistake, and throws.
 export class Game {
-  constructor(canvas, { controls, inputTarget, drawError = drawPlainError } = {}) {
+  constructor(canvas, { controls, inputTarget, assets = {}, drawError = drawPlainError } = {}) {
     this.canvas = canvas;
     this.ctx = canvas.getContext('2d');
     this.width = canvas.width;
@@ -63,6 +65,7 @@ export class Game {
     // Game rather than a scene, so they stay on when the scene changes.
     this.debug = {};
 
+    this.assets = assets;
     this.drawError = drawError;
     this.running = false;
     this.lastTime = 0;

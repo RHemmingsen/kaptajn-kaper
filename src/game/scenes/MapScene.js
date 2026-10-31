@@ -83,7 +83,7 @@ export class MapScene extends Scene {
   render(ctx) {
     clearScreen(ctx);
     drawMapFrame(ctx, this.state, this.game.sound.enabled);
-    drawMap(ctx, KATTEGAT);
+    drawMap(ctx, KATTEGAT, this.game.assets.kattegat);
     if (this.game.debug.showCollision) drawCollisionOverlay(ctx, KATTEGAT);
     drawCities(ctx, KATTEGAT);
     if (this.portCity) drawCityName(ctx, this.portCity);

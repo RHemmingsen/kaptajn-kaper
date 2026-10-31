@@ -11,10 +11,10 @@ import { connectSounds } from './game/sounds.js';
 import { rememberSound, soundOn } from './game/records.js';
 import { EVENTS } from './game/events.js';
 
-await loadAssets();
+const assets = await loadAssets();
 
 const canvas = document.getElementById('game');
-const game = new Game(canvas, { controls: CONTROLS, drawError });
+const game = new Game(canvas, { controls: CONTROLS, assets, drawError });
 game.sound.setEnabled(soundOn());
 connectSounds(game.events, game.sound);
 

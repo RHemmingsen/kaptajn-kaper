@@ -1,6 +1,5 @@
 // Drawing the sea map: its frame, tiles, ports and the ship.
 import { COLORS } from '../palette.js';
-import { IMAGES } from '../assets.js';
 import { label } from './draw.js';
 
 // Size of one tile in pixels. Not square: the original ran on screens whose
@@ -26,7 +25,8 @@ export function drawMapFrame(ctx, state, soundOn) {
   label(ctx, 'Esc:Slut', 466, 354);
 }
 
-export function drawMap(ctx, chart) {
+// The sea, the grid and `land`, the picture of the coast (assets.kattegat).
+export function drawMap(ctx, chart, land) {
   const w = chart.width * TILE_W;
   const h = chart.height * TILE_H;
 
@@ -52,7 +52,7 @@ export function drawMap(ctx, chart) {
 
   // 3. The land picture on top, which hides the grid on land. It's only for
   // looks: where the ship can sail is decided by the text grid in map.js.
-  ctx.drawImage(IMAGES.kattegat, MAP_X, MAP_Y, w, h);
+  ctx.drawImage(land, MAP_X, MAP_Y, w, h);
 }
 
 // Debug view: a see-through red box on every cell the ship can't sail into,

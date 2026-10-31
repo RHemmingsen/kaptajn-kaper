@@ -183,8 +183,10 @@ without touching the rules, but the two must agree. Press **G** on the map to
 see the collision grid on top of the picture (`game.debug.showCollision`).
 
 **Loading assets.** Images load in the background, so `main.js` waits for
-`loadAssets()` before starting the game. After that, drawing code can use
-`IMAGES.kattegat` straight away.
+`loadAssets()` before starting the game, and hands the images it returns to
+the Game: `new Game(canvas, { ..., assets })`. Scenes find them in
+`game.assets` and pass them to the drawing code, so nothing reads a global
+that something else filled in.
 
 **Game state.** Stats that every mode shares (men, guns, money...) live in one
 `GameState` object that is handed from scene to scene.
