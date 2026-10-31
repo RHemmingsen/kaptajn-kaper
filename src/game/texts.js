@@ -75,6 +75,29 @@ export const TEXTS = deepFreeze({
     repair: (repair) => `Rep: ${repair}`,
     points: (points) => `Point: ${points}`,
   },
+
+  // The harbor (the original's lines 1260-1340), and what happens there.
+  harbor: {
+    sides: { right: 'højre', left: 'venstre' },
+    sailingInto: (city) => `Du er på vej ind i havnen i ${city}.`,
+    instructions: [
+      'Styr uden om de andre skibe på reden',
+      'ind i havneindløbet.',
+      'Brug 4 eller ← for at flytte til venstre',
+      'og 6 eller → for at flytte til højre.',
+    ],
+    warning: [
+      'Hvis du støder ind i et af de andre skibe,',
+      'vil dit skib blive beskadiget, men hvis du',
+      'rammer ved siden af havneindløbet,',
+      'så overlever du det ikke!',
+    ],
+    gustsMayCome: (side) => `Pas på!!! Der kan komme vindstød fra ${side}!`,
+    gustsFrom: (side) => `Vindstød fra ${side}`,
+    crash: (lost, left) => `Du ramte et skib! -${lost} Rep, ${left} tilbage`,
+    welcome: (city) => `Velkommen til ${city}!`,
+    pressAnyKey: 'Tryk på en tast', // without the full stop, under the welcome
+  },
 });
 
 // Object.freeze, for the object and everything in it.

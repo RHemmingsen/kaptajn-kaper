@@ -3,6 +3,7 @@
 import { COLORS } from '../palette.js';
 import { LAYOUT, gustDirection } from '../rules/harbor.js';
 import { centeredLabel, text, textWidth } from './draw.js';
+import { TEXTS } from '../texts.js';
 
 // Where the gust indicator sits: below the left dock.
 const WIND_X = 40;
@@ -28,33 +29,26 @@ export function drawHarbor(ctx, harbor, state) {
   if (harbor.gustTimer > 0) drawGust(ctx, harbor);
 
   if (harbor.crashTimer > 0) {
-    const message = `Du ramte et skib! -${harbor.lastCrash} Rep, ${state.repair} tilbage`;
-    centeredLabel(ctx, message, 240, COLORS.white);
+    centeredLabel(ctx, TEXTS.harbor.crash(harbor.lastCrash, state.repair), 240, COLORS.white);
   }
   if (harbor.status === 'docked') {
-    centeredLabel(ctx, `Velkommen til ${harbor.city.name}!`, 440, COLORS.white);
-    centeredLabel(ctx, 'Tryk på en tast', 464, COLORS.white);
+    centeredLabel(ctx, TEXTS.harbor.welcome(harbor.city.name), 440, COLORS.white);
+    centeredLabel(ctx, TEXTS.harbor.pressAnyKey, 464, COLORS.white);
   }
 }
 
 // The original's instructions, before you sail in.
 export function drawHarborIntro(ctx, harbor) {
-  const from = harbor.gustsFrom === 'right' ? 'højre' : 'venstre';
+  const words = TEXTS.harbor;
   const lines = [
-    `Du er på vej ind i havnen i ${harbor.city.name}.`,
-    'Styr uden om de andre skibe på reden',
-    'ind i havneindløbet.',
-    'Brug 4 eller ← for at flytte til venstre',
-    'og 6 eller → for at flytte til højre.',
+    words.sailingInto(harbor.city.name),
+    ...words.instructions,
     '',
-    'Hvis du støder ind i et af de andre skibe,',
-    'vil dit skib blive beskadiget, men hvis du',
-    'rammer ved siden af havneindløbet,',
-    'så overlever du det ikke!',
+    ...words.warning,
     '',
-    `Pas på!!! Der kan komme vindstød fra ${from}!`,
+    words.gustsMayCome(words.sides[harbor.gustsFrom]),
     '',
-    'Tryk på en tast for at fortsætte!',
+    TEXTS.common.pressAnyKeyToContinue,
   ];
   lines.forEach((line, i) => {
     const color = i === 11 ? COLORS.white : COLORS.salmon;
@@ -65,8 +59,7 @@ export function drawHarborIntro(ctx, harbor) {
 
 // "Vindstød fra højre" and an arrow the way the gusts push.
 function drawGustIndicator(ctx, harbor) {
-  const from = harbor.gustsFrom === 'right' ? 'højre' : 'venstre';
-  const message = `Vindstød fra ${from}`;
+  const message = TEXTS.harbor.gustsFrom(TEXTS.harbor.sides[harbor.gustsFrom]);
   text(ctx, message, WIND_X, WIND_Y, { color: COLORS.white });
   // The arrow goes just after the text, which is longer for "venstre".
   const arrowX = WIND_X + textWidth(ctx, message) + 20 + WIND_ARROW_HALF;
