@@ -1,0 +1,12 @@
+{
+  "name": "kaptajn-kaper",
+  "private": true,
+  "license": "GPL-3.0-only",
+  "type": "module",
+  "dependencies": {
+    "engine": "*"
+  },
+  "scripts": {
+    "test": "node --test"
+  }
+}

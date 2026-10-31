@@ -1,12 +1,13 @@
 {
-  "name": "kaptajn-kaper",
+  "name": "kaptajn-kaper-monorepo",
   "private": true,
   "license": "GPL-3.0-only",
   "type": "module",
   "workspaces": [
-    "packages/*"
+    "packages/*",
+    "games/*"
   ],
   "scripts": {
-    "test": "node --test"
+    "test": "npm test --workspaces"
   }
 }

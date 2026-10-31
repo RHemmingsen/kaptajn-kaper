@@ -12,11 +12,12 @@
        CSS scales it up to fit the window. -->
   <canvas id="game" width="640" height="480"></canvas>
 
-  <!-- The engine is a package of its own (packages/engine). The import map
-       tells the browser where 'engine/...' is, so the game can import it by
-       name: import { Game } from 'engine/Game.js'. -->
+  <!-- The engine is a package of its own (packages/engine, at the top of the
+       repo). The import map tells the browser where 'engine/...' is, so the
+       game can import it by name: import { Game } from 'engine/Game.js'.
+       So serve the whole repo, not just this folder. -->
   <script type="importmap">
-    { "imports": { "engine/": "./packages/engine/src/" } }
+    { "imports": { "engine/": "../../packages/engine/src/" } }
   </script>
 
   <!-- type="module" lets us use import/export between files. -->
