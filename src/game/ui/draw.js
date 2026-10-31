@@ -22,6 +22,7 @@ export function polygon(ctx, points) {
 //   baseline  where y is: 'middle' of the letters (the default), or
 //             'alphabetic', the line they stand on
 export function text(ctx, string, x, y, options = {}) {
+  checkText(string);
   const { color = COLORS.salmon, size = 20, align = 'left', baseline = 'middle' } = options;
   ctx.font = font(size);
   ctx.fillStyle = color;
@@ -50,4 +51,12 @@ export function label(ctx, string, x, y, color = COLORS.salmon) {
 // Same as label(), centred horizontally on the screen.
 export function centeredLabel(ctx, string, y, color = COLORS.salmon) {
   label(ctx, string, (ctx.canvas.width - textWidth(ctx, string)) / 2, y, color);
+}
+
+// Texts come from TEXTS (texts.js), and a misspelt constant there is
+// undefined. Refuse it, rather than write "undefined" on the screen.
+function checkText(string) {
+  if (typeof string !== 'string') {
+    throw new TypeError(`Text to draw must be a string, not ${string} (a misspelt TEXTS constant?)`);
+  }
 }
