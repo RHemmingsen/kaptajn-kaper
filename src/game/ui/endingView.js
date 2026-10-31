@@ -2,6 +2,7 @@
 import { COLORS } from '../palette.js';
 import { text } from './draw.js';
 import { recordLine } from './recordText.js';
+import { TEXTS } from '../texts.js';
 
 const LEFT = 40;
 const TOP = 60;
@@ -41,7 +42,7 @@ export function drawEnding(ctx, view) {
     `Du fik ${view.points} point og havde ${view.money} rigsdaler!`,
     `Du sluttede med ${view.men} mand og ${view.repair} Rep.`,
     '',
-    view.isNew ? `Ny rekord: ${view.record.points} point!` : recordLine(view.record),
+    view.isNew ? TEXTS.record.newOne(view.record.points) : recordLine(view.record),
     '',
     'Tryk på en tast.',
   ];

@@ -5,11 +5,12 @@
 // might swap these for image files.
 import { COLORS } from '../palette.js';
 import { polygon, text, textWidth } from './draw.js';
+import { TEXTS } from '../texts.js';
 
 // "Tryk på en tast for at fortsætte!" at the bottom, with a cursor after it
 // when `cursorOn`.
 export function drawTitlePrompt(ctx, cursorOn) {
-  const prompt = 'Tryk på en tast for at fortsætte!';
+  const prompt = TEXTS.common.pressAnyKeyToContinue;
   text(ctx, prompt, 14, 470, { color: COLORS.white, baseline: 'alphabetic' });
 
   if (cursorOn) {
@@ -94,8 +95,8 @@ function drawTitlePanel(ctx) {
   ctx.strokeRect(240, 18, 348, 198);
 
   const title = { color: COLORS.white, size: 64, align: 'center' };
-  text(ctx, 'Kaptajn', 414, 75, title);
-  text(ctx, 'Kaper', 414, 155, title);
+  text(ctx, TEXTS.title.words[0], 414, 75, title);
+  text(ctx, TEXTS.title.words[1], 414, 155, title);
 }
 
 function drawCannon(ctx) {
@@ -185,6 +186,6 @@ function drawChest(ctx) {
   ctx.stroke();
 
   const sign = { color: COLORS.white, align: 'center', baseline: 'alphabetic' };
-  text(ctx, 'Rigs-', 140, 432, sign);
-  text(ctx, 'dalere', 140, 452, sign);
+  text(ctx, TEXTS.title.sign[0], 140, 432, sign);
+  text(ctx, TEXTS.title.sign[1], 140, 452, sign);
 }

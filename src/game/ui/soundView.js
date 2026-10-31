@@ -1,23 +1,25 @@
 // Drawing the question about sound at the start, in the original's words.
 import { COLORS } from '../palette.js';
 import { text } from './draw.js';
+import { TEXTS } from '../texts.js';
 
 const LEFT = 40;
 const TOP = 60;
 const LINE = 28; // pixels between lines
 
 export function drawSoundQuestion(ctx, soundOn) {
+  const words = TEXTS.sound;
   const lines = [
-    'Du kan altid flippe lyden af og på med F2!',
+    words.flipWithF2,
     '',
-    'Hvad vælger du lige nu?:',
+    words.whatNow,
     '',
-    '0: Stilhed',
-    '1: Lydeffekter',
+    words.silence,
+    words.effects,
     '',
-    `Nuværende værdi: ${soundOn ? 1 : 0}   (Enter beholder den)`,
+    words.current(soundOn ? 1 : 0),
     '',
-    'Angiv ny værdi:',
+    words.newValue,
   ];
 
   lines.forEach((line, i) => {

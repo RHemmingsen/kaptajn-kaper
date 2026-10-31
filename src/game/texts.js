@@ -23,6 +23,37 @@ export const TEXTS = deepFreeze({
     pressAnyKey: 'Tryk på en tast.',
     pressAnyKeyToContinue: 'Tryk på en tast for at fortsætte!',
   },
+
+  // The question about sound at the start (the original's lines 83-88).
+  sound: {
+    flipWithF2: 'Du kan altid flippe lyden af og på med F2!',
+    whatNow: 'Hvad vælger du lige nu?:',
+    silence: '0: Stilhed',
+    effects: '1: Lydeffekter',
+    current: (value) => `Nuværende værdi: ${value}   (Enter beholder den)`,
+    newValue: 'Angiv ny værdi:',
+  },
+
+  title: {
+    words: ['Kaptajn', 'Kaper'],
+    sign: ['Rigs-', 'dalere'], // on the treasure chest
+  },
+
+  // Your name, before a new game, and the greeting after it.
+  name: {
+    question: 'Hvad er dit navn?',
+    keys: 'Enter: ok   Esc: tilbage',
+    greeting: (name) => `OK, ${name}.`,
+    howToQuit: ['Du kan afbryde spillet', 'ved at trykke på Esc!'],
+  },
+
+  // The record, wherever it's shown. The first version kept no name.
+  record: {
+    none: 'Der er ingen rekord endnu.',
+    is: (points) => `Rekorden er ${points} point.`,
+    isBy: (points, name) => `Rekorden er ${points} point, sat af ${name}.`,
+    newOne: (points) => `Ny rekord: ${points} point!`,
+  },
 });
 
 // Object.freeze, for the object and everything in it.

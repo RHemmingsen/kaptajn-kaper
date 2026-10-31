@@ -2,6 +2,7 @@
 import { COLORS } from '../palette.js';
 import { text } from './draw.js';
 import { recordLine } from './recordText.js';
+import { TEXTS } from '../texts.js';
 
 const LEFT = 40;
 const TOP = 60;
@@ -13,19 +14,18 @@ const LINE = 28; // pixels between lines
 export function drawName(ctx, { step, text: typed, cursorOn, name, record }) {
   const lines = step === 'greeting'
     ? [
-      `OK, ${name}.`,
+      TEXTS.name.greeting(name),
       '',
-      'Du kan afbryde spillet',
-      'ved at trykke på Esc!',
+      ...TEXTS.name.howToQuit,
       '',
-      'Tryk på en tast.',
+      TEXTS.common.pressAnyKey,
     ]
     : [
-      'Hvad er dit navn?',
+      TEXTS.name.question,
       '',
       `${typed}${cursorOn ? '_' : ' '}`,
       '',
-      'Enter: ok   Esc: tilbage',
+      TEXTS.name.keys,
       '',
       '',
       recordLine(record),
