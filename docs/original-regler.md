@@ -255,8 +255,8 @@ Har du over 500 mænd, smides resten "ud til hajerne".
   billedet og kollisionen passer sammen. Originalens landliste (linje
   650–740) har 114 landfelter, vores har 158, og de er uenige om 86 felter:
   21 er land i originalen og vand hos os (f.eks. 7,5), og 65 er vand i
-  originalen og land hos os. I originalen kunne skibet derfor sejle over
-  land, der var tegnet på kortet, og støde på grund i åbent vand.
+  originalen og land hos os. (Originalens eget kortbillede og landliste
+  passede heller ikke altid sammen.)
 - Fejlene ovenfor kopieres ikke.
 - Felter med kaprede eller sænkede skibe bliver "rolige", som i originalen
   (`quietenWaters` i `rules/sea.js`). Vi droppede først reglen, fordi den
