@@ -33,7 +33,7 @@ export function drawHarbor(ctx, harbor, state) {
   }
   if (harbor.status === 'docked') {
     centeredLabel(ctx, TEXTS.harbor.welcome(harbor.city.name), 440, COLORS.white);
-    centeredLabel(ctx, TEXTS.harbor.pressAnyKey, 464, COLORS.white);
+    centeredLabel(ctx, TEXTS.common.pressAnyKey, 464, COLORS.white);
   }
 }
 

@@ -99,7 +99,6 @@ export const TEXTS = deepFreeze({
     gustsFrom: (side) => `Vindstød fra ${side}`,
     crash: (lost, left) => `Du ramte et skib! -${lost} Rep, ${left} tilbage`,
     welcome: (city) => `Velkommen til ${city}!`,
-    pressAnyKey: 'Tryk på en tast', // without the full stop, under the welcome
   },
 
   // Trading in a port (the original's lines 1500-1720), and the prize money
