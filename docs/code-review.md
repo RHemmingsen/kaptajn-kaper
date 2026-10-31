@@ -55,11 +55,6 @@ All done.
 
 ### C. Small things
 
-- **C2. No types.** The game passes many plain objects (`battle`, `harbor`,
-  `enemy`, fire results, sea events) whose shape is only described in
-  comments. That's exactly where JSDoc `@typedef` pays off. Without a build
-  step: `// @ts-check` in each file and a `jsconfig.json` with
-  `"checkJs": true`, and VS Code checks it.
 - **C4. Loading failure is a black screen.** If `loadAssets()` fails, the
   top-level `await` in `main.js` rejects and nothing is drawn. Catch it and
   write the error on the canvas.
@@ -73,7 +68,12 @@ All done.
 
 ### Recommended cleanup order
 
-1. **C2** `@ts-check` + JSDoc typedefs for the shared object shapes.
+The small things above, in any order.
+
+Decided against: **types (was C2)**, JSDoc `@typedef`s and `// @ts-check`.
+The game is nearly finished, the tests and the screenshot comparison cover
+it, and the next project will be TypeScript from the start, where types
+come with the language instead of in comments.
 
 Avoid ECS, plugin systems and general renderer abstractions. The game doesn't
 need them, and they would hide what's worth learning.
