@@ -124,7 +124,7 @@ function placeObstacles(count, random) {
 // Events emitted (plus the ones from ship.js):
 //   harborGust     {}       a gust starts pushing the ship
 //   harborCrash    { damage }  you hit a ship at anchor
-//   enteredHarbor  { city }
+// Whether you made it in, or were lost, is in harbor.status.
 export function updateHarbor(harbor, controls, dt, state, events, random = Math.random) {
   if (harbor.status !== 'sailing') return;
 
@@ -182,7 +182,6 @@ export function updateHarbor(harbor, controls, dt, state, events, random = Math.
   // 6. All the way past the docks means you made it in.
   if (ship.y > LAYOUT.dockTop + LAYOUT.dockHeight) {
     harbor.status = 'docked';
-    events.emit('enteredHarbor', { city: harbor.city });
   }
 }
 

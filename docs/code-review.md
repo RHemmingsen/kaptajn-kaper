@@ -45,24 +45,12 @@ ways. That is where cleanup pays off most.
 
 ### A. Structural (the cleanup that matters most)
 
-**A3. Rules report what happened in two different ways.** (`sail()` already
-returns `{ moved, city, seaEvent }` instead of emitting events only the map
-listened to; done with A1.)
-- `fire()`, `fightRound()` and `investigateFog()` return a result *and* emit
-  the same result as an event (for sound). Good.
-- `buy()`/`sell()` return a result and emit nothing; the *scene* emits
-  `tradeRefused` on their behalf.
-The project's own rule (README, `EventBus.js`) is: events for things several
-unrelated parts care about, direct calls for the rest.
-**Better:** one convention. Rules *return* what happened to their caller, and
-*emit* only for observers (sound, game over). So `buy`/`sell` emit
-`tradeRefused` themselves, like `fire()` does.
-Also: four events are emitted that nothing in the game listens to
-(`shipDamaged`, `shipSunk`, `crewStarving`, `enteredHarbor`); only tests do.
-Tests should assert on returned results and state, not on events kept alive
-for them. And event names are 16 loose strings: a typo does nothing, silently,
-while `Input` fails loudly on a mistyped action. Collect them in one
-`EVENTS` object.
+**A3. Event names are loose strings.** (The rest of A3 is done: rules return
+what happened to their caller and emit only for observers, and events
+nobody listened to are gone.) The 12 event names are strings: a typo does
+nothing, silently, while `Input` fails loudly on a mistyped action. Collect
+them in one `EVENTS` object, frozen, and have `EventBus` refuse a name that
+isn't a string (a misspelt constant gives `undefined`).
 
 **A4. Rules depend on module-level singletons.**
 `rules/sailing.js` imports the map directly (`tileAt` → `KATTEGAT`), so the

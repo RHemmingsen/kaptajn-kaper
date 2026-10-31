@@ -9,11 +9,8 @@
 // battle, boarding, sending a prize) still checks isSunk, to stop what it
 // was doing.
 //
-// Events emitted:
-//   shipDamaged   { amount }
-//   crewStarving  { lost }   men who died for lack of grain
-//   shipSunk      {}         once per game, however the ship was lost
-// and, when the ship is lost, the game ends (see ending.js).
+// No events of its own: what changed is in the state. When the ship is lost,
+// the game ends, and that is announced (gameOver, see ending.js).
 
 import { endGame } from './ending.js';
 
@@ -27,7 +24,6 @@ const STARVING_SURVIVORS = 0.9; // share of the crew left after a meal without g
 // Lose `amount` Rep, never going below 0.
 export function damageShip(state, amount, events) {
   state.repair = Math.max(0, state.repair - amount);
-  events.emit('shipDamaged', { amount });
   checkShipLost(state, events);
 }
 
@@ -40,7 +36,6 @@ export function crewEats(state, events) {
 
   state.grain = 0;
   const lost = state.men - Math.floor(state.men * STARVING_SURVIVORS);
-  events.emit('crewStarving', { lost });
   loseMen(state, lost, events);
 }
 
@@ -64,7 +59,6 @@ export function sinkShip(state, events, sunkBy = null) {
   if (state.sunk) return;
   state.sunk = true;
   state.sunkBy = sunkBy;
-  events.emit('shipSunk', {});
   endGame(state, 'sunk', events);
 }
 

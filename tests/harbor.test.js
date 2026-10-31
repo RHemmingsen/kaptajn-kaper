@@ -36,7 +36,7 @@ function play(harbor, controls, seconds, state, events, random = noGusts) {
 }
 
 // The events these tests look at.
-const recordEvents = () => record(['harborCrash', 'shipDamaged', 'shipSunk', 'enteredHarbor', 'harborGust']);
+const recordEvents = () => record(['harborCrash', 'harborGust', 'gameOver']);
 
 test('there are difficulty x 5 + 1 ships at anchor, all of them, however crowded', () => {
   for (const difficulty of [2, 4, 6, 8]) {
@@ -162,10 +162,7 @@ test('hitting a ship at anchor costs 15 x difficulty Rep, once, and you sail on'
   play(harbor, NO_KEYS, 1.5, state, events); // right across it
 
   assert.equal(state.repair, 170);
-  assert.deepEqual(log, [
-    { name: 'harborCrash', data: { damage: 30 } },
-    { name: 'shipDamaged', data: { amount: 30 } },
-  ]);
+  assert.deepEqual(log, [{ name: 'harborCrash', data: { damage: 30 } }]);
   assert.ok(harbor.ship.y > start.y + 50, 'the ship carries on, not back to the start');
 });
 
@@ -191,7 +188,7 @@ test('a crash that takes Rep down to 20 or less sinks the ship', () => {
 
   assert.equal(harbor.status, 'sunk');
   assert.equal(state.sunk, true);
-  assert.deepEqual(log.map((e) => e.name), ['harborCrash', 'shipDamaged', 'shipSunk']);
+  assert.deepEqual(log.map((e) => e.name), ['harborCrash', 'gameOver']);
 });
 
 test('sailing through the gap docks the ship', () => {
@@ -204,7 +201,7 @@ test('sailing through the gap docks the ship', () => {
 
   assert.equal(harbor.status, 'docked');
   assert.equal(state.repair, 200);
-  assert.deepEqual(log, [{ name: 'enteredHarbor', data: { city: CITY } }]);
+  assert.deepEqual(log, []);
 });
 
 test('missing the gap and hitting a dock sinks the ship', () => {
@@ -218,5 +215,5 @@ test('missing the gap and hitting a dock sinks the ship', () => {
   assert.equal(harbor.status, 'sunk');
   assert.equal(state.sunk, true);
   assert.equal(state.repair, 200, 'a wreck on the pier sinks the ship whatever its Rep');
-  assert.deepEqual(log.map((e) => e.name), ['shipSunk']);
+  assert.deepEqual(log.map((e) => e.name), ['gameOver']);
 });

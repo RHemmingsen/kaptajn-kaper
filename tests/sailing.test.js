@@ -11,7 +11,7 @@ import { sail } from '../src/game/rules/sailing.js';
 const nothingSpotted = () => 0.99;
 
 // The events these tests look at.
-const recordEvents = () => record(['shipRanAground', 'shipDamaged', 'shipSunk', 'gameOver']);
+const recordEvents = () => record(['shipRanAground', 'gameOver']);
 
 test('sailing onto water moves the ship and costs one move', () => {
   const state = new GameState(); // ship starts at col 10, row 10
@@ -52,7 +52,7 @@ test('sailing into land: the ship stays, but it costs a move, grain and 3 Rep', 
   assert.equal(state.moves, 1);
   assert.equal(state.grain, 29.5);
   assert.equal(state.repair, 197);
-  assert.deepEqual(log.map((e) => e.name), ['shipRanAground', 'shipDamaged']);
+  assert.deepEqual(log.map((e) => e.name), ['shipRanAground']);
 });
 
 test('sailing into a port says which', () => {
@@ -88,7 +88,7 @@ test('if the crew starves to death, the ship is lost and goes nowhere', () => {
   assert.equal(sail(state, 'left', events, nothingSpotted).moved, false);
   assert.equal(state.sunk, true);
   assert.equal(state.repair, 200, 'the lost ship does not also run aground');
-  assert.deepEqual(log.map((e) => e.name), ['shipSunk', 'gameOver']);
+  assert.deepEqual(log.map((e) => e.name), ['gameOver']);
 });
 
 test('sailing onto open water can make the lookout spot something', () => {
