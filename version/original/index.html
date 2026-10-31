@@ -6,19 +6,21 @@
   <title>Kaptajn Kaper i Kattegat</title>
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="style.css">
+
+  <!-- The engine is a package of its own (packages/engine, at the top of the
+       repo). The import map tells the browser where 'engine/...' is, so the
+       game can import it by name: import { Game } from 'engine/Game.js'.
+       So serve the whole repo, not just this folder.
+       It sits in <head>, not <body>: then the body's text is empty, so browser
+       extensions that show JSON files don't mistake this page for one. -->
+  <script type="importmap">
+    { "imports": { "engine/": "../../packages/engine/src/" } }
+  </script>
 </head>
 <body>
   <!-- The whole game draws onto this one canvas. 640x480 is the classic VGA size;
        CSS scales it up to fit the window. -->
   <canvas id="game" width="640" height="480"></canvas>
-
-  <!-- The engine is a package of its own (packages/engine, at the top of the
-       repo). The import map tells the browser where 'engine/...' is, so the
-       game can import it by name: import { Game } from 'engine/Game.js'.
-       So serve the whole repo, not just this folder. -->
-  <script type="importmap">
-    { "imports": { "engine/": "../../packages/engine/src/" } }
-  </script>
 
   <!-- type="module" lets us use import/export between files. -->
   <script type="module" src="src/main.js"></script>
