@@ -58,10 +58,6 @@ All done.
 - **C4. Loading failure is a black screen.** If `loadAssets()` fails, the
   top-level `await` in `main.js` rejects and nothing is drawn. Catch it and
   write the error on the canvas.
-- **C5. The redrawn coastline isn't in "Vores beslutninger".** The collision
-  grid in `map.js` is our own, not the original's land list (e.g. cell 7,5 is
-  land in the original, water here). Help topic 0 says so; the reference doc
-  should too.
 - **C6. Pixelated text.** `image-rendering: pixelated` makes canvas text
   blocky when scaled; fine for the retro look, but it should be a stated
   choice.
