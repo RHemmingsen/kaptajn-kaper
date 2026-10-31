@@ -26,8 +26,10 @@ const MAX_SCENE_CHANGES_PER_STEP = 10;
 //
 // Scenes are kept in a stack. Normally there's one, and setScene() swaps it.
 // pushScene() puts another on top, like help over a battle: the one below is
-// paused, not ended, and popScene() takes it back up where it was. Only the
-// top scene is updated and drawn.
+// paused, not ended, and popScene() takes it back up where it was.
+// replaceScene() swaps only the top one, like the harbor making way for the
+// port, while the map waits below. Only the top scene is updated and drawn.
+// (A stack of scenes like this is a "pushdown automaton".)
 //
 // Scene changes are deferred: setScene(), pushScene() and popScene() only
 // ask for the change, and the Game makes it at the end of the step, when the
@@ -50,7 +52,7 @@ export class Game {
     this.sound = new Sound(inputTarget);
     this.scenes = [];
     // The scene change asked for this step, made at its end:
-    // { kind: 'set' | 'push' | 'pop', scene }, or null.
+    // { kind: 'set' | 'push' | 'replace' | 'pop', scene }, or null.
     this.pendingChange = null;
 
     // Actions that work whatever scene is showing, like opening help:
@@ -82,6 +84,12 @@ export class Game {
   // is popped. (At the end of the step.)
   pushScene(scene) {
     this.askForChange({ kind: 'push', scene });
+  }
+
+  // End the top scene and put another in its place. The ones below stay
+  // paused. (At the end of the step.)
+  replaceScene(scene) {
+    this.askForChange({ kind: 'replace', scene });
   }
 
   // End the top scene and carry on with the one below it. (At the end of the
@@ -116,6 +124,10 @@ export class Game {
         scene.enter();
       } else if (kind === 'push') {
         this.scene?.pause();
+        this.scenes.push(scene);
+        scene.enter();
+      } else if (kind === 'replace') {
+        this.removeTop();
         this.scenes.push(scene);
         scene.enter();
       } else {

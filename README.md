@@ -122,7 +122,9 @@ and `game.setScene(...)` switches between them, calling `exit()` on the old one 
 `enter()` on the new one. (The name is the one Phaser, Godot and Unity use.)
 Scenes can also be stacked: `game.pushScene(...)` puts one on top, like the
 help over a battle, and the one below is paused (`pause()`), not ended, until
-`game.popScene()` takes it back up (`resume()`).
+`game.popScene()` takes it back up (`resume()`). `game.replaceScene(...)` swaps
+only the top one, like the harbor making way for the port while the map waits
+below.
 
 **Scene changes wait for the end of the step.** `setScene`, `pushScene` and
 `popScene` only ask; the Game makes the change when the scene's `update()`

@@ -165,6 +165,24 @@ test('a pushed scene pauses the one below, and popping it resumes it, without re
   ]);
 });
 
+test('replaceScene swaps only the top scene; the one below stays paused', () => {
+  const { game } = setup();
+  const log = [];
+  game.setScene(new LoggingScene(game, 'map', log));
+  game.step(DT);
+  game.pushScene(new LoggingScene(game, 'harbor', log));
+  game.step(DT);
+  game.replaceScene(new LoggingScene(game, 'port', log));
+  game.step(DT);
+  game.popScene();
+  game.step(DT);
+  assert.deepEqual(log, [
+    'map enter', 'map update', 'map pause', 'harbor enter', 'harbor update', 'harbor exit', 'port enter',
+    'port update', 'port exit', 'map resume',
+  ]);
+  assert.equal(game.scene.name, 'map');
+});
+
 test('setScene ends every scene in the stack', () => {
   const { game } = setup();
   const log = [];
