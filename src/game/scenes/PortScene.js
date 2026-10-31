@@ -120,8 +120,7 @@ export class PortScene extends Scene {
 
     const { action, good } = this.trade;
     const trade = action === 'buy' ? buy : sell;
-    const result = trade(this.state, this.prices, good, count);
-    if (!result.ok) this.game.events.emit('tradeRefused', result);
+    const result = trade(this.state, this.prices, good, count, this.game.events);
     this.message = { action, result };
     this.showMenu();
   }

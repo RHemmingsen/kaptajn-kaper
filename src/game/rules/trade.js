@@ -1,13 +1,17 @@
 // The rules for trading in a port, as in the original game: hire men, repair
 // the ship, buy guns and grain, and sell grain, guns and jewels.
 //
-// buy() and sell() answer the one who asked with a result, rather than
-// emitting events: { ok: true } or { ok: false, reason }. The reasons are
+// buy() and sell() answer the one who asked with a result: { ok: true, total }
+// or { ok: false, reason }. The reasons are
 //   invalidAmount   not a whole number of at least 1
 //   notForSale      this can't be bought / sold
 //   cantAfford      not enough rigsdaler
 //   tooMany         the ship can't hold that many
 //   notEnough       selling more than you have
+//
+// Events emitted, for whoever else cares (the sound beeps, as the original
+// did):
+//   tradeRefused  { reason }   a trade that didn't happen
 
 // What can be traded. `stat` is the GameState field it changes, `max` the
 // most the ship can hold (the original's limits).
@@ -30,25 +34,25 @@ export function rollPrices(random = Math.random) {
   return prices;
 }
 
-export function buy(state, prices, goodName, amount) {
+export function buy(state, prices, goodName, amount, events) {
   const good = GOODS[goodName];
-  if (!isWholeAmount(amount)) return fail('invalidAmount');
-  if (!good.canBuy) return fail('notForSale');
+  if (!isWholeAmount(amount)) return refuse('invalidAmount', events);
+  if (!good.canBuy) return refuse('notForSale', events);
 
   const cost = amount * prices[goodName];
-  if (cost > state.money) return fail('cantAfford');
-  if (state[good.stat] + amount > good.max) return fail('tooMany');
+  if (cost > state.money) return refuse('cantAfford', events);
+  if (state[good.stat] + amount > good.max) return refuse('tooMany', events);
 
   state.money -= cost;
   state[good.stat] += amount;
   return { ok: true, total: cost };
 }
 
-export function sell(state, prices, goodName, amount) {
+export function sell(state, prices, goodName, amount, events) {
   const good = GOODS[goodName];
-  if (!isWholeAmount(amount)) return fail('invalidAmount');
-  if (!good.canSell) return fail('notForSale');
-  if (amount > state[good.stat]) return fail('notEnough');
+  if (!isWholeAmount(amount)) return refuse('invalidAmount', events);
+  if (!good.canSell) return refuse('notForSale', events);
+  if (amount > state[good.stat]) return refuse('notEnough', events);
 
   const earnings = amount * prices[goodName];
   state[good.stat] -= amount;
@@ -61,6 +65,7 @@ function isWholeAmount(amount) {
   return Number.isInteger(amount) && amount >= 1;
 }
 
-function fail(reason) {
+function refuse(reason, events) {
+  events.emit('tradeRefused', { reason });
   return { ok: false, reason };
 }
