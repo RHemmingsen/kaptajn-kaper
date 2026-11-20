@@ -11,6 +11,9 @@ class FakeContext {
     this.state = 'running';
     this.destination = {};
     this.started = []; // { type, frequency, start, stop }
+    this.gains = []; // every volume control, with what it was connected to
+    this.filters = [];
+    this.delays = [];
   }
 
   createOscillator() {
@@ -32,21 +35,37 @@ class FakeContext {
   }
 
   createGain() {
-    return { gain: {}, connect: (next) => next };
+    const gain = { gain: {}, connectedTo: [], connect: (next) => { gain.connectedTo.push(next); return next; } };
+    this.gains.push(gain);
+    return gain;
+  }
+
+  createBiquadFilter() {
+    const filter = { frequency: {}, connect: (next) => next };
+    this.filters.push(filter);
+    return filter;
+  }
+
+  createDelay() {
+    const delay = { delayTime: {}, connect: (next) => next };
+    this.delays.push(delay);
+    return delay;
   }
 
   node(type) {
     const log = { type };
-    return {
+    const node = {
       log,
       connect: (next) => next,
-      start: (at) => { log.start = at; this.started.push(log); },
+      // An oscillator's wave is set after it's made; write down what it is.
+      start: (at) => { log.type = node.type ?? log.type; log.start = at; this.started.push(log); },
       // stop() with no time means stop now, before its time.
       stop: (at) => {
         if (at === undefined) log.stoppedEarly = true;
         else log.stop = at;
       },
     };
+    return node;
   }
 }
 
@@ -136,4 +155,40 @@ test('a key press wakes a context the browser put to sleep', () => {
   context.resume = () => { resumed += 1; };
   pressKey();
   assert.equal(resumed, 1);
+});
+
+test('effects and music sound like the PC speaker until a game gives them voices', () => {
+  const { sound, context, pressKey } = setup();
+  pressKey();
+  sound.tone(440, 0.1);
+  sound.music('C');
+  assert.deepEqual(context.started.map((note) => note.type), ['square', 'square']);
+  assert.ok(context.gains.every((gain) => gain.connectedTo[0] === context.destination), 'straight to the speakers');
+  assert.equal(context.filters.length + context.delays.length, 0);
+});
+
+test('effects and music can have voices of their own', () => {
+  const { sound, context, pressKey } = setup();
+  pressKey();
+  sound.setVoices({ effects: { wave: 'triangle' }, music: { wave: 'sawtooth' } });
+  sound.tone(440, 0.1);
+  sound.music('C');
+  assert.deepEqual(context.started.map((note) => note.type), ['triangle', 'sawtooth']);
+});
+
+test('a voice can have a low-pass filter and an echo, made once and shared by its notes', () => {
+  const { sound, context, pressKey } = setup();
+  pressKey();
+  sound.setVoices({ music: { wave: 'sawtooth', filter: 1800, echo: { delay: 0.2, feedback: 0.3 } } });
+  sound.music('CDE');
+  assert.equal(context.filters.length, 1);
+  assert.equal(context.filters[0].type, 'lowpass');
+  assert.equal(context.filters[0].frequency.value, 1800);
+  assert.equal(context.delays.length, 1);
+  assert.equal(context.delays[0].delayTime.value, 0.2);
+  // Each note's volume control leads into the filter, not straight out.
+  const notes = context.gains.filter((gain) => gain.connectedTo[0] === context.filters[0]);
+  assert.equal(notes.length, 3);
+  sound.tone(440, 0.1); // effects keep the PC speaker
+  assert.equal(context.gains.at(-1).connectedTo[0], context.destination);
 });

@@ -112,6 +112,9 @@ written in the music language of BASIC's `PLAY` statement, like
 `"O3CEGO4CO3GEC2"`. `mml.js` reads such a string into notes with a frequency
 and a length; `Sound` plays them. Browsers only allow sound after the player
 has pressed something, so nothing is heard before the first key.
+Effects and music each have a voice, the PC speaker's square wave unless a
+game gives them others with `sound.setVoices(...)`: a wave (sawtooth,
+triangle, sine), a low-pass filter and an echo.
 
 **Tile maps.** A map can be an array of strings, one character per tile.
 `TileMap` answers "what's at (col, row)?", counting from 0; the game decides
