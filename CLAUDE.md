@@ -9,8 +9,9 @@ endings, help, sound and the record.
 
 The repo is an npm workspace: the engine is a package of its own
 (`packages/engine`), and each version of the game is a folder under
-`version/` (the original is `version/original`), so more versions can be
-built on the same engine.
+`version/` (the original is `version/original`; `version/neon` is the same
+game in neon synthwave colours, changing only how it looks), so more
+versions can be built on the same engine.
 
 **The main goal is to learn how to build a game engine.** The game is the
 learning project, not the end in itself. For Claude that means:
@@ -29,7 +30,7 @@ learning project, not the end in itself. For Claude that means:
 ```sh
 npm install                   # once: links the workspace packages, downloads nothing
 npm test                      # every package's tests (Node's built-in test runner)
-python3 -m http.server 8000   # from the repo root; open /version/original/
+python3 -m http.server 8000   # from the repo root; open /version/original/ or /version/neon/
 ```
 
 No dependencies, no build step. Needs a modern browser (top-level `await`,

@@ -10,10 +10,12 @@ packages/
   engine/               the engine: game loop, scenes, input, events, sound
 version/
   original/             the game, as the original
+  neon/                 the same game in neon synthwave colours
 ```
 
 Each has its own README: [the engine](packages/engine/README.md),
-[Kaptajn Kaper](version/original/README.md).
+[Kaptajn Kaper](version/original/README.md),
+[Kaptajn Kaper Neon](version/neon/README.md).
 
 ## Running it
 
@@ -32,7 +34,7 @@ python3 -m http.server 8000
 # or: npx serve
 ```
 
-and open http://localhost:8000/version/original/.
+and open http://localhost:8000/version/original/ (or `/version/neon/`).
 
 ## Tests
 

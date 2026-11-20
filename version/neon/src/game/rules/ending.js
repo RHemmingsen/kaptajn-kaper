@@ -1,0 +1,29 @@
+// How the game ends. There are four ways, as in the original:
+//   'sunk'    the ship is lost (see ship.js)
+//   'jilted'  out of moves: Julie marries another (see career.js)
+//   'won'     every goal reached (see career.js)
+//   'quit'    you gave up: Esc on the map (the original's line 1060)
+//
+// Whatever the reason, the game ends here, once, with one event:
+//   gameOver  { ending, sunkBy, name, points, money, men, repair }
+// where sunkBy says which cargo was too heavy, if that's what sank the ship.
+// So whoever shows the ending doesn't need to know every way to get there.
+import { EVENTS } from '../events.js';
+
+export function endGame(state, ending, events) {
+  if (state.ending) return;
+  state.ending = ending;
+  events.emit(EVENTS.gameOver, {
+    ending,
+    sunkBy: state.sunkBy,
+    name: state.name,
+    points: state.points,
+    money: state.money,
+    men: state.men,
+    repair: state.repair,
+  });
+}
+
+export function isGameOver(state) {
+  return state.ending !== null;
+}

@@ -1,0 +1,73 @@
+// Tests for your career: goals, promotions, and running out of moves.
+import { test } from 'node:test';
+import assert from 'node:assert/strict';
+import { EventBus } from 'engine/EventBus.js';
+import { GameState } from '../src/game/GameState.js';
+import { careerLevel, goalReached, promote, useMove } from '../src/game/rules/career.js';
+import { EVENTS } from '../src/game/events.js';
+
+function recordGameOver() {
+  const events = new EventBus();
+  const log = [];
+  events.on(EVENTS.gameOver, (data) => log.push(data));
+  return { events, log };
+}
+
+test('you start at career level 1, aiming for 1000 points in 300 moves', () => {
+  const state = new GameState();
+  assert.equal(careerLevel(state), 1);
+  assert.equal(state.goal, 1000);
+  assert.equal(state.maxMoves, 300);
+});
+
+test('the goal is reached at its number of points', () => {
+  const state = new GameState();
+  state.points = 999;
+  assert.equal(goalReached(state), false);
+  state.points = 1000;
+  assert.equal(goalReached(state), true);
+});
+
+test('a promotion raises the difficulty and the career level, and sets a new goal from here', () => {
+  const state = new GameState();
+  state.points = 1010;
+  state.moves = 120;
+
+  assert.deepEqual(promote(state, new EventBus()), { won: false });
+  assert.equal(state.difficulty, 4);
+  assert.equal(careerLevel(state), 2);
+  assert.equal(state.goal, 1010 + 500 + 250 * 4); // 2510
+  assert.equal(state.maxMoves, 120 + 325 - 12.5 * 4); // 395
+});
+
+test('the fourth promotion wins the game, at career level 5', () => {
+  const state = new GameState();
+  assert.equal(promote(state, new EventBus()).won, false); // baron
+  assert.equal(promote(state, new EventBus()).won, false); // greve
+  assert.equal(promote(state, new EventBus()).won, false); // kammerherre
+  assert.equal(promote(state, new EventBus()).won, true);
+  assert.equal(careerLevel(state), 5);
+});
+
+test('the move that reaches the limit ends the game: Julie marries another', () => {
+  const state = new GameState();
+  state.moves = 298;
+  const { events, log } = recordGameOver();
+
+  useMove(state, events);
+  assert.equal(state.ending, null);
+
+  useMove(state, events);
+  assert.equal(state.ending, 'jilted');
+  assert.equal(log.length, 1);
+  assert.equal(log[0].ending, 'jilted');
+});
+
+test('a promotion is told as a promoted event', () => {
+  const state = new GameState();
+  const events = new EventBus();
+  const told = [];
+  events.on(EVENTS.promoted, (news) => told.push(news));
+  promote(state, events);
+  assert.deepEqual(told, [{ won: false }]);
+});
