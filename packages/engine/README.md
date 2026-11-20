@@ -114,7 +114,11 @@ and a length; `Sound` plays them. Browsers only allow sound after the player
 has pressed something, so nothing is heard before the first key.
 Effects and music each have a voice, the PC speaker's square wave unless a
 game gives them others with `sound.setVoices(...)`: a wave (sawtooth,
-triangle, sine), a low-pass filter and an echo.
+triangle, sine), a low-pass filter and an echo. For more than a tune on one
+voice, a game can bring a track of its own: an object with a `duration` and
+a `play(context, output, start)` that schedules its own Web Audio nodes.
+`sound.playTrack(track)` plays it like a tune: only once sound is allowed and
+on, and a new tune or track cuts it off.
 
 **Tile maps.** A map can be an array of strings, one character per tile.
 `TileMap` answers "what's at (col, row)?", counting from 0; the game decides

@@ -39,6 +39,17 @@ const SPEAKER = Object.freeze({ wave: 'square', volume: VOLUME });
 //   echo     { delay, feedback }: each sound comes back `delay` seconds later,
 //            `feedback` times as loud, again and again (none by default)
 //
+// For music beyond a tune on one voice, a game can bring a track of its own
+// and play it like a tune, with playTrack: an object that schedules its own
+// Web Audio nodes (drums, bass, effects...) into the output it's handed:
+//
+//   const track = { duration: 32, play(context, output, start) { ... } };
+//   sound.playTrack(track);
+//
+// Sound still decides whether it's heard: not before the first key press,
+// not with sound off, and a new tune or track stops it. (The engine knows
+// nothing about what's in it.)
+//
 // Browsers don't let a page make sound before the player has done something,
 // like pressing a key. So the audio is set up at the first key press on
 // `target` (the browser window normally); anything played before that is
@@ -53,6 +64,7 @@ export class Sound {
     this.tune = new Set(); // the notes of the music playing now
     this.voices = { effects: SPEAKER, music: SPEAKER };
     this.outputs = new Map(); // voice name -> the node its sounds go into
+    this.trackOutput = null; // where the track playing now goes, if one is
     target.addEventListener('keydown', () => this.unlock());
   }
 
@@ -110,12 +122,28 @@ export class Sound {
     return notes.reduce((total, note) => total + note.duration, 0);
   }
 
+  // Play a track (see above) instead of a tune. Returns its length.
+  playTrack(track, { delay = 0 } = {}) {
+    this.stopMusic();
+    this.whenAudible(() => {
+      // The track's own output: stopping it cuts this off, which silences
+      // whatever the track has scheduled, now or later.
+      const output = this.context.createGain();
+      output.connect(this.context.destination);
+      this.trackOutput = output;
+      track.play(this.context, output, this.context.currentTime + delay);
+    });
+    return track.duration;
+  }
+
   stopMusic() {
     stop(this.tune);
+    this.trackOutput?.disconnect();
+    this.trackOutput = null;
   }
 
   stopAll() {
-    stop(this.tune);
+    this.stopMusic();
     stop(this.playing);
   }
 

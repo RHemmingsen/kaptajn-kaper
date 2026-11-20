@@ -35,7 +35,12 @@ class FakeContext {
   }
 
   createGain() {
-    const gain = { gain: {}, connectedTo: [], connect: (next) => { gain.connectedTo.push(next); return next; } };
+    const gain = {
+      gain: {},
+      connectedTo: [],
+      connect: (next) => { gain.connectedTo.push(next); return next; },
+      disconnect: () => { gain.disconnected = true; },
+    };
     this.gains.push(gain);
     return gain;
   }
@@ -191,4 +196,46 @@ test('a voice can have a low-pass filter and an echo, made once and shared by it
   assert.equal(notes.length, 3);
   sound.tone(440, 0.1); // effects keep the PC speaker
   assert.equal(context.gains.at(-1).connectedTo[0], context.destination);
+});
+
+// A track that writes down what it's asked to do.
+function fakeTrack(duration = 32) {
+  const calls = [];
+  return { calls, duration, play: (context, output, start) => calls.push({ context, output, start }) };
+}
+
+test('a track plays into an output of its own, from its start, and gives its length', () => {
+  const { sound, context, pressKey } = setup();
+  pressKey();
+  const track = fakeTrack();
+  assert.equal(sound.playTrack(track, { delay: 2 }), 32);
+  assert.equal(track.calls.length, 1);
+  const { context: given, output, start } = track.calls[0];
+  assert.equal(given, context);
+  assert.deepEqual(output.connectedTo, [context.destination]);
+  assert.equal(start, 12); // currentTime 10, plus the delay
+});
+
+test('a track is not played before the first key press, or with sound off', () => {
+  const { sound, pressKey } = setup();
+  const before = fakeTrack();
+  sound.playTrack(before);
+  pressKey();
+  sound.setEnabled(false);
+  const off = fakeTrack();
+  sound.playTrack(off);
+  assert.equal(before.calls.length + off.calls.length, 0);
+});
+
+test('a new tune, or sound turned off, cuts a track off', () => {
+  const { sound, pressKey } = setup();
+  pressKey();
+  const first = fakeTrack();
+  sound.playTrack(first);
+  sound.music('C');
+  assert.equal(first.calls[0].output.disconnected, true);
+  const second = fakeTrack();
+  sound.playTrack(second);
+  sound.setEnabled(false);
+  assert.equal(second.calls[0].output.disconnected, true);
 });
