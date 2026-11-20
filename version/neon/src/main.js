@@ -7,11 +7,17 @@ import { EndScene } from './game/scenes/EndScene.js';
 import { HelpScene } from './game/scenes/HelpScene.js';
 import { SoundScene } from './game/scenes/SoundScene.js';
 import { drawError } from './game/ui/errorView.js';
+import { addGlow } from './game/ui/glow.js';
+import { COLORS } from './game/palette.js';
 import { connectSounds } from './game/sounds.js';
 import { rememberSound, soundOn } from './game/records.js';
 import { EVENTS } from './game/events.js';
 
 const canvas = document.getElementById('game');
+
+// Everything drawn on the canvas glows in its own colour (ui/glow.js). The
+// Game draws on this same context: a canvas has only the one.
+addGlow(canvas.getContext('2d'), { background: COLORS.blue });
 
 // Without its pictures the game can't run. If they don't load, show why, on
 // the same error screen as a crash, rather than leaving the canvas black;
