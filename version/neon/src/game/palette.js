@@ -1,14 +1,16 @@
-// The game's colours, picked to match the old EGA/VGA look of the original.
-// Keeping them in one place means every scene uses exactly the same shades.
+// The game's colours: neon on a synthwave night. Every scene draws with
+// these, so this file sets most of the look. The names are the original
+// version's (its palette.js), so the drawing code is the same in both;
+// what they stand for here is in the comments.
 export const COLORS = {
-  blue: '#2a32e8',
-  white: '#e8e8d0',
-  magenta: '#d040d8',
-  cyan: '#40d8f0',
-  red: '#e02828',
-  brown: '#c87828',
-  green: '#40f080',
-  salmon: '#f08070',
+  blue: '#12002b', // the night: the background
+  white: '#f4ecff', // headings, and anything that should stand out
+  magenta: '#ff2bd6', // hot pink
+  cyan: '#00eaff', // electric blue
+  red: '#ff3864', // ports, the sights
+  brown: '#7a2cff', // the docks in the harbor: violet
+  green: '#b46bff', // the map's frame: purple
+  salmon: '#ff8ad8', // most text: soft pink
 };
 
 export const FONT = '"Courier New", Courier, monospace';
