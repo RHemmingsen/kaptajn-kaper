@@ -6,6 +6,7 @@ import { EventBus } from 'engine/EventBus.js';
 import { parseMml } from 'engine/mml.js';
 import * as music from '../src/game/music.js';
 import { connectSounds } from '../src/game/sounds.js';
+import { TITLE_TRACK } from '../src/game/track.js';
 import { EVENTS } from '../src/game/events.js';
 
 function setup() {
@@ -17,6 +18,7 @@ function setup() {
     noise: (...args) => { played.push(['noise', ...args]); return args[0]; },
     music: (...args) => { played.push(['music', ...args]); return 1; },
     setVoices: (voices) => { sound.voices = voices; },
+    playTrack: (...args) => { played.push(['track', ...args]); return 32; },
   };
   const events = new EventBus();
   connectSounds(events, sound);
@@ -69,10 +71,10 @@ test('every one of the original\'s tunes can be read', () => {
   }
 });
 
-test('the title shows with the title tune', () => {
+test('the title shows with the title track', () => {
   const { events, played } = setup();
   events.emit(EVENTS.titleShown, {});
-  assert.deepEqual(played, [['music', music.TITLE]]);
+  assert.deepEqual(played, [['track', TITLE_TRACK]]);
 });
 
 test('every boarding round has its tune, and the march follows when she strikes her flag', () => {

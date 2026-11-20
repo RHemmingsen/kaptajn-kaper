@@ -13,9 +13,13 @@
 // see Sound.setVoices): the tunes on a sawtooth, its bright edge softened by
 // a low-pass filter, with an echo; the effects on a triangle wave, rounder
 // than the speaker's square. Same notes, same timing.
+//
+// The title tune is more than that: an EDM track with a build-up and a drop,
+// made from its notes (track.js).
 
-import { BOARDING, END, FOG, HELP, MARCH, PROMOTION, TITLE } from './music.js';
+import { BOARDING, END, FOG, HELP, MARCH, PROMOTION } from './music.js';
 import { EVENTS } from './events.js';
+import { TITLE_TRACK } from './track.js';
 
 const BEEP = { frequency: 800, duration: 0.25 }; // BASIC's BEEP
 
@@ -29,7 +33,7 @@ export function connectSounds(events, sound) {
   sound.setVoices(VOICES);
 
   // The tunes (music.js).
-  events.on(EVENTS.titleShown, () => sound.music(TITLE));
+  events.on(EVENTS.titleShown, () => sound.playTrack(TITLE_TRACK));
   events.on(EVENTS.helpOpened, () => sound.music(HELP));
   events.on(EVENTS.fogInvestigated, () => sound.music(FOG));
   events.on(EVENTS.promoted, () => sound.music(PROMOTION));

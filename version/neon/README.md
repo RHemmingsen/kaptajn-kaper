@@ -4,7 +4,10 @@ The same game as [the original version](../original/README.md), with the same
 rules and texts, in neon synthwave colours: a neon palette, a glow on
 everything drawn, scanlines, and a synthwave sunset behind the title and the
 ending. It plays the original's tunes and sounds on synths: the tunes on a
-filtered sawtooth with an echo, the effects on a triangle wave.
+filtered sawtooth with an echo, the effects on a triangle wave. The title
+tune becomes an EDM track (src/game/track.js): the original's notes at 128
+BPM on a supersaw lead, with an intro, a build-up and a drop, four-on-the-
+floor drums, an off-beat bass and a sidechain pump.
 
 It started as a copy of `version/original` and shares the engine with it
 (`packages/engine`). How the game is built is described in the original's
