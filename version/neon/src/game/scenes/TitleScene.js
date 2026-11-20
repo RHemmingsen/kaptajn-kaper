@@ -1,5 +1,5 @@
 import { Scene } from 'engine/Scene.js';
-import { clearScreen } from '../ui/draw.js';
+import { drawSynthwave } from '../ui/synthwave.js';
 import { drawTitleArt, drawTitlePrompt } from '../ui/titleArt.js';
 import { NameScene } from './NameScene.js';
 import { EVENTS } from '../events.js';
@@ -21,7 +21,7 @@ export class TitleScene extends Scene {
   }
 
   render(ctx) {
-    clearScreen(ctx);
+    drawSynthwave(ctx);
     drawTitleArt(ctx);
     // A blinking cursor: on for half a second, off for half.
     drawTitlePrompt(ctx, Math.floor(this.time * 2) % 2 === 0);

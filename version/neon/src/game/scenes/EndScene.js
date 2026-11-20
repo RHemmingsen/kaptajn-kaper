@@ -1,6 +1,6 @@
 import { Scene } from 'engine/Scene.js';
 import { recordScore } from '../records.js';
-import { clearScreen } from '../ui/draw.js';
+import { drawSynthwave } from '../ui/synthwave.js';
 import { drawEnding } from '../ui/endingView.js';
 import { TitleScene } from './TitleScene.js';
 
@@ -23,7 +23,7 @@ export class EndScene extends Scene {
   }
 
   render(ctx) {
-    clearScreen(ctx);
+    drawSynthwave(ctx);
     drawEnding(ctx, { ...this.summary, ...this.record });
   }
 }

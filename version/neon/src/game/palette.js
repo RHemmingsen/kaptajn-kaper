@@ -14,3 +14,16 @@ export const COLORS = {
 };
 
 export const FONT = '"Courier New", Courier, monospace';
+
+// The synthwave sunset behind the title and the ending (ui/synthwave.js):
+// the sky from top to horizon, the sun from top to bottom, and the grid.
+export const SUNSET = {
+  skyTop: '#0b0020',
+  skyHorizon: '#2a0050',
+  sunTop: '#ffd319',
+  sunMiddle: '#ff2bd6',
+  sunBottom: '#8c1eff',
+  grid: '#ff2bd6',
+  // Behind text that sits on the sunset, so it can still be read.
+  shade: 'rgba(18, 0, 43, 0.82)',
+};

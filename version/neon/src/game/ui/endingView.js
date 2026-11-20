@@ -2,6 +2,7 @@
 import { COLORS } from '../palette.js';
 import { text } from './draw.js';
 import { recordLine } from './recordText.js';
+import { drawShade } from './synthwave.js';
 import { TEXTS } from '../texts.js';
 
 const LEFT = 40;
@@ -25,6 +26,9 @@ export function drawEnding(ctx, view) {
     TEXTS.common.pressAnyKey,
   ];
 
+  // The ending sits on the synthwave sunset: a dark panel behind the text
+  // keeps it readable where it crosses the sun.
+  drawShade(ctx, LEFT - 20, TOP - LINE, 640 - 2 * (LEFT - 20), (lines.length + 1) * LINE);
   lines.forEach((line, i) => {
     text(ctx, line, LEFT, TOP + i * LINE, { color: i === 0 ? COLORS.white : COLORS.salmon });
   });
