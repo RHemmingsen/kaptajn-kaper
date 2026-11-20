@@ -8,13 +8,26 @@
 // a frequency and a length in clock ticks (18.2 a second), often in a loop
 // that slid the frequency up or down: a sweep, here. The numbers in the
 // comments are the original's lines in KAPER.BAS.
+//
+// Neon plays them on synths instead of the PC speaker (the engine's voices,
+// see Sound.setVoices): the tunes on a sawtooth, its bright edge softened by
+// a low-pass filter, with an echo; the effects on a triangle wave, rounder
+// than the speaker's square. Same notes, same timing.
 
 import { BOARDING, END, FOG, HELP, MARCH, PROMOTION, TITLE } from './music.js';
 import { EVENTS } from './events.js';
 
 const BEEP = { frequency: 800, duration: 0.25 }; // BASIC's BEEP
 
+export const VOICES = {
+  // A triangle is quieter than a square at the same volume, so a little more.
+  effects: { wave: 'triangle', volume: 0.12 },
+  music: { wave: 'sawtooth', volume: 0.08, filter: 1800, echo: { delay: 0.22, feedback: 0.35 } },
+};
+
 export function connectSounds(events, sound) {
+  sound.setVoices(VOICES);
+
   // The tunes (music.js).
   events.on(EVENTS.titleShown, () => sound.music(TITLE));
   events.on(EVENTS.helpOpened, () => sound.music(HELP));

@@ -1,13 +1,14 @@
 # Kaptajn Kaper Neon
 
 The same game as [the original version](../original/README.md), with the same
-rules, texts and sounds, in neon synthwave colours: a neon palette, a glow on
+rules and texts, in neon synthwave colours: a neon palette, a glow on
 everything drawn, scanlines, and a synthwave sunset behind the title and the
-ending.
+ending. It plays the original's tunes and sounds on synths: the tunes on a
+filtered sawtooth with an echo, the effects on a triangle wave.
 
 It started as a copy of `version/original` and shares the engine with it
 (`packages/engine`). How the game is built is described in the original's
-README; this version changes only how it looks. Its rules, the original's
+README; this version changes only how it looks and sounds. Its rules, the original's
 source code and the reference for its rules are in `version/original`.
 
 ## Running it

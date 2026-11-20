@@ -16,6 +16,7 @@ function setup() {
     sweep: (...args) => { played.push(['sweep', ...args]); return args[2]; },
     noise: (...args) => { played.push(['noise', ...args]); return args[0]; },
     music: (...args) => { played.push(['music', ...args]); return 1; },
+    setVoices: (voices) => { sound.voices = voices; },
   };
   const events = new EventBus();
   connectSounds(events, sound);
@@ -100,4 +101,12 @@ test('giving up goes straight to the end tune, without the whine', () => {
   const { events, played } = setup();
   events.emit(EVENTS.gameOver, { ending: 'quit' });
   assert.deepEqual(played, [['music', music.END, { delay: 0 }]]);
+});
+
+test('the tunes play on a synth with an echo, the effects on a triangle', () => {
+  const sound = { setVoices: (voices) => { sound.voices = voices; } };
+  connectSounds(new EventBus(), sound);
+  assert.equal(sound.voices.music.wave, 'sawtooth');
+  assert.ok(sound.voices.music.echo, 'an echo on the tunes');
+  assert.equal(sound.voices.effects.wave, 'triangle');
 });
