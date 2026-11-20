@@ -10,14 +10,39 @@ body {
   justify-content: center;
 }
 
-/* Scale the 640x480 canvas to the largest size that fits, keeping 4:3.
+/* Scale the 640x480 screen to the largest size that fits, keeping 4:3.
    dvh is the height actually visible: on phones, 100vh also counts the part
    behind the browser's address bar. The vh lines are for browsers without dvh. */
-#game {
+.screen {
+  position: relative;
   width: min(100vw, calc(100vh * 4 / 3));
   height: min(100vh, calc(100vw * 3 / 4));
   width: min(100vw, calc(100dvh * 4 / 3));
   height: min(100dvh, calc(100vw * 3 / 4));
+}
+
+/* Scanlines, like an old screen: a dark line across every third row of the
+   game's 480, laid over the canvas. Pure CSS, so it costs nothing to draw,
+   and clicks go through it to the game. */
+.screen::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: repeating-linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0.22) 0,
+    rgba(0, 0, 0, 0.22) 33.3%,
+    transparent 33.3%,
+    transparent 100%
+  );
+  background-size: 100% calc(100% / 160);
+}
+
+#game {
+  display: block;
+  width: 100%;
+  height: 100%;
   /* A deliberate choice: crisp, blocky pixels for the old DOS look. Smooth
      scaling ('auto') blurs instead, text most. The price: text is blocky, and
      at scales that aren't whole numbers (e.g. 2.5x) some 1px lines become

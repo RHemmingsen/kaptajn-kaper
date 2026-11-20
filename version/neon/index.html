@@ -19,8 +19,11 @@
 </head>
 <body>
   <!-- The whole game draws onto this one canvas. 640x480 is the classic VGA size;
-       CSS scales it up to fit the window. -->
-  <canvas id="game" width="640" height="480"></canvas>
+       CSS scales it up to fit the window. The frame around it carries the
+       scanlines (style.css), on top of the game, like an old screen. -->
+  <div class="screen">
+    <canvas id="game" width="640" height="480"></canvas>
+  </div>
 
   <!-- type="module" lets us use import/export between files. -->
   <script type="module" src="src/main.js"></script>
