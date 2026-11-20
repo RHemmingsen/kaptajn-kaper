@@ -12,11 +12,25 @@
 
   Water is left transparent; the game draws the water and grid underneath.
 
+  Neon: the land is deep violet with a glowing pink edge. The edge keeps the
+  same width however the picture is stretched (vector-effect), and the glow
+  is an SVG filter: a blurred copy of the land under the land itself.
+
   The coastlines were traced from a screenshot of the original game's map.
 -->
 <svg xmlns="http://www.w3.org/2000/svg" width="551" height="308"
      viewBox="0 0 290 140" preserveAspectRatio="none">
-  <g fill="#c87828">
+  <defs>
+    <filter id="glow" x="-10%" y="-10%" width="120%" height="120%">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="1.2" result="blur" />
+      <feMerge>
+        <feMergeNode in="blur" />
+        <feMergeNode in="SourceGraphic" />
+      </feMerge>
+    </filter>
+  </defs>
+  <g fill="#2e0f5c" stroke="#ff2bd6" stroke-width="1.5" stroke-linejoin="round"
+     vector-effect="non-scaling-stroke" filter="url(#glow)">
     <!-- Zealand: Odsherred, Isefjord, Hundested, Helsingør, København, Kalundborg -->
     <polygon points="
       210,48 234,51 237,53 239,57 245,60 245,65 242,66 241,70 238,73 237,84 240,88 242,88
